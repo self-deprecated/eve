@@ -1,0 +1,200 @@
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.driver.widgets', executablePath='<DVTFilePath:0xa99a98780:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex/DriverWidgets'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0xa99bf4d60; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0xa9bfe4480>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0xa99ba0360>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0xa99ba0480>",
+    "<IDEClassKitEntitlementsProcessor: 0xa99ba0570>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0xa99ba0bd0>"
+)'> with overrides <IDEProvisionableOverrides 0xa99a3b600: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe5730>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a99560; bundleID='ai.selfdeprecated.driver.widgets', path='<DVTFilePath:0xa9bfa08c0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a994a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.driver.widgets";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.driver.widgets', executablePath='<DVTFilePath:0xa99a98780:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex/DriverWidgets'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0xa99ba0360>: {
+}
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a99560; bundleID='ai.selfdeprecated.driver.widgets', path='<DVTFilePath:0xa9bfa08c0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a994a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.driver.widgets";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.driver.widgets', executablePath='<DVTFilePath:0xa99a98780:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex/DriverWidgets'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0xa99ba0480>: {
+}
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a99560; bundleID='ai.selfdeprecated.driver.widgets', path='<DVTFilePath:0xa9bfa08c0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a994a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.driver.widgets";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.driver.widgets', executablePath='<DVTFilePath:0xa99a98780:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex/DriverWidgets'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0xa99ba0570>: {
+}
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a99560; bundleID='ai.selfdeprecated.driver.widgets', path='<DVTFilePath:0xa9bfa08c0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a994a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.driver.widgets";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.driver.widgets', executablePath='<DVTFilePath:0xa99a98780:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/PlugIns/DriverWidgets.appex/DriverWidgets'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0xa99ba0bd0>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.driver.widgets";
+}
+2026-10-16 14:06:42 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0xa9bf25800; distributionItem='<IDEDistributionItem: 0xa99a995c0; bundleID='org.webrtc.WebRTC', path='<DVTFilePath:0xa9bfa1340:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a99680; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='(null)', teamID='2559B88H6C', identifier='org.webrtc.WebRTC', executablePath='<DVTFilePath:0xa99a990e0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework/WebRTC'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0xa99bf4d60; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0xa9bfe4480>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0xa99ba0390>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0xa99ba03f0>",
+    "<IDEClassKitEntitlementsProcessor: 0xa99ba04b0>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0xa99ba0750>"
+)'> with overrides <IDEProvisionableOverrides 0xa99b206c0: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe5810>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a995c0; bundleID='org.webrtc.WebRTC', path='<DVTFilePath:0xa9bfa1340:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a99680; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='(null)', teamID='2559B88H6C', identifier='org.webrtc.WebRTC', executablePath='<DVTFilePath:0xa99a990e0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework/WebRTC'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0xa99ba0390>: {
+}
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a995c0; bundleID='org.webrtc.WebRTC', path='<DVTFilePath:0xa9bfa1340:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a99680; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='(null)', teamID='2559B88H6C', identifier='org.webrtc.WebRTC', executablePath='<DVTFilePath:0xa99a990e0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework/WebRTC'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0xa99ba03f0>: {
+}
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a995c0; bundleID='org.webrtc.WebRTC', path='<DVTFilePath:0xa9bfa1340:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a99680; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='(null)', teamID='2559B88H6C', identifier='org.webrtc.WebRTC', executablePath='<DVTFilePath:0xa99a990e0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework/WebRTC'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0xa99ba04b0>: {
+}
+2026-10-16 14:06:42 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xa99a995c0; bundleID='org.webrtc.WebRTC', path='<DVTFilePath:0xa9bfa1340:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa99a99680; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa999f9ce0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='(null)', teamID='2559B88H6C', identifier='org.webrtc.WebRTC', executablePath='<DVTFilePath:0xa99a990e0:'~/Developer/driver/ios/build/testflight/202610161405/Driver.xcarchive/Products/Applications/Driver.app/Frameworks/WebRTC.framework/WebRTC'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0xa99ba0750>: {
+}
+2026-10-16 14:06:44 +0000 [MT] Evaluation for WebRTC.framework is <IDEProvisionableStatusEvaluation 0xa9c304770: inputs: <IDEProvisionableStatusEvalutorInputs 0xa9941a0d0: provisionableSnapshot: <IDEProvisionableSnapshot 0xa99ba1e30: name: WebRTC.framework, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0xa9b0fa800: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0xa99bf4d60; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe5890>, platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: org.webrtc.WebRTC, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0xa995d43a0; signedEntitlements='{\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0xa9bfe58a0>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0xa995d4ae0: Features: {\n}, Containers: {\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0xa99b206c0: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe5810>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0xa99b31e30>:
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0xa99b91500; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-16 14:06:53 +0000 [MT] Evaluation for DriverWidgets.appex is <IDEProvisionableStatusEvaluation 0xa9c3c8930: inputs: <IDEProvisionableStatusEvalutorInputs 0xa9a091770: provisionableSnapshot: <IDEProvisionableSnapshot 0xa99ba24f0: name: DriverWidgets.appex, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0xa9b0fa620: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0xa99bf4d60; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe57c0>, platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.driver.widgets, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0xa99b02040; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.driver.widgets\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0xa9bfe57d0>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0xa995d4020: Features: {\n}, Containers: {\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0xa99a3b600: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe5730>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0xa99b78150>:
+Profile:  <DVTEmbeddedProvisioningProfile 0xa99a39200: name: iOS Team Store Provisioning Profile: ai.selfdeprecated.driver.widgets, UUID: 257a51e1-b5d4-466f-9e8b-c22d32e0de33, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.driver.widgets";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 0;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: Driver Widgets, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-16 12:55:47 +0000, dateExpired: 2027-10-13 18:26:55 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+)}, certificateSHA1Hashes: {(
+    [udid],
+    [udid]
+)}, supportedUDIDs: {(
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0xa9b13c8c0:'com.apple.platform.xros':<DVTFilePath:0xa9ac2d680:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0xa9b13c640:'com.apple.platform.watchos':<DVTFilePath:0xa9b0cd3b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0xa9b0d2580:'~/Library/Developer/Xcode/UserData/Provisioning Profiles/257a51e1-b5d4-466f-9e8b-c22d32e0de33.mobileprovision'>>
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0xa99b92060; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-16 14:06:59 +0000 [MT] Evaluation for Driver.app is <IDEProvisionableStatusEvaluation 0xa9c438ee0: inputs: <IDEProvisionableStatusEvalutorInputs 0xa9a0916d0: provisionableSnapshot: <IDEProvisionableSnapshot 0xa99ba1bf0: name: Driver.app, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0xa9b0f9680: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0xa99bf4d60; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe56f0>, platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.driver, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0xa99bf6680; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.driver\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0xa9bfe5700>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0xa99b00660: Features: {\n}, Containers: {\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0xa9941d440: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xa9bfe4970>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0xa99b78690>:
+Profile:  <DVTEmbeddedProvisioningProfile 0xa99a38e40: name: iOS Team Store Provisioning Profile: ai.selfdeprecated.driver, UUID: cf6e1586-a180-489f-b580-c9ff94887d61, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.driver";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 0;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: Driver, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-16 12:55:45 +0000, dateExpired: 2027-10-13 18:26:55 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+)}, certificateSHA1Hashes: {(
+    [udid],
+    [udid]
+)}, supportedUDIDs: {(
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0xa9b13c8c0:'com.apple.platform.xros':<DVTFilePath:0xa9ac2d680:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0xa9b13c640:'com.apple.platform.watchos':<DVTFilePath:0xa9b0cd3b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0xa9b13c460:'com.apple.platform.iphoneos':<DVTFilePath:0xa9b0ccfc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0xa9b0d2c60:'~/Library/Developer/Xcode/UserData/Provisioning Profiles/cf6e1586-a180-489f-b580-c9ff94887d61.mobileprovision'>>
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0xa99b91dc0; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-16 14:07:04 +0000 [MT] Skipping push notification registration because context lacks a device token.
+2026-10-16 14:07:04 +0000 [MT] Uploading Driver with device token (null)
+2026-10-16 14:07:04 +0000 [MT] Starting upload
+2026-10-16 14:08:46 +0000  Updated message: Making copy of ‘Driver.ipa’…, progress: 0.000000
+2026-10-16 14:08:46 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-16 14:08:46 +0000  Updated message: Preparing to upload ‘Driver.ipa’…, progress: 0.000000
+2026-10-16 14:11:29 +0000  Updated message: Analyzing package…, progress: 0.000000
+2026-10-16 14:11:29 +0000  Updated message: Sending analysis to App Store Connect…, progress: 0.000000
+2026-10-16 14:11:30 +0000  Updated message: Sending analysis to App Store Connect…, progress: 0.000000
+2026-10-16 14:11:31 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-16 14:14:17 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-16 14:14:17 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-16 14:14:18 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-16 14:14:19 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-16 14:14:19 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-16 14:14:23 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-BA5BB5B8-A312-41EE-910A-F47ADA69E790.zip”…, progress: 0.000000
+2026-10-16 14:14:25 +0000  Updated message: “DTAppAnalyzerExtractorOutput-BA5BB5B8-A312-41EE-910A-F47ADA69E790.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-16 14:14:30 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-BA5BB5B8-A312-41EE-910A-F47ADA69E790.zip”…, progress: 0.000000
+2026-10-16 14:14:47 +0000  Updated message: Requesting upload instructions from App Store Connect…, progress: 0.000000
+2026-10-16 14:15:43 +0000  Updated message: Preparing file for upload to App Store Connect…, progress: 0.000000
+2026-10-16 14:15:43 +0000  Updated message: Preparing file for upload to App Store Connect…, progress: 0.000000
+2026-10-16 14:15:44 +0000  Updated message: Uploading to App Store Connect…, progress: 0.000000
+2026-10-16 14:15:44 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-16 14:15:44 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-16 14:15:44 +0000  Updated message: , progress: 0.000000
+2026-10-16 14:15:44 +0000  Updated progress: 0.340699 (raw value: 0.340699)
+2026-10-16 14:15:44 +0000  Updated message: , progress: 0.340699
+2026-10-16 14:15:45 +0000  Updated progress: 1.000000 (raw value: 1.000000)
+2026-10-16 14:15:45 +0000  Updated message: , progress: 1.000000
+2026-10-16 14:15:45 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-16 14:15:45 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-16 14:15:46 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-16 14:16:08 +0000  Updated message: Uploading “Driver.ipa” is complete., progress: 0.000000
+2026-10-16 14:16:08 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-16 14:16:08 +0000  Updated progress: 1.000000 (raw value: 1.000000)
+2026-10-16 14:16:08 +0000  Updated message: Uploading “Driver.ipa” is complete., progress: 1.000000
+2026-10-16 14:16:08 +0000  Updated message: Waiting for package to begin processing…, progress: 1.000000
+2026-10-16 14:16:08 +0000  Updated message: Uploaded package is processing., progress: 1.000000
+2026-10-16 14:16:08 +0000  Updated message: Upload succeeded., progress: 1.000000
+2026-10-16 14:16:09 +0000 [MT] Distribution record info for archive: <IDEArchiveDistributionRecord: 0xa99a38840; task='2', distributionDestination='2', uploadDestination='1', teamID='2559B88H6C', signingCertificateSHA1='[udid]', uniqueIdentifier='fbdd670b-fcbc-4921-a16a-dfc8e2b92bef', packagePath='(null)', preparationEvent='<IDEArchiveDistributionEvent: 0xa9a090640; title='Prepared archive for uploading', shortTitle='Prepared', date='2026-10-16 14:06:04 +0000', errors='(
+)', warnings='(
+)', infoMessages='(
+)', state='2'>', uploadEvent='<IDEArchiveDistributionEvent: 0xa9a0905f0; title='Uploaded with warnings', shortTitle='Uploaded with warnings', date='2026-10-16 14:16:09 +0000', errors='(
+)', warnings='(
+    "Error Domain=ITunesConnectFoundationErrorDomain Code=-19237 \"A non-validation error occurred during validation.\" UserInfo={IDEDistributionIssueSeverity=2, NSLocalizedDescription=A non-validation error occurred during validation., NSLocalizedRecoverySuggestion=Skipping validation.}",
+    "Error Domain=ITunesConnectFoundationErrorDomain Code=-19237 \"The server returned unexpected content.\" UserInfo={IDEDistributionIssueSeverity=2, NSLocalizedDescription=The server returned unexpected content., NSLocalizedRecoverySuggestion=<HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>\nAn error occurred while processing your request.<p>\nReference&#32;&#35;221&#46;e5ac1702&#46;1792159936&#46;82209a3\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;221&#46;e5ac1702&#46;1792159936&#46;82209a3</P>\n</BODY></HTML>\n}"
+)', infoMessages='(
+)', state='4'>', validationEvent='(null)', processingCompletedEvent='(null)'>
+2026-10-16 14:16:09 +0000 [MT] Step failed: <IDEDistributionResultStep: 0xa995d4800>: Error Domain=IDEDistributionResultStepErrorDomain Code=-1 "Upload completed with warnings" UserInfo={NSLocalizedDescription=Upload completed with warnings, IDEDistributionUnderlyingErrors=(
+    "Error Domain=ITunesConnectFoundationErrorDomain Code=-19237 \"warning: A non-validation error occurred during validation. Skipping validation.\" UserInfo={NSLocalizedDescription=warning: A non-validation error occurred during validation. Skipping validation.}",
+    "Error Domain=ITunesConnectFoundationErrorDomain Code=-19237 \"warning: The server returned unexpected content. <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>\nAn error occurred while processing your request.<p>\nReference&#32;&#35;221&#46;e5ac1702&#46;1792159936&#46;82209a3\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;221&#46;e5ac1702&#46;1792159936&#46;82209a3</P>\n</BODY></HTML>\n.\" UserInfo={NSLocalizedDescription=warning: The server returned unexpected content. <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>\nAn error occurred while processing your request.<p>\nReference&#32;&#35;221&#46;e5ac1702&#46;1792159936&#46;82209a3\n<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;221&#46;e5ac1702&#46;1792159936&#46;82209a3</P>\n</BODY></HTML>\n.}",
+    "Error Domain=IDEDistributionSymbolsStepError Code=1 \"warning: Upload Symbols Failed. The archive did not include a dSYM for the WebRTC.framework with the UUIDs [4C4C44F0-5555-3144-A190-21F9C2A35CDA]. Ensure that the archive's dSYM folder includes a DWARF file for WebRTC.framework with the expected UUIDs.\" UserInfo={NSLocalizedDescription=warning: Upload Symbols Failed. The archive did not include a dSYM for the WebRTC.framework with the UUIDs [4C4C44F0-5555-3144-A190-21F9C2A35CDA]. Ensure that the archive's dSYM folder includes a DWARF file for WebRTC.framework with the expected UUIDs.}"
+)}

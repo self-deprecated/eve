@@ -1,0 +1,14 @@
+==> Generating Xcode project
+==> Archiving build 202610131835
+** ARCHIVE SUCCEEDED **
+==> Signing and uploading to App Store Connect
+2026-10-13 20:36:07.387 xcodebuild[49310:31102936] [MT] IDEDistribution: -[IDEDistributionLogging _createLoggingBundleAtPath:]: Created bundle at path "/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/ScreenGate_2026-10-13_20-36-07.387.xcdistributionlogs".
+error: exportArchive Cloud signing permission error
+  You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/.
+error: exportArchive No profiles for 'ai.selfdeprecated.screengate.monitor' were found
+  Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.screengate.monitor'.
+error: exportArchive Cloud signing permission error
+  You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/.
+error: exportArchive No profiles for 'ai.selfdeprecated.screengate' were found
+  Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.screengate'.
+** EXPORT FAILED **

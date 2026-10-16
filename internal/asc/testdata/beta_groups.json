@@ -1,0 +1,24 @@
+{
+  "data" : [ {
+    "type" : "betaGroups",
+    "id" : "f3312b11-08f6-47a6-9cc0-3a38fc1566df",
+    "attributes" : {
+      "publicLinkLimit" : null,
+      "iosBuildsAvailableForAppleSiliconMac" : true,
+      "createdDate" : "2026-10-16T12:58:21.01Z",
+      "publicLinkEnabled" : null,
+      "publicLink" : null,
+      "hasAccessToAllBuilds" : true,
+      "publicLinkId" : null,
+      "isInternalGroup" : true,
+      "name" : "Driver",
+      "feedbackEnabled" : true,
+      "publicLinkLimitEnabled" : null,
+      "iosBuildsAvailableForAppleVision" : true
+    }
+  } ],
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/betaGroups?filter%5Bapp%5D=6823618186&limit=5"
+  },
+  "meta" : { "paging" : { "total" : 1, "limit" : 5 } }
+}

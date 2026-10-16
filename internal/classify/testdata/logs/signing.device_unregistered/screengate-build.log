@@ -1,0 +1,5 @@
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Device "[secret]’s iPhone" isn't registered in your developer account. The device must be registered in order to be included in a provisioning profile. (in target 'ScreenGate' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: No profiles for 'com.example.screengate.app' were found: Xcode couldn't find any iOS App Development provisioning profiles matching 'com.example.screengate.app'. (in target 'ScreenGate' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Device "[secret]’s iPhone" isn't registered in your developer account. The device must be registered in order to be included in a provisioning profile. (in target 'ScreenGateMonitor' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: No profiles for 'com.example.screengate.app.monitor' were found: Xcode couldn't find any iOS App Development provisioning profiles matching 'com.example.screengate.app.monitor'. (in target 'ScreenGateMonitor' from project 'ScreenGate')
+** BUILD FAILED **

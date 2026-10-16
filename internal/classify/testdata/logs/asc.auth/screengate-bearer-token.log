@@ -1,0 +1,5 @@
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Authentication failed: Make sure a bearer token was provided, it is properly configured and signed, and it has not expired. (in target 'ScreenGate' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: No profiles for 'ai.selfdeprecated.screengate' were found: Xcode couldn't find any iOS App Development provisioning profiles matching 'ai.selfdeprecated.screengate'. (in target 'ScreenGate' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Authentication failed: Make sure a bearer token was provided, it is properly configured and signed, and it has not expired. (in target 'ScreenGateMonitor' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: No profiles for 'ai.selfdeprecated.screengate.monitor' were found: Xcode couldn't find any iOS App Development provisioning profiles matching 'ai.selfdeprecated.screengate.monitor'. (in target 'ScreenGateMonitor' from project 'ScreenGate')
+** BUILD FAILED **

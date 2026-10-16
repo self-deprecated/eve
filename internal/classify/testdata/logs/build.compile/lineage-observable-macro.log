@@ -1,0 +1,9 @@
+   |   |                                                                      `- error: type 'Observation' has no member 'ObservationRegistrar'
+   |   |                                                        `- error: cannot infer key path type from context; consider explicitly specifying a root type
+   |   |                                                     `- error: cannot infer key path type from context; consider explicitly specifying a root type
+   |  |                                             `- error: 'Observable' is not a member type of struct 'LineageKit.Observation'
+** BUILD FAILED **
+macro expansion @Observable:1:45: error: 'Observable' is not a member type of struct 'LineageKit.Observation'
+macro expansion @Observable:1:70: error: type 'Observation' has no member 'ObservationRegistrar'
+macro expansion @ObservationTracked:21:53: error: cannot infer key path type from context; consider explicitly specifying a root type
+macro expansion @ObservationTracked:23:56: error: cannot infer key path type from context; consider explicitly specifying a root type

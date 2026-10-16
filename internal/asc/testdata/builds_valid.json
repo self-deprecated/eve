@@ -1,0 +1,43 @@
+{
+  "data" : [ {
+    "type" : "builds",
+    "id" : "5552ea26-dc5e-4b82-bf21-d8e79ca644b3",
+    "attributes" : {
+      "version" : "202610161458",
+      "uploadedDate" : "2026-10-16T08:01:20-07:00",
+      "expirationDate" : "2027-01-14T07:01:20-08:00",
+      "expired" : false,
+      "minOsVersion" : "26.0",
+      "lsMinimumSystemVersion" : null,
+      "processingState" : "VALID",
+      "buildAudienceType" : "APP_STORE_ELIGIBLE",
+      "usesNonExemptEncryption" : false
+    },
+    "relationships" : {
+      "preReleaseVersion" : {
+        "data" : { "type" : "preReleaseVersions", "id" : "ed5ffb16-782f-4be6-bf56-4f984a69d679" }
+      },
+      "betaGroups" : { "links" : { } },
+      "buildBetaDetail" : {
+        "data" : { "type" : "buildBetaDetails", "id" : "5552ea26-dc5e-4b82-bf21-d8e79ca644b3" }
+      }
+    }
+  } ],
+  "included" : [ {
+    "type" : "preReleaseVersions",
+    "id" : "ed5ffb16-782f-4be6-bf56-4f984a69d679",
+    "attributes" : { "version" : "0.1", "platform" : "IOS" }
+  }, {
+    "type" : "buildBetaDetails",
+    "id" : "5552ea26-dc5e-4b82-bf21-d8e79ca644b3",
+    "attributes" : {
+      "autoNotifyEnabled" : true,
+      "internalBuildState" : "IN_BETA_TESTING",
+      "externalBuildState" : "READY_FOR_BETA_SUBMISSION"
+    }
+  } ],
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/builds?filter%5Bapp%5D=6823618186&limit=1"
+  },
+  "meta" : { "paging" : { "total" : 1, "limit" : 1 } }
+}

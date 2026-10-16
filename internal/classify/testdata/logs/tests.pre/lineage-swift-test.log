@@ -1,0 +1,5 @@
+✘ Test swiftReplaysTypeScriptHistoriesToIdenticalWorldsAndExplanations() recorded an issue at SessionTests.swift:170:13: Expectation failed: replay.session.world == scenario.session.world
+✘ Test swiftReplaysTypeScriptHistoriesToIdenticalWorldsAndExplanations() recorded an issue at SessionTests.swift:180:17: Expectation failed: digest == scenario.digests[index]
+✘ Test swiftReplaysTypeScriptHistoriesToIdenticalWorldsAndExplanations() recorded an issue at SessionTests.swift:182:21: Expectation failed: e == full
+✘ Test swiftReplaysTypeScriptHistoriesToIdenticalWorldsAndExplanations() recorded an issue at SessionTests.swift:180:17: Expectation failed: digest == scenario.digests[index]
+✘ Test swiftReplaysTypeScriptHistoriesToIdenticalWorldsAndExplanations() recorded an issue at SessionTests.swift:182:21: Expectation failed: e == full

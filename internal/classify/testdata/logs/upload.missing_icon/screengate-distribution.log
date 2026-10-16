@@ -1,0 +1,200 @@
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x747ac0ba0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0x747b342d0>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.screengate";
+}
+2026-10-13 18:37:26 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0x749eafd80; distributionItem='<IDEDistributionItem: 0x747ac0ea0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x749e72ed0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x747ac01e0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x74701ddc0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x749e73090:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0x747a717c0; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0x749f48160>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0x747b34480>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0x747b34570>",
+    "<IDEClassKitEntitlementsProcessor: 0x747b343f0>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0x747b34660>"
+)'> with overrides <IDEProvisionableOverrides 0x747b6a940: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x749f49450>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-13 18:37:26 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x747ac0ea0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x749e72ed0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x747ac01e0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x74701ddc0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x749e73090:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0x747b34480>: {
+}
+2026-10-13 18:37:26 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x747ac0ea0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x749e72ed0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x747ac01e0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x74701ddc0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x749e73090:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0x747b34570>: {
+}
+2026-10-13 18:37:26 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x747ac0ea0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x749e72ed0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x747ac01e0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x74701ddc0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x749e73090:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0x747b343f0>: {
+}
+2026-10-13 18:37:26 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x747ac0ea0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x749e72ed0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x747ac01e0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x74701ddc0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x749e73090:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0x747b34660>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.screengate.monitor";
+}
+2026-10-13 18:37:35 +0000 [MT] Evaluation for ScreenGateMonitor.appex is <IDEProvisionableStatusEvaluation 0x74a30c770: inputs: <IDEProvisionableStatusEvalutorInputs 0x7480c8910: provisionableSnapshot: <IDEProvisionableSnapshot 0x747b34d50: name: ScreenGateMonitor.appex, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0x7490fcfa0: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0x747a717c0; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0x749f494d0>, platform: <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.screengate.monitor, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0x747152560; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.screengate.monitor\";\n    \"com.apple.developer.family-controls\" = 1;\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"com.apple.security.application-groups\" =     (\n        \"group.ai.selfdeprecated.screengate\"\n    );\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0x749f494f0>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0x747152620: Features: {\n    \"<DVTPortalProfileFeature: 0x74a24c310; id='APP_GROUPS', userDescription='App Groups', platforms='.macosx, .appletvos, .iphoneos, .watchos, .xros'>\" = 1;\n    \"<DVTPortalProfileFeature: 0x74a1d4d90; id='FAMILY_CONTROLS_DISTRIBUTION', userDescription='Family Controls (Distribution)', platforms='.xros, .iphoneos'>\" = 1;\n}, Containers: {\n    \"Xcode.Portal.Container.Type.AppGroup\" = \"{(\\n    \\\"group.ai.selfdeprecated.screengate\\\"\\n)}\";\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0x747b6a940: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x749f49450>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0x747b7ccc0>:
+Profile:  <DVTEmbeddedProvisioningProfile 0x747a58cc0: name: iOS Team Store Provisioning Profile: ai.selfdeprecated.screengate.monitor, UUID: 370ed72a-5a37-4772-89ce-09675c72d99a, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "beta-reports-active" = 1;
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 0;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: Screen Gate Monitor, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-13 18:36:58 +0000, dateExpired: 2027-10-13 18:26:55 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+)}, certificateSHA1Hashes: {(
+    [udid],
+    [udid]
+)}, supportedUDIDs: {(
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x7491408c0:'com.apple.platform.xros':<DVTFilePath:0x748c2d680:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x749140640:'com.apple.platform.watchos':<DVTFilePath:0x7490d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x7490d5b80:'~/Library/Developer/Xcode/UserData/Provisioning Profiles/370ed72a-5a37-4772-89ce-09675c72d99a.mobileprovision'>>
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0x74701e220; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-13 18:37:42 +0000 [MT] Evaluation for ScreenGate.app is <IDEProvisionableStatusEvaluation 0x74a3541c0: inputs: <IDEProvisionableStatusEvalutorInputs 0x747bbf070: provisionableSnapshot: <IDEProvisionableSnapshot 0x747b34990: name: ScreenGate.app, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0x7490fcbe0: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0x747a717c0; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0x749f49400>, platform: <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.screengate, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0x747a73c00; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.screengate\";\n    \"com.apple.developer.family-controls\" = 1;\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"com.apple.security.application-groups\" =     (\n        \"group.ai.selfdeprecated.screengate\"\n    );\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0x749f49410>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0x7471523a0: Features: {\n    \"<DVTPortalProfileFeature: 0x74a1d4d90; id='FAMILY_CONTROLS_DISTRIBUTION', userDescription='Family Controls (Distribution)', platforms='.xros, .iphoneos'>\" = 1;\n    \"<DVTPortalProfileFeature: 0x74a178310; id='APP_GROUPS', userDescription='App Groups', platforms='.macosx, .iphoneos, .xros, .watchos, .appletvos'>\" = 1;\n}, Containers: {\n    \"Xcode.Portal.Container.Type.AppGroup\" = \"{(\\n    \\\"group.ai.selfdeprecated.screengate\\\"\\n)}\";\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0x747bcf000: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x749f48660>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0x747b7d920>:
+Profile:  <DVTEmbeddedProvisioningProfile 0x747a58b40: name: iOS Team Store Provisioning Profile: ai.selfdeprecated.screengate, UUID: e2a35758-adb6-4148-9124-aa6f6cd429ec, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate";
+    "beta-reports-active" = 1;
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 0;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: Screen Gate, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-13 18:36:56 +0000, dateExpired: 2027-10-13 18:26:55 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+)}, certificateSHA1Hashes: {(
+    [udid],
+    [udid]
+)}, supportedUDIDs: {(
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x7491408c0:'com.apple.platform.xros':<DVTFilePath:0x748c2d680:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x749140640:'com.apple.platform.watchos':<DVTFilePath:0x7490d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x749140460:'com.apple.platform.iphoneos':<DVTFilePath:0x7490d0fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x7490d5ea0:'~/Library/Developer/Xcode/UserData/Provisioning Profiles/e2a35758-adb6-4148-9124-aa6f6cd429ec.mobileprovision'>>
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0x74701cee0; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-13 18:37:44 +0000 [MT] Skipping push notification registration because context lacks a device token.
+2026-10-13 18:37:44 +0000 [MT] Uploading ScreenGate with device token (null)
+2026-10-13 18:37:44 +0000 [MT] Starting upload
+2026-10-13 18:37:46 +0000  Updated message: Making copy of ‘ScreenGate.ipa’…, progress: 0.000000
+2026-10-13 18:37:46 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-13 18:37:46 +0000  Updated message: Preparing to upload ‘ScreenGate.ipa’…, progress: 0.000000
+2026-10-13 18:37:59 +0000  Updated message: Analyzing package…, progress: 0.000000
+2026-10-13 18:38:00 +0000  Updated message: Sending analysis to App Store Connect…, progress: 0.000000
+2026-10-13 18:38:00 +0000  Updated message: Sending analysis to App Store Connect…, progress: 0.000000
+2026-10-13 18:38:01 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-13 18:38:01 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-13 18:38:03 +0000  Updated message: Checking completion status for “asset-description-DB52F230-77F6-43EA-9AEF-9B16C3CA8592.xml”…, progress: 0.000000
+2026-10-13 18:38:03 +0000  Updated message: “asset-description-DB52F230-77F6-43EA-9AEF-9B16C3CA8592.xml” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:08 +0000  Updated message: Checking completion status for “asset-description-DB52F230-77F6-43EA-9AEF-9B16C3CA8592.xml”…, progress: 0.000000
+2026-10-13 18:38:08 +0000  Updated message: “asset-description-DB52F230-77F6-43EA-9AEF-9B16C3CA8592.xml” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:13 +0000  Updated message: Checking completion status for “asset-description-DB52F230-77F6-43EA-9AEF-9B16C3CA8592.xml”…, progress: 0.000000
+2026-10-13 18:38:14 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-13 18:38:14 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-13 18:38:15 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-13 18:38:16 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-13 18:38:17 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip”…, progress: 0.000000
+2026-10-13 18:38:17 +0000  Updated message: “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:22 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip”…, progress: 0.000000
+2026-10-13 18:38:23 +0000  Updated message: “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:28 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip”…, progress: 0.000000
+2026-10-13 18:38:28 +0000  Updated message: “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:33 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip”…, progress: 0.000000
+2026-10-13 18:38:33 +0000  Updated message: “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:38 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip”…, progress: 0.000000
+2026-10-13 18:38:38 +0000  Updated message: “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-13 18:38:43 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-622C1273-161D-4BFE-A178-D4CC4525045F.zip”…, progress: 0.000000
+2026-10-13 18:38:44 +0000  Updated message: Upload failed.
+Missing required icon file. The bundle does not contain an app icon for iPad of exactly '152x152' pixels, in .png format for iOS versions >= 10.0. To support older operating systems, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface.
+n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4), progress: 0.000000
+2026-10-13 18:38:44 +0000 [MT] Distribution record info for archive: <IDEArchiveDistributionRecord: 0x747a58540; task='2', distributionDestination='2', uploadDestination='1', teamID='2559B88H6C', signingCertificateSHA1='[udid]', uniqueIdentifier='bf6bb759-8948-41a4-81d4-c21402c11c6c', packagePath='(null)', preparationEvent='<IDEArchiveDistributionEvent: 0x7480c8e10; title='Prepared archive for uploading', shortTitle='Prepared', date='2026-10-13 18:37:21 +0000', errors='(
+)', warnings='(
+)', infoMessages='(
+)', state='2'>', uploadEvent='<IDEArchiveDistributionEvent: 0x7480c8780; title='Upload failed', shortTitle='Upload failed', date='2026-10-13 18:38:44 +0000', errors='(
+    "Error Domain=ContentDelivery Code=90023 \"Missing required icon file. The bundle does not contain an app icon for iPad of exactly '152x152' pixels, in .png format for iOS versions >= 10.0. To support older operating systems, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface.\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=Missing required icon file. The bundle does not contain an app icon for iPad of exactly '152x152' pixels, in .png format for iOS versions >= 10.0. To support older operating systems, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface., NSLocalizedRecoverySuggestion=n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4)}",
+    "Error Domain=ContentDelivery Code=90022 \"Missing required icon file. The bundle does not contain an app icon for iPhone / iPod Touch of exactly '120x120' pixels, in .png format for iOS versions >= 10.0. To support older versions of iOS, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface.\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=Missing required icon file. The bundle does not contain an app icon for iPhone / iPod Touch of exactly '120x120' pixels, in .png format for iOS versions >= 10.0. To support older versions of iOS, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface., NSLocalizedRecoverySuggestion=n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4)}",
+    "Error Domain=ContentDelivery Code=90713 \"Missing Info.plist value. A value for the Info.plist key 'CFBundleIconName' is missing in the bundle 'ai.selfdeprecated.screengate'. Apps built with iOS 11 or later SDK must supply app icons in an asset catalog and must also provide a value for this Info.plist key. For more information see http://help.apple.com/xcode/mac/current/#/dev10510b1f7.\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=Missing Info.plist value. A value for the Info.plist key 'CFBundleIconName' is missing in the bundle 'ai.selfdeprecated.screengate'. Apps built with iOS 11 or later SDK must supply app icons in an asset catalog and must also provide a value for this Info.plist key. For more information see http://help.apple.com/xcode/mac/current/#/dev10510b1f7., NSLocalizedRecoverySuggestion=n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4)}"
+)', warnings='(
+)', infoMessages='(
+)', state='5'>', validationEvent='(null)', processingCompletedEvent='(null)'>
+2026-10-13 18:38:44 +0000 [MT] Step failed: <IDEDistributionResultStep: 0x747150880>: Error Domain=IDEDistributionResultStepErrorDomain Code=-1 "Upload failed with errors" UserInfo={NSLocalizedDescription=Upload failed with errors, IDEDistributionUnderlyingErrors=(
+    "Error Domain=ContentDelivery Code=90023 \"error: Missing required icon file. The bundle does not contain an app icon for iPad of exactly '152x152' pixels, in .png format for iOS versions >= 10.0. To support older operating systems, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface. n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4).\" UserInfo={NSLocalizedDescription=error: Missing required icon file. The bundle does not contain an app icon for iPad of exactly '152x152' pixels, in .png format for iOS versions >= 10.0. To support older operating systems, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface. n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4).}",
+    "Error Domain=ContentDelivery Code=90022 \"error: Missing required icon file. The bundle does not contain an app icon for iPhone / iPod Touch of exactly '120x120' pixels, in .png format for iOS versions >= 10.0. To support older versions of iOS, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface. n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4).\" UserInfo={NSLocalizedDescription=error: Missing required icon file. The bundle does not contain an app icon for iPhone / iPod Touch of exactly '120x120' pixels, in .png format for iOS versions >= 10.0. To support older versions of iOS, the icon may be required in the bundle outside of an asset catalog. Make sure the Info.plist file includes appropriate entries referencing the file. See https://developer.apple.com/documentation/bundleresources/information_property_list/user_interface. n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4).}",
+    "Error Domain=ContentDelivery Code=90713 \"error: Missing Info.plist value. A value for the Info.plist key 'CFBundleIconName' is missing in the bundle 'ai.selfdeprecated.screengate'. Apps built with iOS 11 or later SDK must supply app icons in an asset catalog and must also provide a value for this Info.plist key. For more information see http://help.apple.com/xcode/mac/current/#/dev10510b1f7. n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4).\" UserInfo={NSLocalizedDescription=error: Missing Info.plist value. A value for the Info.plist key 'CFBundleIconName' is missing in the bundle 'ai.selfdeprecated.screengate'. Apps built with iOS 11 or later SDK must supply app icons in an asset catalog and must also provide a value for this Info.plist key. For more information see http://help.apple.com/xcode/mac/current/#/dev10510b1f7. n/a (ID: 2VZBCNVYIU2XJRTMIW2CK5MTB4).}"
+)}

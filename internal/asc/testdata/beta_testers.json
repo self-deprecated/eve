@@ -1,0 +1,14 @@
+{
+  "data" : [ {
+    "type" : "betaTesters",
+    "id" : "27050d41-a63a-4c21-b663-c65285bb6fa6",
+    "attributes" : {
+      "inviteType" : "EMAIL",
+      "email" : "me@example.com",
+      "state" : "INSTALLED"
+    },
+    "links" : { }
+  } ],
+  "links" : { },
+  "meta" : { "paging" : { "total" : 1, "limit" : 20 } }
+}

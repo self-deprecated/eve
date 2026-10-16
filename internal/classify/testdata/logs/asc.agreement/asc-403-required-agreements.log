@@ -1,0 +1,2 @@
+GET https://api.appstoreconnect.apple.com/v1/builds?filter[app]=6740000000&filter[version]=202610141155 -> 403
+{"errors":[{"id":"8a1f2c3d-4e5f-4a6b-9c7d-0e1f2a3b4c5d","status":"403","code":"FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED","title":"A required agreement is missing or has expired.","detail":"This request requires an in-effect agreement that has not been signed or has expired.","links":{"see":"/business"}}]}

@@ -1,0 +1,11 @@
+==> Installing and launching
+App installed:
+• bundleID: ai.selfdeprecated.screengate
+ERROR: The application failed to launch. (com.apple.dt.CoreDeviceError error 10002 (0x2712))
+       BundleIdentifier = ai.selfdeprecated.screengate
+       ----------------------------------------
+           The request to open "ai.selfdeprecated.screengate" failed. (FBSOpenApplicationServiceErrorDomain error 1 (0x01))
+           NSLocalizedFailureReason = The request was denied by service delegate (SBMainWorkspace).
+       ----------------------------------------
+               Unable to Verify App: An internet connection is required to verify the trust of the developer "Apple Development: [secret]". This app will not be available until verified.
+syslog: online-auth-agent[412] <Error>: Couldn't get device identity: Failed to create BAA info

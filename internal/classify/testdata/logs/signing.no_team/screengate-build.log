@@ -1,0 +1,3 @@
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Signing for "ScreenGate" requires a development team. Select a development team in the Signing & Capabilities editor. (in target 'ScreenGate' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Signing for "ScreenGateMonitor" requires a development team. Select a development team in the Signing & Capabilities editor. (in target 'ScreenGateMonitor' from project 'ScreenGate')
+** BUILD FAILED **

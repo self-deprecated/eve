@@ -1,0 +1,200 @@
+2026-10-14 12:13:48 +0000  App Store Connect request for store configuration response: <DVTITunesConnectConfigurationResponse: 0x791404500; isSuccessful='1', configuration='{
+    2559B88H6C =     {
+        "com.apple.platform.appletvos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        "com.apple.platform.iphoneos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.macosx" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = pngInBinary;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.watchos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.xros" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        configModelVersion = "2.0";
+    };
+    preflight =     (
+        2559B88H6C
+    );
+}', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
+2026-10-14 12:13:48 +0000  App Store Connect team IDs for account (null) are (
+    2559B88H6C
+)
+2026-10-14 12:13:49 +0000 [MT] Skipping push notification registration because context lacks a device token or push notifications are disabled.
+2026-10-14 12:13:51 +0000 [MT] Starting evaluation for distribution items:
+(
+    "<IDEDistributionItem: 0x792d7ee80; bundleID='ai.selfdeprecated.lineage', path='<DVTFilePath:0x791e11e00:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x791e123a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x791fdc540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.ai.selfdeprecated.lineage\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='ai.selfdeprecated.lineage', executablePath='<DVTFilePath:0x791e12220:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app/Lineage'>', hardenedRuntime='0'>'>"
+)
+2026-10-14 12:13:51 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0x793ce8780; distributionItem='<IDEDistributionItem: 0x792d7ee80; bundleID='ai.selfdeprecated.lineage', path='<DVTFilePath:0x791e11e00:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x791e123a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x791fdc540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.lineage";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.lineage', executablePath='<DVTFilePath:0x791e12220:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app/Lineage'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0x791f0c760; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0x793913f00>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0x791f24480>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0x791f244e0>",
+    "<IDEClassKitEntitlementsProcessor: 0x791f24570>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0x791f245d0>"
+)'> with overrides <IDEProvisionableOverrides 0x791fe0a80: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x793a74380>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x7930b8460:'com.apple.platform.iphoneos':<DVTFilePath:0x793048fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-14 12:13:51 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x792d7ee80; bundleID='ai.selfdeprecated.lineage', path='<DVTFilePath:0x791e11e00:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x791e123a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x791fdc540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.lineage";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.lineage', executablePath='<DVTFilePath:0x791e12220:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app/Lineage'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0x791f24480>: {
+}
+2026-10-14 12:13:51 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x792d7ee80; bundleID='ai.selfdeprecated.lineage', path='<DVTFilePath:0x791e11e00:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x791e123a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x791fdc540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.lineage";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.lineage', executablePath='<DVTFilePath:0x791e12220:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app/Lineage'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0x791f244e0>: {
+}
+2026-10-14 12:13:51 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x792d7ee80; bundleID='ai.selfdeprecated.lineage', path='<DVTFilePath:0x791e11e00:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x791e123a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x791fdc540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.lineage";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.lineage', executablePath='<DVTFilePath:0x791e12220:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app/Lineage'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0x791f24570>: {
+}
+2026-10-14 12:13:51 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x792d7ee80; bundleID='ai.selfdeprecated.lineage', path='<DVTFilePath:0x791e11e00:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x791e123a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x791fdc540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.lineage";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.lineage', executablePath='<DVTFilePath:0x791e12220:'/var/folders/3k/0rp6__5x1290xzg8w7yj1d9r0000gn/T/lineage-release.6lNPEPw2/Lineage.xcarchive/Products/Applications/Lineage.app/Lineage'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0x791f245d0>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.lineage";
+}
+2026-10-14 12:14:03 +0000 [MT] Evaluation for Lineage.app is <IDEProvisionableStatusEvaluation 0x794226b50: inputs: <IDEProvisionableStatusEvalutorInputs 0x791416490: provisionableSnapshot: <IDEProvisionableSnapshot 0x791f24c00: name: Lineage.app, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0x7930745a0: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0x791f0c760; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0x793a75120>, platform: <DVTPlatform:0x7930b8460:'com.apple.platform.iphoneos':<DVTFilePath:0x793048fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.lineage, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0x791f0e2a0; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.lineage\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0x793a75130>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0x7918d1c00: Features: {\n}, Containers: {\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0x791fe0a80: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x793a74380>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x7930b8460:'com.apple.platform.iphoneos':<DVTFilePath:0x793048fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0x791f6f1e0>:
+Profile:  <DVTEmbeddedProvisioningProfile 0x791ed73c0: name: iOS Team Store Provisioning Profile: ai.selfdeprecated.lineage, UUID: e29b9151-449e-4864-b16a-09c0a13dc552, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.lineage";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 0;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: Lineage, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-14 12:14:03 +0000, dateExpired: 2027-10-13 18:26:55 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+)}, certificateSHA1Hashes: {(
+    [udid],
+    [udid]
+)}, supportedUDIDs: {(
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x7930b88c0:'com.apple.platform.xros':<DVTFilePath:0x792801c20:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x7930b8640:'com.apple.platform.watchos':<DVTFilePath:0x7930493b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x7930b8460:'com.apple.platform.iphoneos':<DVTFilePath:0x793048fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x793080be0:'~/Library/Developer/Xcode/UserData/Provisioning Profiles/e29b9151-449e-4864-b16a-09c0a13dc552.mobileprovision'>>
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0x791fde5a0; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-14 12:14:05 +0000 [MT] Step failed: <IDEDistributionPackagingStep: 0x7918d03a0>: Error Domain=IDEFoundationErrorDomain Code=1 "Copy failed" UserInfo={NSLocalizedDescription=Copy failed}

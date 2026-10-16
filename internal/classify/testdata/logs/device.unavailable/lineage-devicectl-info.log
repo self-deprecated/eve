@@ -1,0 +1,39 @@
+Current device information:
+? Identifier: [secret]
+? Connection:
+    ? Authentication Type: manualPairing
+    ? Device State: unavailable
+    ? Last Connection Date: 14 Oct 2026 at 18.11.00
+    ? Pairing State: paired
+? Hardware:
+    ? CPU Count: 6 cores (6 logical, 1 package(s))
+    ? CPU Type: arm64e
+    ? Device Reality: physical
+    ? Device Type: iPhone
+    ? ECID: [secret]
+    ? Has Action Button: true
+    ? Internal Storage Capacity: 256000000000
+    ? Marketing Name: iPhone 17
+    ? Platform: iOS
+    ? Product Type: iPhone18,3
+    ? Serial Number: [secret]
+    ? Supported Biometrics: Face ID
+    ? Supported CPU Types:
+        ? arm64e
+        ? arm64
+    ? Supported Device Families: ? 1
+    ? Supports Siri: true
+    ? Thinning Product Type: iPhone18,3
+    ? UDID: [udid]
+? Software:
+    ? OS Build Update: 24A446
+    ? OS Version: 27.0.1
+    ? Supports Checked Allocations: true
+? State:
+    ? Developer Mode Status: Enabled (1)
+    ? Device Name: [secret]?s iPhone
+
+Capabilities:
+    ? Modify Credentials for Default Users for a Device (com.apple.coredevice.feature.default.user.credentials)
+    ? Modify Tags (com.apple.coredevice.feature.tags)
+    ? Unpair Device (com.apple.coredevice.feature.unpairdevice)

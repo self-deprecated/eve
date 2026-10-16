@@ -1,0 +1,200 @@
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodAdHocVisionOS: 0x848f41f50> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodEnterpriseVisionOS: 0x848f40b50> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodWatchOSEnterprise: 0x848f40ed0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Accepted distribution method <IDEDistributionMethodiOSEnterprise: 0x848f41cc0>
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodTVOSEnterprise: 0x848f42070> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodWatchOSDevelopmentSigned: 0x848f41ab0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodTVOSDevelopmentSigned: 0x848f41bb0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Accepted distribution method <IDEDistributionMethodDevelopmentSigned: 0x848f41f30>
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodDevelopmentSignedVisionOS: 0x848f41000> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodDeveloperID: 0x848f41c30> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodDeveloperIDNotarizedApp: 0x848f41f90> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodSaveBuiltProducts: 0x848f41a80> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodDevelopmentSignedMac: 0x848f41dc0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodMacApplication: 0x848f41da0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodMacAppStoreValidation: 0x848f41db0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodTVOSAppStoreValidation: 0x848f41dd0> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodiOSAppStoreValidation: 0x848f41d40> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodAppStoreValidationVisionOS: 0x848f40170> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Rejected distribution method <IDEDistributionMethodExportArchive: 0x848f41b50> because it doesn't support distributing archive
+2026-10-15 12:38:07 +0000  Available distribution methods: {(
+    <IDEDistributionMethodiOSAppStoreDistribution: 0x848f41f40>,
+    <IDEDistributionMethodiOSAdHoc: 0x848f41e00>,
+    <IDEDistributionMethodiOSEnterprise: 0x848f41cc0>,
+    <IDEDistributionMethodDevelopmentSigned: 0x848f41f30>
+)}
+2026-10-15 12:38:07 +0000  IDEDistributionItem init <DVTFilePath:0x84883d650:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework'>
+2026-10-15 12:38:07 +0000  IDEDistributionItem init <DVTFilePath:0x8488f4e70:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework'>
+2026-10-15 12:38:07 +0000  IDEDistributionItem init <DVTFilePath:0x8455a3540:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app'>
+2026-10-15 12:38:07 +0000  Set distributionItems on context: (
+    "<IDEDistributionItem: 0x845fcbba0; bundleID='dev.barbican.app', path='<DVTFilePath:0x8455a3540:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x845fcaa60; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x84a0e7e20; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.dev.barbican.app\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='dev.barbican.app', executablePath='<DVTFilePath:0x845fca820:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/App'>', hardenedRuntime='0'>'>"
+)
+2026-10-15 12:38:07 +0000  Archs to thin for item ~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app are []
+2026-10-15 12:38:07 +0000  Archs to thin for item ~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework are []
+2026-10-15 12:38:07 +0000  Archs to thin for item ~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework are []
+2026-10-15 12:38:07 +0000  [OPTIONAL] Found platform <DVTPlatform:0x8470c92c0:'com.apple.platform.iphoneos':<DVTFilePath:0x84726c690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x84a0e7e20; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x8455a3540:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app'>
+2026-10-15 12:38:07 +0000  [OPTIONAL] Profile <DVTEmbeddedProvisioningProfile 0x846ed8540: name: iOS Team Provisioning Profile: *, UUID: 445ab8cb-8f58-4785-b054-9c4a7db56d76, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.*";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: XC Wildcard, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-14 11:43:01 +0000, dateExpired: 2027-10-14 11:43:01 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+)}, certificateSHA1Hashes: {(
+    [udid]
+)}, supportedUDIDs: {(
+    "[udid]",
+    [udid],
+    "[udid]"
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x8470c95e0:'com.apple.platform.xros':<DVTFilePath:0x846c41c80:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x8470c94a0:'com.apple.platform.watchos':<DVTFilePath:0x84726c7e0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x8470c92c0:'com.apple.platform.iphoneos':<DVTFilePath:0x84726c690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x84881c460:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/embedded.mobileprovision'>> for <DVTFilePath:0x8455a3540:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app'> was an automatic profile
+2026-10-15 12:38:07 +0000  [OPTIONAL] Found platform <DVTPlatform:0x8470c92c0:'com.apple.platform.iphoneos':<DVTFilePath:0x84726c690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x84a0e7720; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x84883d650:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework'>
+2026-10-15 12:38:07 +0000  [OPTIONAL] Found platform <DVTPlatform:0x8470c92c0:'com.apple.platform.iphoneos':<DVTFilePath:0x84726c690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x84a0e7720; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x8488f4e70:'~/Library/Developer/Xcode/Archives/2026-10-15/App 3.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework'>
+2026-10-15 12:38:07 +0000  Distributable's provisioning style is Automatic
+2026-10-15 12:38:08 +0000  App Store Connect request for store configuration response: <DVTITunesConnectConfigurationResponse: 0x846de1940; isSuccessful='1', configuration='{
+    2559B88H6C =     {
+        "com.apple.platform.appletvos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        "com.apple.platform.iphoneos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.macosx" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = pngInBinary;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.watchos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.xros" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        configModelVersion = "2.0";
+    };
+    preflight =     (
+        2559B88H6C
+    );
+}', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
+2026-10-15 12:38:08 +0000  App Store Connect team IDs for account (null) are (
+    2559B88H6C
+)
+2026-10-15 12:38:08 +0000  Step failed: <IDEDistributionFetchAppRecordStep: 0x8471d6fc0>: IDEDistribution.DistributionAppRecordProviderError.missingApp(bundleId: "dev.barbican.app")
+2026-10-15 12:38:08 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionProgressViewController: 0x84a0e78e0 representing: (null)>, previousPolicy: canGoPrevious), interstitial: Optional(<IDEDistributionProgressViewController: 0x84a0e78e0 representing: (null)>))
+2026-10-15 12:38:08 +0000 [MT] Distribution app record creator state changed: preparingConfiguration
+2026-10-15 12:38:08 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionProgressViewController: 0x84a0e78e0 representing: (null)>, previousPolicy: canGoPrevious), interstitial: Optional(<IDEDistributionProgressViewController: 0x84a0e78e0 representing: (null)>))
+2026-10-15 12:38:09 +0000 [MT] Distribution app record creator state changed: editing(payload: IDEDistribution.DistributionAppRecordCreatorEditingPayload(bundleIdentifier: "dev.barbican.app", appName: "App", editingInfoMessage: "Your app must be registered with App Store Connect before it can be uploaded. Xcode will create an app record with the following properties.", localePack: IDEDistribution.DistributionAppRecordCreatorLocalePack(localeIds: ["hi", "en-US", "gu-IN", "hr", "ta-IN", "hu", "ur-PK", "te-IN", "zh-Hans", "nl-NL", "zh-Hant", "uk", "en-AU", "id", "or-IN", "ml-IN", "ms", "el", "it", "fr-CA", "pt-PT", "vi", "ja", "fr-FR", "ro", "en-GB", "no", "en-CA", "fi", "ru", "sl-SI", "pa-IN", "sk", "kn-IN", "ca", "ar-SA", "de-DE", "sv", "ko", "pt-BR", "es-ES", "es-MX", "cs", "th", "bn-BD", "mr-IN", "pl", "da", "he", "tr"], defaultLocale: en-DK (fixed en-DK), error: nil)), isExport: false)
+2026-10-15 12:38:09 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionCreateAppRecordConfigurationViewController: 0x8436cdb80 representing: (null)>, previousPolicy: canGoPrevious), interstitial: Optional(<IDEDistributionCreateAppRecordConfigurationViewController: 0x8436cdb80 representing: (null)>))
+2026-10-15 12:38:41 +0000 [MT] Distribution app record creator state changed: creating
+2026-10-15 12:38:41 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionProgressViewController: 0x84a0e5260 representing: (null)>, previousPolicy: previousUnsupported), interstitial: Optional(<IDEDistributionProgressViewController: 0x84a0e5260 representing: (null)>))
+2026-10-15 12:38:44 +0000 [MT] Distribution app record creator state changed: failure(parameters: Optional(IDEDistribution.DistributionAppRecordCreatorRequestParameters(appName: "Barbican", bundleIdentifier: "dev.barbican.app", primaryLanguage: "en-US", sku: "barbican")), editingPayload: IDEDistribution.DistributionAppRecordCreatorEditingPayload(bundleIdentifier: "dev.barbican.app", appName: "App", editingInfoMessage: "Your app must be registered with App Store Connect before it can be uploaded. Xcode will create an app record with the following properties.", localePack: IDEDistribution.DistributionAppRecordCreatorLocalePack(localeIds: ["hi", "en-US", "gu-IN", "hr", "ta-IN", "hu", "ur-PK", "te-IN", "zh-Hans", "nl-NL", "zh-Hant", "uk", "en-AU", "id", "or-IN", "ml-IN", "ms", "el", "it", "fr-CA", "pt-PT", "vi", "ja", "fr-FR", "ro", "en-GB", "no", "en-CA", "fi", "ru", "sl-SI", "pa-IN", "sk", "kn-IN", "ca", "ar-SA", "de-DE", "sv", "ko", "pt-BR", "es-ES", "es-MX", "cs", "th", "bn-BD", "mr-IN", "pl", "da", "he", "tr"], defaultLocale: en-DK (fixed en-DK), error: nil)), isExport: false, errors: [Error Domain=AppStoreConnectAPIErrorDomain Code=0 "App Record Creation Error" UserInfo={NSLocalizedDescription=App Record Creation Error, NSLocalizedRecoverySuggestion=App Record Creation failed due to request containing an attribute already in use. The App Name you entered is already being used. If you have trademark rights to this name and would like it released for your use, submit a claim.}])
+2026-10-15 12:38:44 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionErrorsViewController: 0x8436ccb40 representing: (null)>, previousPolicy: previousAction((Function))), interstitial: Optional(<IDEDistributionErrorsViewController: 0x8436ccb40 representing: (null)>))
+2026-10-15 12:38:46 +0000 [MT] Distribution app record creator state changed: editing(payload: IDEDistribution.DistributionAppRecordCreatorEditingPayload(bundleIdentifier: "dev.barbican.app", appName: "Barbican", editingInfoMessage: "Your app must be registered with App Store Connect before it can be uploaded. Xcode will create an app record with the following properties.", localePack: IDEDistribution.DistributionAppRecordCreatorLocalePack(localeIds: ["hi", "en-US", "gu-IN", "hr", "ta-IN", "hu", "ur-PK", "te-IN", "zh-Hans", "nl-NL", "zh-Hant", "uk", "en-AU", "id", "or-IN", "ml-IN", "ms", "el", "it", "fr-CA", "pt-PT", "vi", "ja", "fr-FR", "ro", "en-GB", "no", "en-CA", "fi", "ru", "sl-SI", "pa-IN", "sk", "kn-IN", "ca", "ar-SA", "de-DE", "sv", "ko", "pt-BR", "es-ES", "es-MX", "cs", "th", "bn-BD", "mr-IN", "pl", "da", "he", "tr"], defaultLocale: en-US (fixed en-US), error: nil)), isExport: false)
+2026-10-15 12:38:46 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionCreateAppRecordConfigurationViewController: 0x8436cf0c0 representing: (null)>, previousPolicy: canGoPrevious), interstitial: Optional(<IDEDistributionCreateAppRecordConfigurationViewController: 0x8436cf0c0 representing: (null)>))
+2026-10-15 12:38:53 +0000 [MT] Distribution app record creator state changed: creating
+2026-10-15 12:38:53 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionProgressViewController: 0x84a0e4fc0 representing: (null)>, previousPolicy: previousUnsupported), interstitial: Optional(<IDEDistributionProgressViewController: 0x84a0e4fc0 representing: (null)>))
+2026-10-15 12:38:57 +0000 [MT] Distribution app record creator state changed: failure(parameters: Optional(IDEDistribution.DistributionAppRecordCreatorRequestParameters(appName: "Barbican: Siege", bundleIdentifier: "dev.barbican.app", primaryLanguage: "en-US", sku: "barbican")), editingPayload: IDEDistribution.DistributionAppRecordCreatorEditingPayload(bundleIdentifier: "dev.barbican.app", appName: "Barbican", editingInfoMessage: "Your app must be registered with App Store Connect before it can be uploaded. Xcode will create an app record with the following properties.", localePack: IDEDistribution.DistributionAppRecordCreatorLocalePack(localeIds: ["hi", "en-US", "gu-IN", "hr", "ta-IN", "hu", "ur-PK", "te-IN", "zh-Hans", "nl-NL", "zh-Hant", "uk", "en-AU", "id", "or-IN", "ml-IN", "ms", "el", "it", "fr-CA", "pt-PT", "vi", "ja", "fr-FR", "ro", "en-GB", "no", "en-CA", "fi", "ru", "sl-SI", "pa-IN", "sk", "kn-IN", "ca", "ar-SA", "de-DE", "sv", "ko", "pt-BR", "es-ES", "es-MX", "cs", "th", "bn-BD", "mr-IN", "pl", "da", "he", "tr"], defaultLocale: en-US (fixed en-US), error: nil)), isExport: false, errors: [IDEDistribution.DistributionAppRecordProviderError.missingApp(bundleId: "dev.barbican.app")])
+2026-10-15 12:38:57 +0000 [MT] Recovery handler token state changed: DistributionErrorRecoveryHandlerTokenState(state: .recoveryInterstitial(<IDEDistributionErrorsViewController: 0x8436cf200 representing: (null)>, previousPolicy: previousAction((Function))), interstitial: Optional(<IDEDistributionErrorsViewController: 0x8436cf200 representing: (null)>))

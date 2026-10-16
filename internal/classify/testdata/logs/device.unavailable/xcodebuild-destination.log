@@ -1,0 +1,9 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Lineage.xcodeproj -scheme Lineage -destination id=[udid] -allowProvisioningUpdates -allowProvisioningDeviceRegistration build
+
+xcodebuild: error: Unable to find a destination matching the provided destination specifier:
+		{ id:[udid] }
+
+	Ineligible destinations for the "Lineage" scheme:
+		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
+		{ platform:macOS, arch:arm64e, id:[udid], name:My Mac, error:My Mac’s macOS platform doesn’t match Lineage.app’s supported platforms. You can change Lineage.app’s Base SDK or Supported Platforms to support My Mac. }

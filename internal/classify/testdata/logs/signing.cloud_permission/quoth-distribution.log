@@ -1,0 +1,200 @@
+    "application-identifier" = "2559B88H6C.*";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: XC Wildcard, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-14 11:43:01 +0000, dateExpired: 2027-10-14 11:43:01 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+)}, certificateSHA1Hashes: {(
+    [udid]
+)}, supportedUDIDs: {(
+    "[udid]",
+    [udid],
+    "[udid]"
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x8dd13c8c0:'com.apple.platform.xros':<DVTFilePath:0x8dcc11980:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x8dd13c640:'com.apple.platform.watchos':<DVTFilePath:0x8dd0cd500:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x8dd13c460:'com.apple.platform.iphoneos':<DVTFilePath:0x8dd0cd3b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x8dda9fdb0:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/embedded.mobileprovision'>> for <DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'> was an automatic profile
+2026-10-14 15:07:43 +0000 [MT] Distributable's provisioning style is Automatic
+2026-10-14 15:07:44 +0000  App Store Connect request for store configuration response: <DVTITunesConnectConfigurationResponse: 0x8dce35180; isSuccessful='1', configuration='{
+    2559B88H6C =     {
+        "com.apple.platform.appletvos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        "com.apple.platform.iphoneos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.macosx" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = pngInBinary;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.watchos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.xros" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        configModelVersion = "2.0";
+    };
+    preflight =     (
+        2559B88H6C
+    );
+}', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
+2026-10-14 15:07:44 +0000  App Store Connect team IDs for account API Key <identifier: J9584QW2TF; issuer: 25a2d76f-91fe-49e0-9551-09af06f209dc> are (
+    2559B88H6C
+)
+2026-10-14 15:07:45 +0000 [MT] Skipping push notification registration because context lacks a device token or push notifications are disabled.
+2026-10-14 15:07:48 +0000 [MT] Starting evaluation for distribution items:
+(
+    "<IDEDistributionItem: 0x8dbaa41e0; bundleID='ai.selfdeprecated.quoth', path='<DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8dbaa4ae0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8db02c540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.ai.selfdeprecated.quoth\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='ai.selfdeprecated.quoth', executablePath='<DVTFilePath:0x8dbaa4120:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/Quoth'>', hardenedRuntime='0'>'>"
+)
+2026-10-14 15:07:48 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0x8ddc19f00; distributionItem='<IDEDistributionItem: 0x8dbaa41e0; bundleID='ai.selfdeprecated.quoth', path='<DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8dbaa4ae0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8db02c540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.quoth";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.quoth', executablePath='<DVTFilePath:0x8dbaa4120:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/Quoth'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0x8dc095660; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0x8dd32a3e0>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0x8dbb78480>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0x8dbb783c0>",
+    "<IDEClassKitEntitlementsProcessor: 0x8dbb78030>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0x8dbb783f0>"
+)'> with overrides <IDEProvisionableOverrides 0x8db024cc0: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x8de020420>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x8dd13c460:'com.apple.platform.iphoneos':<DVTFilePath:0x8dd0cd3b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-14 15:07:48 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8dbaa41e0; bundleID='ai.selfdeprecated.quoth', path='<DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8dbaa4ae0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8db02c540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.quoth";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.quoth', executablePath='<DVTFilePath:0x8dbaa4120:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/Quoth'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0x8dbb78480>: {
+}
+2026-10-14 15:07:48 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8dbaa41e0; bundleID='ai.selfdeprecated.quoth', path='<DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8dbaa4ae0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8db02c540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.quoth";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.quoth', executablePath='<DVTFilePath:0x8dbaa4120:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/Quoth'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0x8dbb783c0>: {
+}
+2026-10-14 15:07:48 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8dbaa41e0; bundleID='ai.selfdeprecated.quoth', path='<DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8dbaa4ae0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8db02c540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.quoth";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.quoth', executablePath='<DVTFilePath:0x8dbaa4120:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/Quoth'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0x8dbb78030>: {
+}
+2026-10-14 15:07:48 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8dbaa41e0; bundleID='ai.selfdeprecated.quoth', path='<DVTFilePath:0x8db897240:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8dbaa4ae0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8db02c540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.quoth";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.quoth', executablePath='<DVTFilePath:0x8dbaa4120:'/tmp/quoth-testflight.tqYpxbuX/build/testflight/202610141507/Quoth.xcarchive/Products/Applications/Quoth.app/Quoth'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0x8dbb783f0>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.quoth";
+}
+2026-10-14 15:07:57 +0000 [MT] Evaluation for Quoth.app is <IDEProvisionableStatusEvaluation 0x8dd3a0fc0: inputs: <IDEProvisionableStatusEvalutorInputs 0x8dc091b80: provisionableSnapshot: <IDEProvisionableSnapshot 0x8dbb79020: name: Quoth.app, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0x8dd0fe800: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0x8dc095660; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0x8de0211c0>, platform: <DVTPlatform:0x8dd13c460:'com.apple.platform.iphoneos':<DVTFilePath:0x8dd0cd3b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.quoth, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0x8dc0971a0; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.quoth\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0x8de0211d0>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0x8db1516e0: Features: {\n}, Containers: {\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0x8db024cc0: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x8de020420>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x8dd13c460:'com.apple.platform.iphoneos':<DVTFilePath:0x8dd0cd3b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: (null), errors: (
+    "Error Domain=DeveloperAPIServiceErrorDomain Code=5 \"Cloud signing permission error\" UserInfo={NSLocalizedDescription=Cloud signing permission error, NSLocalizedRecoverySuggestion=You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/.}",
+    "Error Domain=IDEProfileLocatorErrorDomain Code=1 \"No profiles for 'ai.selfdeprecated.quoth' were found\" UserInfo={NSLocalizedDescription=No profiles for 'ai.selfdeprecated.quoth' were found, NSLocalizedRecoverySuggestion=Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.quoth'.}"
+)>
+2026-10-14 15:07:57 +0000 [MT] Step failed: <IDEDistributionSigningAssetsStep: 0x8dc095840>: Error Domain=IDEDistributionSigningAssetStepErrorDomain Code=0 "Locating signing assets failed." UserInfo={NSLocalizedDescription=Locating signing assets failed., IDEDistributionUnderlyingErrors=(
+    "Error Domain=DeveloperAPIServiceErrorDomain Code=5 \"Cloud signing permission error\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=Cloud signing permission error, NSLocalizedRecoverySuggestion=You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/.}",
+    "Error Domain=IDEProfileLocatorErrorDomain Code=1 \"No profiles for 'ai.selfdeprecated.quoth' were found\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=No profiles for 'ai.selfdeprecated.quoth' were found, NSLocalizedRecoverySuggestion=Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.quoth'.}"
+)}

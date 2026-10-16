@@ -1,0 +1,9 @@
+CodeSign ~/Library/Developer/Xcode/DerivedData/ScreenGate-abc/Build/Products/Debug-iphoneos/ScreenGate.app (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate"
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Library/Developer/Xcode/DerivedData/ScreenGate-abc/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate.app.xcent --timestamp\=none --generate-entitlement-der ~/Library/Developer/Xcode/DerivedData/ScreenGate-abc/Build/Products/Debug-iphoneos/ScreenGate.app
+Warning: unable to build chain to self-signed root for signer "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+~/Library/Developer/Xcode/DerivedData/ScreenGate-abc/Build/Products/Debug-iphoneos/ScreenGate.app: errSecInternalComponent
+Command CodeSign failed with a nonzero exit code
+** BUILD FAILED **

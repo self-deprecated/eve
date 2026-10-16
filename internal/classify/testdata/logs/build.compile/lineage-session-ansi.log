@@ -1,0 +1,8 @@
+Building for debugging...
+error: SwiftCompile normal arm64 ~/.t3/worktrees/lineage/t3-88c77cac/LineageKit/Sources/LineageKit/Session.swift failed with a nonzero exit code. Command line:     cd ~/.t3/worktrees/lineage/t3-88c77cac
+~/.t3/worktrees/lineage/t3-88c77cac/LineageKit/Sources/LineageKit/Session.swift:173:39: [1;31merror: [1;39mcannot call value of non-function type 'module<Observation>'[0;0m
+    [0;36m|[0;0m                                       `- [1;31merror: [1;39mcannot call value of non-function type 'module<Observation>'[0;0m
+error: Build failed
+    |                                       `- error: cannot call value of non-function type 'module<Observation>'
+** BUILD FAILED **
+~/.t3/worktrees/lineage/t3-88c77cac/LineageKit/Sources/LineageKit/Session.swift:173:39: error: cannot call value of non-function type 'module<Observation>'

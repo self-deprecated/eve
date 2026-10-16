@@ -1,0 +1,3 @@
+    |         |- error: missing return in static method expected to return 'Shot'
+** BUILD FAILED **
+xcodebuild failed; full log: ~/.t3/worktrees/bodydiff/t3-f88410d8/build/logs/simulator.log

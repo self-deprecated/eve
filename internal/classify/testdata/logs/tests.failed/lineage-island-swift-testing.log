@@ -1,0 +1,10 @@
+◇ Test soakStaysFiniteAndInBounds() started.
+◇ Test islandersSpreadOverTheWholeGrassInSmallGroupsAndKeepSceneryClear() started.
+✔ Test islandersSpreadOverTheWholeGrassInSmallGroupsAndKeepSceneryClear() passed after 0.314 seconds.
+✘ Test soakStaysFiniteAndInBounds() recorded an issue at IslandPresentationTests.swift:231:9: Expectation failed: Double(inClearings) / Double(samples) < 0.03
+✘ Test soakStaysFiniteAndInBounds() failed after 1.585 seconds with 1 issue.
+◇ Test aHundredWalkersForAMinuteOfStepsStayWithinALooseBudget() started.
+✔ Test aHundredWalkersForAMinuteOfStepsStayWithinALooseBudget() passed after 0.631 seconds.
+✘ Suite IslandMotionLoadTests failed after 2.217 seconds with 1 issue.
+↳ /// The two long motion runs are serialized so the timing bound is not measured against the soak.
+✘ Test run with 58 tests in 11 suites failed after 2.217 seconds with 1 issue.

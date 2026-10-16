@@ -1,0 +1,200 @@
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.xros" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        configModelVersion = "2.0";
+    };
+    preflight =     (
+        2559B88H6C
+    );
+}', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
+2026-10-13 18:36:09 +0000  App Store Connect team IDs for account API Key <identifier: J9584QW2TF; issuer: 25a2d76f-91fe-49e0-9551-09af06f209dc> are (
+    2559B88H6C
+)
+2026-10-13 18:36:09 +0000 [MT] Skipping push notification registration because context lacks a device token or push notifications are disabled.
+2026-10-13 18:36:12 +0000 [MT] Starting evaluation for distribution items:
+(
+    "<IDEDistributionItem: 0x8e3a91140; bundleID='ai.selfdeprecated.screengate', path='<DVTFilePath:0x8e38830c0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a911a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.ai.selfdeprecated.screengate\";\n    \"com.apple.developer.family-controls\" = 1;\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"com.apple.security.application-groups\" =     (\n        \"group.ai.selfdeprecated.screengate\"\n    );\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x8e3a90d80:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'>"
+)
+2026-10-13 18:36:12 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0x8e5f3e580; distributionItem='<IDEDistributionItem: 0x8e3a91140; bundleID='ai.selfdeprecated.screengate', path='<DVTFilePath:0x8e38830c0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a911a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x8e3a90d80:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0x8e3a75800; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0x8e5f74150>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0x8e3b387b0>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0x8e3b389f0>",
+    "<IDEClassKitEntitlementsProcessor: 0x8e3b38780>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0x8e3b38c30>"
+)'> with overrides <IDEProvisionableOverrides 0x8e3bdef40: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x8e5f74600>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x8e5140460:'com.apple.platform.iphoneos':<DVTFilePath:0x8e50d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a91140; bundleID='ai.selfdeprecated.screengate', path='<DVTFilePath:0x8e38830c0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a911a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x8e3a90d80:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0x8e3b387b0>: {
+}
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a91140; bundleID='ai.selfdeprecated.screengate', path='<DVTFilePath:0x8e38830c0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a911a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x8e3a90d80:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0x8e3b389f0>: {
+}
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a91140; bundleID='ai.selfdeprecated.screengate', path='<DVTFilePath:0x8e38830c0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a911a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x8e3a90d80:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0x8e3b38780>: {
+}
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a91140; bundleID='ai.selfdeprecated.screengate', path='<DVTFilePath:0x8e38830c0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a911a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028540; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate', executablePath='<DVTFilePath:0x8e3a90d80:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/ScreenGate'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0x8e3b38c30>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.screengate";
+}
+2026-10-13 18:36:12 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0x8e5f3d680; distributionItem='<IDEDistributionItem: 0x8e3a910e0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x8e5e776b0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a91080; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028b60; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x8e5e778e0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0x8e3a75800; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0x8e5f74150>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0x8e3b388d0>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0x8e3b388a0>",
+    "<IDEClassKitEntitlementsProcessor: 0x8e3b38840>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0x8e3b38ab0>"
+)'> with overrides <IDEProvisionableOverrides 0x8e3b79bc0: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x8e5f75450>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x8e5140460:'com.apple.platform.iphoneos':<DVTFilePath:0x8e50d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a910e0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x8e5e776b0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a91080; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028b60; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x8e5e778e0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0x8e3b388d0>: {
+}
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a910e0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x8e5e776b0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a91080; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028b60; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x8e5e778e0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0x8e3b388a0>: {
+}
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a910e0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x8e5e776b0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a91080; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028b60; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x8e5e778e0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0x8e3b38840>: {
+}
+2026-10-13 18:36:12 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0x8e3a910e0; bundleID='ai.selfdeprecated.screengate.monitor', path='<DVTFilePath:0x8e5e776b0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x8e3a91080; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x8e3028b60; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.screengate.monitor";
+    "com.apple.developer.family-controls" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "com.apple.security.application-groups" =     (
+        "group.ai.selfdeprecated.screengate"
+    );
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.screengate.monitor', executablePath='<DVTFilePath:0x8e5e778e0:'~/Developer/screen-gate/build/testflight/202610131835/ScreenGate.xcarchive/Products/Applications/ScreenGate.app/PlugIns/ScreenGateMonitor.appex/ScreenGateMonitor'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0x8e3b38ab0>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.screengate.monitor";
+}
+2026-10-13 18:36:21 +0000 [MT] Evaluation for ScreenGate.app is <IDEProvisionableStatusEvaluation 0x8e628c460: inputs: <IDEProvisionableStatusEvalutorInputs 0x8e3ad2b70: provisionableSnapshot: <IDEProvisionableSnapshot 0x8e3b396b0: name: ScreenGate.app, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0x8e5100b40: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0x8e3a75800; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0x8e5f75400>, platform: <DVTPlatform:0x8e5140460:'com.apple.platform.iphoneos':<DVTFilePath:0x8e50d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.screengate, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0x8e3a77c40; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.screengate\";\n    \"com.apple.developer.family-controls\" = 1;\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"com.apple.security.application-groups\" =     (\n        \"group.ai.selfdeprecated.screengate\"\n    );\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0x8e5f75410>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0x8e311ad20: Features: {\n    \"<DVTPortalProfileFeature: 0x8e61c58f0; id='FAMILY_CONTROLS', userDescription='Family Controls (Development)', platforms='.iphoneos, .xros'>\" = 1;\n    \"<DVTPortalProfileFeature: 0x8e6164700; id='APP_GROUPS', userDescription='App Groups', platforms='.appletvos, .macosx, .iphoneos, .xros, .watchos'>\" = 1;\n}, Containers: {\n    \"Xcode.Portal.Container.Type.AppGroup\" = \"{(\\n    \\\"group.ai.selfdeprecated.screengate\\\"\\n)}\";\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0x8e3bdef40: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x8e5f74600>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x8e5140460:'com.apple.platform.iphoneos':<DVTFilePath:0x8e50d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: (null), errors: (
+    "Error Domain=DeveloperAPIServiceErrorDomain Code=5 \"Cloud signing permission error\" UserInfo={NSLocalizedRecoverySuggestion=You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/., NSLocalizedDescription=Cloud signing permission error}",
+    "Error Domain=IDEProfileLocatorErrorDomain Code=1 \"No profiles for 'ai.selfdeprecated.screengate' were found\" UserInfo={NSLocalizedDescription=No profiles for 'ai.selfdeprecated.screengate' were found, NSLocalizedRecoverySuggestion=Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.screengate'.}"
+)>
+2026-10-13 18:36:21 +0000 [MT] Evaluation for ScreenGateMonitor.appex is <IDEProvisionableStatusEvaluation 0x8e5394700: inputs: <IDEProvisionableStatusEvalutorInputs 0x8e3bcb160: provisionableSnapshot: <IDEProvisionableSnapshot 0x8e3b399e0: name: ScreenGateMonitor.appex, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0x8e5100e60: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0x8e3a75800; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0x8e5f754e0>, platform: <DVTPlatform:0x8e5140460:'com.apple.platform.iphoneos':<DVTFilePath:0x8e50d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.screengate.monitor, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0x8e311ae80; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.screengate.monitor\";\n    \"com.apple.developer.family-controls\" = 1;\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"com.apple.security.application-groups\" =     (\n        \"group.ai.selfdeprecated.screengate\"\n    );\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0x8e5f754f0>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0x8e3a77be0: Features: {\n    \"<DVTPortalProfileFeature: 0x8e61c58f0; id='FAMILY_CONTROLS', userDescription='Family Controls (Development)', platforms='.iphoneos, .xros'>\" = 1;\n    \"<DVTPortalProfileFeature: 0x8e624c9a0; id='APP_GROUPS', userDescription='App Groups', platforms='.xros, .iphoneos, .watchos, .macosx, .appletvos'>\" = 1;\n}, Containers: {\n    \"Xcode.Portal.Container.Type.AppGroup\" = \"{(\\n    \\\"group.ai.selfdeprecated.screengate\\\"\\n)}\";\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0x8e3b79bc0: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0x8e5f75450>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0x8e5140460:'com.apple.platform.iphoneos':<DVTFilePath:0x8e50d13b0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: (null), errors: (
+    "Error Domain=DeveloperAPIServiceErrorDomain Code=5 \"Cloud signing permission error\" UserInfo={NSLocalizedDescription=Cloud signing permission error, NSLocalizedRecoverySuggestion=You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/.}",
+    "Error Domain=IDEProfileLocatorErrorDomain Code=1 \"No profiles for 'ai.selfdeprecated.screengate.monitor' were found\" UserInfo={NSLocalizedDescription=No profiles for 'ai.selfdeprecated.screengate.monitor' were found, NSLocalizedRecoverySuggestion=Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.screengate.monitor'.}"
+)>
+2026-10-13 18:36:21 +0000 [MT] Step failed: <IDEDistributionSigningAssetsStep: 0x8e3a75ca0>: Error Domain=IDEDistributionSigningAssetStepErrorDomain Code=0 "Locating signing assets failed." UserInfo={NSLocalizedDescription=Locating signing assets failed., IDEDistributionUnderlyingErrors=(
+    "Error Domain=DeveloperAPIServiceErrorDomain Code=5 \"Cloud signing permission error\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=Cloud signing permission error, NSLocalizedRecoverySuggestion=You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/.}",
+    "Error Domain=IDEProfileLocatorErrorDomain Code=1 \"No profiles for 'ai.selfdeprecated.screengate.monitor' were found\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=No profiles for 'ai.selfdeprecated.screengate.monitor' were found, NSLocalizedRecoverySuggestion=Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.screengate.monitor'.}",
+    "Error Domain=DeveloperAPIServiceErrorDomain Code=5 \"Cloud signing permission error\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedRecoverySuggestion=You haven't been given access to cloud-managed distribution certificates. Please contact your team's Account Holder or an Admin to give you access. If you need further assistance, contact Apple Developer Program Support at https://developer.apple.com/contact/., NSLocalizedDescription=Cloud signing permission error}",
+    "Error Domain=IDEProfileLocatorErrorDomain Code=1 \"No profiles for 'ai.selfdeprecated.screengate' were found\" UserInfo={IDEDistributionIssueSeverity=3, NSLocalizedDescription=No profiles for 'ai.selfdeprecated.screengate' were found, NSLocalizedRecoverySuggestion=Xcode couldn't find any iOS App Store provisioning profiles matching 'ai.selfdeprecated.screengate'.}"
+)}

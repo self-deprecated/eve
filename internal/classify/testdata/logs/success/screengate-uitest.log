@@ -1,0 +1,200 @@
+    t =    24.95s     Find the "gateStatus" Any
+    t =    24.99s Tear Down
+Test Case '-[ScreenGateUITests.GateFlowTests testLunaAgentGrantsViaToolCall]' passed (25.233 seconds).
+Test Case '-[ScreenGateUITests.GateFlowTests testMockGatekeeperUnlocksAndRelocks]' started.
+    t =     0.00s Start Test at 2026-10-14 13:56:20.030
+    t =     0.02s Set Up
+    t =     0.02s     Open ai.selfdeprecated.screengate
+    t =     0.02s         Launch ai.selfdeprecated.screengate
+    t =     0.02s             Terminate ai.selfdeprecated.screengate:66300
+2026-10-14 13:56:21.148 xcodebuild[65719:32726574] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-14 13:56:21.148 xcodebuild[65719:32726574] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.33s             Setting up automation session
+    t =     2.24s             Wait for ai.selfdeprecated.screengate to idle
+    t =     3.72s Tap "Gatekeeper" Button
+    t =     3.72s     Wait for ai.selfdeprecated.screengate to idle
+    t =     3.73s     Find the "Gatekeeper" Button
+    t =     3.87s     Check for interrupting elements affecting "Gatekeeper" Button
+    t =     3.91s     Synthesize event
+    t =     4.20s     Wait for ai.selfdeprecated.screengate to idle
+    t =     5.57s Waiting 5.0s for "providerPicker" Button to exist
+    t =     6.62s     Checking `Expect predicate `existsNoRetry == 1` for object "providerPicker" Button`
+    t =     6.62s         Checking existence of `"providerPicker" Button`
+    t =     6.66s Find the "providerPicker" Button
+    t =     6.70s Tap "providerPicker" Button
+    t =     6.70s     Wait for ai.selfdeprecated.screengate to idle
+    t =     6.70s     Find the "providerPicker" Button
+    t =     6.75s     Check for interrupting elements affecting "providerPicker" Button
+    t =     6.78s     Synthesize event
+    t =     7.07s     Wait for ai.selfdeprecated.screengate to idle
+    t =     8.28s Waiting 5.0s for Any (First Match) to exist
+    t =     9.29s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     9.29s         Checking existence of `Any (First Match)`
+    t =     9.32s Tap Any (First Match)
+    t =     9.32s     Wait for ai.selfdeprecated.screengate to idle
+    t =     9.32s     Find the Any (First Match)
+    t =     9.35s     Check for interrupting elements affecting "Offline mock (test mode)" Button
+    t =     9.39s     Synthesize event
+    t =     9.69s     Wait for ai.selfdeprecated.screengate to idle
+    t =    11.19s Checking existence of `"composer" TextField`
+    t =    11.25s Tap "composer" TextField
+    t =    11.25s     Wait for ai.selfdeprecated.screengate to idle
+    t =    11.27s     Find the "composer" TextField
+    t =    11.32s     Check for interrupting elements affecting "composer" TextField
+    t =    11.37s     Synthesize event
+    t =    11.71s     Wait for ai.selfdeprecated.screengate to idle
+    t =    11.80s Type 'let me on twitter' into "composer" TextField
+    t =    11.81s     Wait for ai.selfdeprecated.screengate to idle
+    t =    12.17s     Find the "composer" TextField
+    t =    12.27s     Check for interrupting elements affecting "composer" TextField
+    t =    12.31s     Synthesize event
+    t =    12.79s     Wait for ai.selfdeprecated.screengate to idle
+    t =    12.87s Tap "send" Button
+    t =    12.87s     Wait for ai.selfdeprecated.screengate to idle
+    t =    12.87s     Find the "send" Button
+    t =    12.92s     Check for interrupting elements affecting "send" Button
+    t =    12.98s     Synthesize event
+    t =    13.28s     Wait for ai.selfdeprecated.screengate to idle
+    t =    13.54s Waiting 20.0s for StaticText (First Match) to exist
+    t =    14.56s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    14.56s         Checking existence of `StaticText (First Match)`
+    t =    14.62s Tap "Gate" Button
+    t =    14.63s     Wait for ai.selfdeprecated.screengate to idle
+    t =    14.63s     Find the "Gate" Button
+    t =    14.67s     Check for interrupting elements affecting "lock.shield" Button
+    t =    14.70s     Synthesize event
+    t =    15.00s     Wait for ai.selfdeprecated.screengate to idle
+    t =    17.51s Checking `Expect predicate `label BEGINSWITH "Locked"` for object "gateStatus" Any`
+    t =    17.51s     Find the "gateStatus" Any
+    t =    17.67s Tap "Gatekeeper" Button
+    t =    17.67s     Wait for ai.selfdeprecated.screengate to idle
+    t =    17.67s     Find the "Gatekeeper" Button
+    t =    17.72s     Check for interrupting elements affecting "bubble.left.and.bubble.right" Button
+    t =    17.76s     Synthesize event
+    t =    18.05s     Wait for ai.selfdeprecated.screengate to idle
+    t =    19.47s Checking existence of `"composer" TextField`
+    t =    19.51s Tap "composer" TextField
+    t =    19.51s     Wait for ai.selfdeprecated.screengate to idle
+    t =    19.51s     Find the "composer" TextField
+    t =    19.54s     Check for interrupting elements affecting "composer" TextField
+    t =    19.57s     Synthesize event
+    t =    19.86s     Wait for ai.selfdeprecated.screengate to idle
+    t =    20.16s Type 'reply to Sam's DM,...' into "composer" TextField
+    t =    20.16s     Wait for ai.selfdeprecated.screengate to idle
+    t =    20.17s     Find the "composer" TextField
+    t =    20.22s     Check for interrupting elements affecting "composer" TextField
+    t =    20.26s     Synthesize event
+    t =    20.85s     Wait for ai.selfdeprecated.screengate to idle
+    t =    20.85s Tap "send" Button
+    t =    20.85s     Wait for ai.selfdeprecated.screengate to idle
+    t =    20.85s     Find the "send" Button
+    t =    20.91s     Check for interrupting elements affecting "send" Button
+    t =    20.95s     Synthesize event
+    t =    21.24s     Wait for ai.selfdeprecated.screengate to idle
+    t =    21.49s Waiting 20.0s for StaticText (First Match) to exist
+    t =    22.53s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    22.53s         Checking existence of `StaticText (First Match)`
+    t =    22.58s Find the Target Application 'ai.selfdeprecated.screengate'
+    t =    22.73s Added attachment named 'mock-chat-approved'
+    t =    22.73s Tap "Gate" Button
+    t =    22.73s     Wait for ai.selfdeprecated.screengate to idle
+    t =    22.74s     Find the "Gate" Button
+    t =    22.77s     Check for interrupting elements affecting "lock.shield" Button
+    t =    22.80s     Synthesize event
+    t =    23.10s     Wait for ai.selfdeprecated.screengate to idle
+    t =    25.56s Checking `Expect predicate `label BEGINSWITH "Unlocked"` for object "gateStatus" Any`
+    t =    25.56s     Find the "gateStatus" Any
+    t =    25.63s Find the Target Application 'ai.selfdeprecated.screengate'
+    t =    25.79s Added attachment named 'mock-gate-unlocked'
+    t =    25.79s Tap "lockNow" Button
+    t =    25.79s     Wait for ai.selfdeprecated.screengate to idle
+    t =    25.80s     Find the "lockNow" Button
+    t =    25.85s     Check for interrupting elements affecting "lockNow" Button
+    t =    25.89s     Synthesize event
+    t =    26.18s     Wait for ai.selfdeprecated.screengate to idle
+    t =    26.42s Tap "Gate" Button
+    t =    26.42s     Wait for ai.selfdeprecated.screengate to idle
+    t =    26.43s     Find the "Gate" Button
+    t =    26.47s     Check for interrupting elements affecting "lock.shield" Button
+    t =    26.51s     Synthesize event
+    t =    26.80s     Wait for ai.selfdeprecated.screengate to idle
+    t =    28.60s Checking `Expect predicate `label BEGINSWITH "Locked"` for object "gateStatus" Any`
+    t =    28.60s     Find the "gateStatus" Any
+    t =    28.66s Tear Down
+Test Case '-[ScreenGateUITests.GateFlowTests testMockGatekeeperUnlocksAndRelocks]' passed (28.929 seconds).
+Test Case '-[ScreenGateUITests.GateFlowTests testNicknameThenDeleteAccount]' started.
+    t =     0.00s Start Test at 2026-10-14 13:56:48.961
+    t =     0.04s Set Up
+    t =     0.04s     Open ai.selfdeprecated.screengate
+    t =     0.04s         Launch ai.selfdeprecated.screengate
+    t =     0.04s             Terminate ai.selfdeprecated.screengate:66612
+2026-10-14 13:56:50.035 xcodebuild[65719:32726574] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-14 13:56:50.035 xcodebuild[65719:32726574] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.48s             Setting up automation session
+    t =     2.65s             Wait for ai.selfdeprecated.screengate to idle
+    t =     4.24s Tap "Settings" Button
+    t =     4.24s     Wait for ai.selfdeprecated.screengate to idle
+    t =     4.24s     Find the "Settings" Button
+    t =     4.51s     Check for interrupting elements affecting "Settings" Button
+    t =     4.55s     Synthesize event
+    t =     4.83s     Wait for ai.selfdeprecated.screengate to idle
+    t =     6.49s Checking existence of `"nickname" TextField`
+    t =     6.56s Waiting 5.0s for "nickname" TextField to exist
+    t =     7.58s     Checking `Expect predicate `existsNoRetry == 1` for object "nickname" TextField`
+    t =     7.58s         Checking existence of `"nickname" TextField`
+    t =     7.62s Tap "nickname" TextField[0.98, 0.50]
+    t =     7.62s     Wait for ai.selfdeprecated.screengate to idle
+    t =     7.63s     Find the "nickname" TextField
+    t =     7.66s     Check for interrupting elements affecting "nickname" TextField
+    t =     7.69s     Synthesize event
+    t =     7.70s         Find the "nickname" TextField
+    t =     7.73s         Find the "nickname" TextField
+    t =     7.77s         Find the "nickname" TextField
+    t =     8.10s     Wait for ai.selfdeprecated.screengate to idle
+    t =     8.20s Find the "nickname" TextField
+    t =     8.29s Find the "nickname" TextField
+    t =     8.35s Type 'Nate
+' into "nickname" TextField
+    t =     8.35s     Wait for ai.selfdeprecated.screengate to idle
+    t =     8.54s     Find the "nickname" TextField
+    t =     8.61s     Check for interrupting elements affecting "nickname" TextField
+    t =     8.67s     Synthesize event
+    t =     8.95s     Wait for ai.selfdeprecated.screengate to idle
+    t =     9.27s Waiting 10.0s for "saveNickname" Button to not exist
+    t =    10.31s     Checking `Expect predicate `existsNoRetry == 0` for object "saveNickname" Button`
+    t =    10.32s         Checking existence of `"saveNickname" Button`
+    t =    10.36s Tap "deleteAccount" Button
+    t =    10.36s     Wait for ai.selfdeprecated.screengate to idle
+    t =    10.37s     Find the "deleteAccount" Button
+    t =    10.40s     Check for interrupting elements affecting "deleteAccount" Button
+    t =    10.44s     Synthesize event
+    t =    10.73s     Wait for ai.selfdeprecated.screengate to idle
+    t =    10.77s Tap "confirmDelete" Button
+    t =    10.78s     Wait for ai.selfdeprecated.screengate to idle
+    t =    11.26s     Find the "confirmDelete" Button
+    t =    11.33s     Check for interrupting elements affecting "confirmDelete" Button
+    t =    11.38s     Synthesize event
+    t =    11.67s     Wait for ai.selfdeprecated.screengate to idle
+    t =    12.08s Waiting 10.0s for "signedOut" Any to exist
+    t =    13.11s     Checking `Expect predicate `existsNoRetry == 1` for object "signedOut" Any`
+    t =    13.11s         Checking existence of `"signedOut" Any`
+    t =    13.13s Find the Target Application 'ai.selfdeprecated.screengate'
+    t =    13.29s Added attachment named 'account-deleted'
+    t =    13.29s Tear Down
+Test Case '-[ScreenGateUITests.GateFlowTests testNicknameThenDeleteAccount]' passed (13.539 seconds).
+Test Suite 'GateFlowTests' passed at 2026-10-14 13:57:02.499.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 67.702 (67.704) seconds
+Test Suite 'ScreenGateUITests.xctest' passed at 2026-10-14 13:57:02.500.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 112.291 (112.297) seconds
+Test Suite 'All tests' passed at 2026-10-14 13:57:02.500.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 112.291 (112.298) seconds
+2026-10-14 13:57:02.897 xcodebuild[65719:32726574] [MT] IDETestOperationsObserverDebug: 114.565 elapsed -- Testing started completed.
+2026-10-14 13:57:02.897 xcodebuild[65719:32726574] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-14 13:57:02.897 xcodebuild[65719:32726574] [MT] IDETestOperationsObserverDebug: 114.565 sec, +114.565 sec -- end
+
+Test session results, code coverage, and logs:
+	~/Developer/sg-38305cec/ios/build/Logs/Test/Test-ScreenGate-2026.10.14_13-55-02-+0200.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

@@ -1,0 +1,200 @@
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacApplication: 0x8a2004a20> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodAppStoreValidationVisionOS: 0x8a2004950> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAppStoreValidation: 0x8a2004a30> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAppStoreValidation: 0x8a2004a50> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodiOSAppStoreValidation: 0x8a2004a80> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodExportArchive: 0x8a20049b0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAppStoreDistribution: 0x8a20048e0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodiOSAppStoreDistribution: 0x8a20048f0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAppStoreDistribution: 0x8a2004980> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodAppStoreDistributionVisionOS: 0x8a20049c0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodAdHocVisionOS: 0x8a2004900> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodWatchOSAdHoc: 0x8a20049e0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAdHoc: 0x8a20049f0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAdHoc: 0x8a2004a60> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodiOSAdHoc: 0x8a2004a70> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSEnterprise: 0x8a2004940> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodEnterpriseVisionOS: 0x8a2004960> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodWatchOSEnterprise: 0x8a2004970> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodiOSEnterprise: 0x8a2004a10> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodDevelopmentSigned: 0x8a2004910> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodDevelopmentSignedVisionOS: 0x8a2004930> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodWatchOSDevelopmentSigned: 0x8a2004990> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSDevelopmentSigned: 0x8a20049d0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodDeveloperIDNotarizedApp: 0x8a2004920> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodDeveloperID: 0x8a2004a00> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodSaveBuiltProducts: 0x8a20049a0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodDevelopmentSignedMac: 0x8a2004a40> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacApplication: 0x8a2004a20> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodAppStoreValidationVisionOS: 0x8a2004950> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAppStoreValidation: 0x8a2004a30> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAppStoreValidation: 0x8a2004a50> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Accepted distribution method <IDEDistributionMethodiOSAppStoreValidation: 0x8a2004a80>
+2026-10-15 11:06:40 +0000 [MT] Rejected distribution method <IDEDistributionMethodExportArchive: 0x8a20049b0> because it doesn't support distributing archive
+2026-10-15 11:06:40 +0000 [MT] Available distribution methods: {(
+    <IDEDistributionMethodiOSAppStoreDistribution: 0x8a20048f0>,
+    <IDEDistributionMethodiOSAdHoc: 0x8a2004a70>,
+    <IDEDistributionMethodiOSEnterprise: 0x8a2004a10>,
+    <IDEDistributionMethodDevelopmentSigned: 0x8a2004910>,
+    <IDEDistributionMethodiOSAppStoreValidation: 0x8a2004a80>
+)}
+2026-10-15 11:06:40 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x8a1afaed0:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework'>
+2026-10-15 11:06:40 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x8a1afb410:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework'>
+2026-10-15 11:06:40 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x8a0d9a220:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app'>
+2026-10-15 11:06:40 +0000 [MT] Set distributionItems on context: (
+    "<IDEDistributionItem: 0x8a0d9b6c0; bundleID='dev.barbican.app', path='<DVTFilePath:0x8a0d9a220:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x89feb2a00; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x89ffe2d80; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.dev.barbican.app\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='dev.barbican.app', executablePath='<DVTFilePath:0x89feb1aa0:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/App'>', hardenedRuntime='0'>'>"
+)
+2026-10-15 11:06:40 +0000 [MT] Archs to thin for item ~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app are []
+2026-10-15 11:06:40 +0000 [MT] Archs to thin for item ~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework are []
+2026-10-15 11:06:40 +0000 [MT] Archs to thin for item ~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework are []
+2026-10-15 11:06:40 +0000 [MT] [OPTIONAL] Found platform <DVTPlatform:0x8a14c0460:'com.apple.platform.iphoneos':<DVTFilePath:0x8a1030fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x89ffe3100; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x8a0d9a220:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app'>
+2026-10-15 11:06:40 +0000 [MT] [OPTIONAL] Profile <DVTEmbeddedProvisioningProfile 0x89f8615c0: name: iOS Team Provisioning Profile: *, UUID: 445ab8cb-8f58-4785-b054-9c4a7db56d76, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.*";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: XC Wildcard, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-14 11:43:01 +0000, dateExpired: 2027-10-14 11:43:01 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+)}, certificateSHA1Hashes: {(
+    [udid]
+)}, supportedUDIDs: {(
+    "[udid]",
+    [udid],
+    "[udid]"
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x8a14c08c0:'com.apple.platform.xros':<DVTFilePath:0x8a0c0dc20:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x8a14c0640:'com.apple.platform.watchos':<DVTFilePath:0x8a10313b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x8a14c0460:'com.apple.platform.iphoneos':<DVTFilePath:0x8a1030fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x8a1afb6b0:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/embedded.mobileprovision'>> for <DVTFilePath:0x8a0d9a220:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app'> was an automatic profile
+2026-10-15 11:06:40 +0000 [MT] [OPTIONAL] Found platform <DVTPlatform:0x8a14c0460:'com.apple.platform.iphoneos':<DVTFilePath:0x8a1030fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x89ffe3640; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x8a1afaed0:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework'>
+2026-10-15 11:06:40 +0000 [MT] [OPTIONAL] Found platform <DVTPlatform:0x8a14c0460:'com.apple.platform.iphoneos':<DVTFilePath:0x8a1030fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x89ffe3640; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x8a1afb410:'~/Development/projects/barbican/ios/build/testflight/App.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework'>
+2026-10-15 11:06:40 +0000 [MT] Distributable's provisioning style is Automatic
+2026-10-15 11:06:43 +0000  App Store Connect request for store configuration response: <DVTITunesConnectConfigurationResponse: 0x89f896640; isSuccessful='1', configuration='{
+    2559B88H6C =     {
+        "com.apple.platform.appletvos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        "com.apple.platform.iphoneos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.macosx" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = pngInBinary;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.watchos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.xros" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        configModelVersion = "2.0";
+    };
+    preflight =     (
+        2559B88H6C
+    );
+}', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
+2026-10-15 11:06:43 +0000  App Store Connect team IDs for account (null) are (
+    2559B88H6C
+)
+2026-10-15 11:06:44 +0000 [MT] Step failed: <IDEDistributionFetchAppRecordStep: 0x89f844140>: IDEDistribution.DistributionAppRecordProviderError.missingApp(bundleId: "dev.barbican.app")

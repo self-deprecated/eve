@@ -1,0 +1,4 @@
+Running altool at path '/Applications/Xcode.app/Contents/SharedFrameworks/ContentDeliveryServices.framework/Frameworks/AppStoreService.framework/Support/altool'...
+2026-10-14 13:13:00.783 *** Error: Error uploading 'BodyDiff.ipa'.
+2026-10-14 13:13:00.783 *** Error: The bundle version must be higher than the previously uploaded version: ‘202610141107’. (ID: 0f4b3c1e-2d5a-4e7b-8c9d-1a2b3c4d5e6f) (90062)
+ERROR ITMS-90189: "Redundant Binary Upload. You've already uploaded a build with build number '202610141107' for version number '1.0'. Make sure you increment the build string before you upload your app to App Store Connect."

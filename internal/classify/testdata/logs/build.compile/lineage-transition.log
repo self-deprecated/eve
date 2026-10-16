@@ -1,0 +1,4 @@
+✔ Test run with 33 tests in 5 suites passed after 1.269 seconds.
+    |                         `- error: 'Transition' is ambiguous for type lookup in this context
+** BUILD FAILED **
+~/.t3/worktrees/lineage/t3-88c77cac/Lineage/ObservationLoop.swift:110:25: error: 'Transition' is ambiguous for type lookup in this context

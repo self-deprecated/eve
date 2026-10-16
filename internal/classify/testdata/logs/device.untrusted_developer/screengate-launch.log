@@ -1,0 +1,3 @@
+               The operation couldn’t be completed. Unable to launch com.example.screengate.app because it has an invalid code signature, inadequate entitlements or its profile has not been explicitly trusted by the user. (FBSOpenApplicationErrorDomain error 3 (0x03))
+               BSErrorCodeDescription = Security
+               NSLocalizedFailureReason = Unable to launch com.example.screengate.app because it has an invalid code signature, inadequate entitlements or its profile has not been explicitly trusted by the user.

@@ -1,0 +1,3 @@
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Provisioning profile "iOS Team Provisioning Profile: com.example.screengate.app" doesn't match the entitlements file's value for the com.apple.security.application-groups entitlement. (in target 'ScreenGate' from project 'ScreenGate')
+~/Developer/screen-gate/ios/ScreenGate.xcodeproj: error: Provisioning profile "iOS Team Provisioning Profile: com.example.screengate.app.monitor" doesn't match the entitlements file's value for the com.apple.security.application-groups entitlement. (in target 'ScreenGateMonitor' from project 'ScreenGate')
+** BUILD FAILED **

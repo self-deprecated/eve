@@ -1,0 +1,7 @@
+? launchServicesIdentifier: unknown
+? databaseUUID: C37FCA6B-6A99-47EC-9051-5C8C30B1C515
+? databaseSequenceNumber: 3120
+? options: 
+               The operation couldn?t be completed. Unable to launch ai.selfdeprecated.lineage because the device was not, or could not be, unlocked. (FBSOpenApplicationErrorDomain error 7 (0x07))
+               BSErrorCodeDescription = Locked
+               NSLocalizedFailureReason = Unable to launch ai.selfdeprecated.lineage because the device was not, or could not be, unlocked.

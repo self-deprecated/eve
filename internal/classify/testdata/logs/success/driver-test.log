@@ -1,0 +1,200 @@
+
+SwiftCompile normal arm64 ~/Developer/driver/ios/Tests/BrainTests.swift (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-SwiftPerFileCompile BrainTests.swift
+
+SwiftCompile normal arm64 Compiling\ SettingsTests.swift ~/Developer/driver/ios/Tests/SettingsTests.swift (in target 'DriverTests' from project 'Driver')
+
+SwiftCompile normal arm64 ~/Developer/driver/ios/Tests/SettingsTests.swift (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-SwiftPerFileCompile SettingsTests.swift
+
+SwiftCompile normal arm64 Compiling\ SessionMachineTests.swift ~/Developer/driver/ios/Tests/SessionMachineTests.swift (in target 'DriverTests' from project 'Driver')
+
+SwiftCompile normal arm64 ~/Developer/driver/ios/Tests/SessionMachineTests.swift (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-SwiftPerFileCompile SessionMachineTests.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for DriverTests (in target 'DriverTests' from project 'Driver')
+
+SwiftDriver\ Compilation\ Requirements DriverTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name DriverTests -Onone @~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios26.0-simulator -g -module-cache-path ~/Developer/driver/ios/build/sim/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/Developer/driver/ios/build/sim/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/Developer/driver/ios/build/sim/SDKStatCaches.noindex/iphonesimulator27.0-24A430-e829b21a6f8c9b70876ba0858053c0448dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/Developer/driver/ios/build/sim/ModuleCache.noindex -sdk-module-cache-path ~/Developer/driver/ios/build/sim/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/Developer/driver/ios/build/sim/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests_const_extract_protocols.json -Xcc -iquote -Xcc ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-generated-files.hmap -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-own-target-headers.hmap -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-all-target-headers.hmap -Xcc -iquote -Xcc ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-project-headers.hmap -Xcc -I~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/include -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources-normal/arm64 -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources/arm64 -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-Swift.h -working-directory ~/Developer/driver/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftMergeGeneratedHeaders ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources/DriverTests-Swift.h ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-Swift.h (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-swiftHeaderTool -arch arm64 ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-Swift.h -o ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources/DriverTests-Swift.h
+
+Copy ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/arm64-apple-ios-simulator.abi.json ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.abi.json (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.abi.json ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/arm64-apple-ios-simulator.swiftmodule ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftmodule (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftmodule ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/arm64-apple-ios-simulator.swiftdoc ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftdoc (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftdoc ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftsourceinfo (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftsourceinfo ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/DriverTests.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling BrainTests.swift (in target 'DriverTests' from project 'Driver')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SessionMachineTests.swift (in target 'DriverTests' from project 'Driver')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SettingsTests.swift (in target 'DriverTests' from project 'Driver')
+
+SwiftDriver\ Compilation DriverTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name DriverTests -Onone @~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.SwiftFileList -DDEBUG -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios26.0-simulator -g -module-cache-path ~/Developer/driver/ios/build/sim/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/Developer/driver/ios/build/sim/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/Developer/driver/ios/build/sim/SDKStatCaches.noindex/iphonesimulator27.0-24A430-e829b21a6f8c9b70876ba0858053c0448dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/Developer/driver/ios/build/sim/ModuleCache.noindex -sdk-module-cache-path ~/Developer/driver/ios/build/sim/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/Developer/driver/ios/build/sim/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests_const_extract_protocols.json -Xcc -iquote -Xcc ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-generated-files.hmap -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-own-target-headers.hmap -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-all-target-headers.hmap -Xcc -iquote -Xcc ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests-project-headers.hmap -Xcc -I~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/include -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources-normal/arm64 -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources/arm64 -Xcc -I~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests-Swift.h -working-directory ~/Developer/driver/ios -experimental-emit-module-separately -disable-cmo
+
+Ld ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/DriverTests normal (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios26.0-simulator -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator -L/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks -filelist ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.LinkFileList -Xlinker -rpath -Xlinker @loader_path/Frameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -bundle_loader ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/Driver -Xlinker -object_path_lto -Xlinker ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.swiftmodule -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/Driver.debug.dylib -Xlinker -no_adhoc_codesign -o ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/DriverTests
+
+CopySwiftLibs ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/DriverTests --scan-folder ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/Frameworks --scan-folder ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/PlugIns --scan-folder ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/SystemExtensions --scan-folder ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/Extensions --platform iphonesimulator --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --module-name DriverTests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 26.0 --bundle-identifier ai.selfdeprecated.driver.tests --output ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest --target-triple arm64-apple-ios26.0-simulator --binary-file ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/DriverTests --dependency-file ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests_dependency_info.dat --stringsdata-file ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.SwiftFileList --metadata-file-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests.DependencyMetadataFileList --static-metadata-file-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests.DependencyStaticMetadataFileList --swift-const-vals-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/Objects-normal/arm64/DriverTests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-16 13:30:05.453 appintentsmetadataprocessor[18422:47220240] Starting appintentsmetadataprocessor export
+2026-10-16 13:30:05.499 appintentsmetadataprocessor[18422:47220240] Extracted no relevant App Intents symbols, skipping writing output
+
+AppIntentsSSUTraining (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/Info.plist --temp-dir-path ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/ssu --bundle-id ai.selfdeprecated.driver.tests --product-path ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest --extracted-metadata-path ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/Metadata.appintents --metadata-file-list ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/Driver.build/Debug-iphonesimulator/DriverTests.build/DriverTests.DependencyMetadataFileList --source-file ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest/Info.plist --archive-ssu-assets
+2026-10-16 13:30:05.514 appintentsnltrainingprocessor[18424:47220244] Parsing options for appintentsnltrainingprocessor
+2026-10-16 13:30:05.514 appintentsnltrainingprocessor[18424:47220244] Starting AppIntents SSU YAML Generation
+2026-10-16 13:30:05.514 appintentsnltrainingprocessor[18424:47220244] No AppShortcuts found - Skipping.
+
+CodeSign ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest
+
+RegisterExecutionPolicyException ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-RegisterExecutionPolicyException ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest
+
+Touch ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest (in target 'DriverTests' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /usr/bin/touch -c ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverTests.xctest
+
+CodeSign ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/Driver.debug.dylib (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/Driver.debug.dylib
+
+CodeSign ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/__preview.dylib (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/__preview.dylib
+
+CodeSign ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app
+
+Validate ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-validationUtility ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app -shallow-bundle -infoplist-subpath Info.plist
+
+ValidateEmbeddedBinary ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverWidgets.appex (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/PlugIns/DriverWidgets.appex -signing-cert - -info-plist-path ~/Developer/driver/ios/build/sim/Build/Products/Debug-iphonesimulator/Driver.app/Info.plist
+
+PruneExplicitPrecompiledModules ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/Developer/driver/ios/build/sim/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/Developer/driver/ios/build/sim/SDKExplicitPrecompiledModules
+
+Test Suite 'All tests' started at 2026-10-16 13:30:47.067.
+Test Suite 'All tests' passed at 2026-10-16 13:30:47.068.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64-apple-ios17.0-simulator
+◇ Suite BrainTests started.
+◇ Test startSessionPostsTheOfferAsJSONWithTheAccessCode() started.
+✔ Test startSessionPostsTheOfferAsJSONWithTheAccessCode() passed after 0.026 seconds.
+◇ Test aNewConversationSendsNoConversationId() started.
+✔ Test aNewConversationSendsNoConversationId() passed after 0.002 seconds.
+◇ Test stopIsAJSONPost() started.
+✔ Test stopIsAJSONPost() passed after 0.001 seconds.
+◇ Test stateIsAGetAndDecodesWhatTheAppShows() started.
+✔ Test stateIsAGetAndDecodesWhatTheAppShows() passed after 0.002 seconds.
+◇ Test unauthorizedAsksForTheAccessCode() started.
+✔ Test unauthorizedAsksForTheAccessCode() passed after 0.005 seconds.
+◇ Test serverErrorsCarryTheBrainsMessage() started.
+✔ Test serverErrorsCarryTheBrainsMessage() passed after 0.038 seconds.
+◇ Test aBrainBehindAPathKeepsIt() started.
+✔ Test aBrainBehindAPathKeepsIt() passed after 0.001 seconds.
+✔ Suite BrainTests passed after 0.077 seconds.
+◇ Suite SessionMachineTests started.
+◇ Test startConnectsWithANewConversation() started.
+✔ Test startConnectsWithANewConversation() passed after 0.001 seconds.
+◇ Test connectedMakesItLive() started.
+✔ Test connectedMakesItLive() passed after 0.001 seconds.
+◇ Test startWhileActiveDoesNothing() started.
+✔ Test startWhileActiveDoesNothing() passed after 0.001 seconds.
+◇ Test stopFinishesAndLateEventsAreIgnored() started.
+✔ Test stopFinishesAndLateEventsAreIgnored() passed after 0.001 seconds.
+◇ Test dropReconnectsOnceWithTheSameConversation() started.
+✔ Test dropReconnectsOnceWithTheSameConversation() passed after 0.001 seconds.
+◇ Test failedReconnectEndsAsLost() started.
+✔ Test failedReconnectEndsAsLost() passed after 0.001 seconds.
+◇ Test dropBeforeTheBrainAnsweredIsAFailure() started.
+✔ Test dropBeforeTheBrainAnsweredIsAFailure() passed after 0.001 seconds.
+◇ Test startFailureFinishesSoTheBrainIsTold() started.
+✔ Test startFailureFinishesSoTheBrainIsTold() passed after 0.001 seconds.
+◇ Test brainHangupDoesNotReconnectOrResume() started.
+✔ Test brainHangupDoesNotReconnectOrResume() passed after 0.001 seconds.
+◇ Test audioEndingsFinish(reason:) started.
+◇ Test case passing 1 argument reason → .interrupted to audioEndingsFinish(reason:) started.
+​◇ Test case passing 1 argument reason → .routeLost to audioEndingsFinish(reason:) started.
+​◇ Test case passing 1 argument reason → .backgrounded to audioEndingsFinish(reason:) started.
+​✔ Test audioEndingsFinish(reason:) with 3 test cases passed after 0.001 seconds.
+◇ Test endingClearsAResumableConversation() started.
+✔ Test endingClearsAResumableConversation() passed after 0.001 seconds.
+✔ Suite SessionMachineTests passed after 0.025 seconds.
+◇ Suite SettingsTests started.
+◇ Test addressesMustBeHTTPS() started.
+✔ Test addressesMustBeHTTPS() passed after 0.001 seconds.
+◇ Test storesTheAddressInDefaultsAndTheCodeAsASecret() started.
+✔ Test storesTheAddressInDefaultsAndTheCodeAsASecret() passed after 0.002 seconds.
+◇ Test keychainRoundTrip() started.
+✔ Test keychainRoundTrip() passed after 0.007 seconds.
+✔ Suite SettingsTests passed after 0.011 seconds.
+◇ Suite VoiceEventTests started.
+◇ Test parsesTheEventsTheBrainLetsThrough() started.
+✔ Test parsesTheEventsTheBrainLetsThrough() passed after 0.001 seconds.
+◇ Test captionsJoinDeltasPerSpeakerAndKeepTheLatest() started.
+✔ Test captionsJoinDeltasPerSpeakerAndKeepTheLatest() passed after 0.001 seconds.
+◇ Test onlyALostDeviceOrABeganInterruptionEnds() started.
+✔ Test onlyALostDeviceOrABeganInterruptionEnds() passed after 0.001 seconds.
+✔ Suite VoiceEventTests passed after 0.001 seconds.
+✔ Test run with 24 tests in 4 suites passed after 0.116 seconds.
+2026-10-16 13:30:47.692 xcodebuild[18359:47219809] [MT] IDETestOperationsObserverDebug: 41.513 elapsed -- Testing started completed.
+2026-10-16 13:30:47.692 xcodebuild[18359:47219809] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-16 13:30:47.692 xcodebuild[18359:47219809] [MT] IDETestOperationsObserverDebug: 41.513 sec, +41.513 sec -- end
+
+Test session results, code coverage, and logs:
+	~/Developer/driver/ios/build/sim/Logs/Test/Test-Driver-2026.10.16_13-30-01-+0200.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

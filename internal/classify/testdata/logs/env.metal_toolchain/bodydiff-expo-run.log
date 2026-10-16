@@ -1,0 +1,23 @@
+> bodydiff@0.1.0 ios
+> bash scripts/with-xcode.sh expo run:ios --device ***
+
+› Using --device 2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856
+› Planning build
+› Executing react-native Pods/hermes-engine » [CP-User] [Hermes] Replace Hermes for the right configuration, if needed
+› Executing react-native Pods/ReactNativeDependencies » [CP-User] [RNDeps] Replace React Native Dependencies for the right configuration, if needed
+› Copying   react-native-fast-tflite TensorFlowLiteC/TensorFlowLiteC.bundle/PrivacyInfo.xcprivacy ➜ ios/Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework/PrivacyInfo.xcprivacy
+› Preparing Pods/VisionCameraResizer-VisionCameraResizerShaders » ResourceBundle-VisionCameraResizerShaders-VisionCameraResizer-Info.plist
+
+❌  error: error: cannot execute tool 'metal' due to missing Metal Toolchain; use: xcodebuild -downloadComponent MetalToolchain
+
+
+› Preparing react-native-fast-tflite Pods/TensorFlowLiteC-TensorFlowLiteC » ResourceBundle-TensorFlowLiteC-TensorFlowLiteC-Info.plist
+› Copying   React-timing/React-timing_privacy.bundle/PrivacyInfo.xcprivacy ➜ node_modules/react-native/ReactCommon/react/timing/PrivacyInfo.xcprivacy
+⚠️  Script has ambiguous dependencies causing it to run on every build.
+   To fix, go to: Xcode » BodyDiff/BodyDiff » Build Phases » '[Expo Dev Launcher] Strip Local Network Keys for Release'
+   Either: Uncheck "Based on dependency analysis", or select output files to trigger the script
+
+
+› 1 error(s), and 1 warning(s)
+
+CommandError: Failed to build iOS project. "xcodebuild" exited with error code 65.

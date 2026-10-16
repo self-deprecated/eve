@@ -1,0 +1,20 @@
+import AVFoundation
+import BodyDiffCore
+import SwiftData
+import SwiftUI
+==> Building Debug for [udid]
+** BUILD SUCCEEDED **
+==> Installing and launching
+? databaseSequenceNumber: 3056
+? options: 
+ERROR: The application failed to launch. (com.apple.dt.CoreDeviceError error 10002 (0x2712))
+       BundleIdentifier = ai.selfdeprecated.bodydiff
+       ----------------------------------------
+           The request to open "ai.selfdeprecated.bodydiff" failed. (FBSOpenApplicationServiceErrorDomain error 1 (0x01))
+           FBSOpenApplicationRequestID = 0x60fb
+           NSLocalizedFailureReason = The request was denied by service delegate (SBMainWorkspace) for reason: Locked ("Unable to launch ai.selfdeprecated.bodydiff because the device was not, or could not be, unlocked").
+           BSErrorCodeDescription = RequestDenied
+       ----------------------------------------
+               The operation couldn?t be completed. Unable to launch ai.selfdeprecated.bodydiff because the device was not, or could not be, unlocked. (FBSOpenApplicationErrorDomain error 7 (0x07))
+               NSLocalizedFailureReason = Unable to launch ai.selfdeprecated.bodydiff because the device was not, or could not be, unlocked.
+               BSErrorCodeDescription = Locked

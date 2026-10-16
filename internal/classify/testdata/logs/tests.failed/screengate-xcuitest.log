@@ -1,0 +1,19 @@
+Test Suite 'All tests' started at 2026-10-14 13:55:06.573.
+Test Suite 'ScreenGateUITests.xctest' started at 2026-10-14 13:55:06.574.
+Test Suite 'GateFlowTests' started at 2026-10-14 13:55:06.574.
+Test Case '-[ScreenGateUITests.GateFlowTests testUnlockShowsGate]' started.
+    t =     0.00s Start Test at 2026-10-14 13:55:06.575
+    t =     0.05s Set Up
+    t =    10.21s Waiting 10.0s for "gate-unlock" Button to exist
+~/Developer/screen-gate/ios/UITests/GateFlowTests.swift:42: error: -[ScreenGateUITests.GateFlowTests testUnlockShowsGate] : XCTAssertTrue failed - Gate button did not appear
+Test Case '-[ScreenGateUITests.GateFlowTests testUnlockShowsGate]' failed (12.345 seconds).
+Test Case '-[ScreenGateUITests.GateFlowTests testLockedAppOpensGate]' started.
+Test Case '-[ScreenGateUITests.GateFlowTests testLockedAppOpensGate]' passed (8.120 seconds).
+Test Suite 'GateFlowTests' failed at 2026-10-14 13:55:27.040.
+	 Executed 2 tests, with 1 failure (0 unexpected) in 20.465 (20.466) seconds
+Test Suite 'All tests' failed at 2026-10-14 13:55:27.041.
+
+Failing tests:
+	ScreenGateUITests.GateFlowTests.testUnlockShowsGate()
+
+** TEST FAILED **

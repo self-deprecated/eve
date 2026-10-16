@@ -1,0 +1,200 @@
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile CaptureController.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/CaptureScreen.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile CaptureScreen.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/CompareView.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile CompareView.swift
+
+SwiftCompile normal arm64 Compiling\ AlignedImage.swift,\ BodyDiffApp.swift,\ Camera.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/AlignedImage.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/App/BodyDiffApp.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/Camera.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/AlignedImage.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile AlignedImage.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/App/BodyDiffApp.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile BodyDiffApp.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/Camera.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile Camera.swift
+
+SwiftCompile normal arm64 Compiling\ DemoData.swift,\ HistoryView.swift,\ HomeView.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Storage/DemoData.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/HistoryView.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/HomeView.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Storage/DemoData.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile DemoData.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/HistoryView.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile HistoryView.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/HomeView.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile HomeView.swift
+
+SwiftCompile normal arm64 Compiling\ Reminders.swift,\ RootView.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/App/Reminders.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/RootView.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/App/Reminders.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile Reminders.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/RootView.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile RootView.swift
+
+SwiftCompile normal arm64 Compiling\ SessionLog.swift,\ SessionRecorder.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Storage/SessionLog.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/SessionRecorder.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Storage/SessionLog.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile SessionLog.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/SessionRecorder.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile SessionRecorder.swift
+
+SwiftCompile normal arm64 Compiling\ TimelapseView.swift,\ Vault.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/TimelapseView.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Storage/Vault.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/TimelapseView.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile TimelapseView.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Storage/Vault.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile Vault.swift
+
+SwiftCompile normal arm64 Compiling\ SettingsView.swift,\ Speaker.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/SettingsView.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/Speaker.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Gallery/SettingsView.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile SettingsView.swift
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Capture/Speaker.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile Speaker.swift
+
+SwiftDriverJobDiscovery normal arm64 Compiling Reminders.swift, RootView.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SessionLog.swift, SessionRecorder.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Compiling Models.swift, Motion.swift, Privacy.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Compiling TimelapseView.swift, Vault.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for BodyDiff (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriver\ Compilation\ Requirements BodyDiff normal arm64 com.apple.xcode.tools.swift.compiler (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name BodyDiff -Onone @~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -target arm64-apple-ios18.0 -g -module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -F ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/SDKStatCaches.noindex/iphoneos27.0-24A430-e829b21a6f8c9b70876ba0858053c0446c78b3cbc238196c85e1bf6c792c5915.sdkstatcache -output-file-map ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/ModuleCache.noindex -sdk-module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff_const_extract_protocols.json -Xcc -iquote -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-generated-files.hmap -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-own-target-headers.hmap -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff-ffcac6d4701c1ee3cca78d3475ccd768-VFS-iphoneos/all-product-headers.yaml -Xcc -iquote -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-project-headers.hmap -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/include -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources-normal/arm64 -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources/arm64 -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-Swift.h -working-directory ~/.t3/worktrees/bodydiff/t3-f88410d8 -experimental-emit-module-separately -disable-cmo
+
+SwiftMergeGeneratedHeaders ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources/BodyDiff-Swift.h ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-Swift.h (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-swiftHeaderTool -arch arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-Swift.h -o ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources/BodyDiff-Swift.h
+
+Copy ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/arm64-apple-ios.swiftmodule ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftmodule (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftmodule ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/arm64-apple-ios.swiftmodule
+
+Copy ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/arm64-apple-ios.swiftdoc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftdoc (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftdoc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/arm64-apple-ios.swiftdoc
+
+Copy ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/arm64-apple-ios.abi.json ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.abi.json (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.abi.json ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/arm64-apple-ios.abi.json
+
+Copy ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftsourceinfo (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftsourceinfo ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling DemoData.swift, HistoryView.swift, HomeView.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Compiling AlignedImage.swift, BodyDiffApp.swift, Camera.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SettingsView.swift, Speaker.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 Compiling\ GeneratedAssetSymbols.swift ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftCompile normal arm64 ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftDriverJobDiscovery normal arm64 Compiling CaptureController.swift, CaptureScreen.swift, CompareView.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriverJobDiscovery normal arm64 Compiling GeneratedAssetSymbols.swift (in target 'BodyDiff' from project 'BodyDiff')
+
+SwiftDriver\ Compilation BodyDiff normal arm64 com.apple.xcode.tools.swift.compiler (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name BodyDiff -Onone @~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -target arm64-apple-ios18.0 -g -module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -F ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/SDKStatCaches.noindex/iphoneos27.0-24A430-e829b21a6f8c9b70876ba0858053c0446c78b3cbc238196c85e1bf6c792c5915.sdkstatcache -output-file-map ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/ModuleCache.noindex -sdk-module-cache-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff_const_extract_protocols.json -Xcc -iquote -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-generated-files.hmap -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-own-target-headers.hmap -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff-ffcac6d4701c1ee3cca78d3475ccd768-VFS-iphoneos/all-product-headers.yaml -Xcc -iquote -Xcc ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-project-headers.hmap -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/include -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources-normal/arm64 -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources/arm64 -Xcc -I~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff-Swift.h -working-directory ~/.t3/worktrees/bodydiff/t3-f88410d8 -experimental-emit-module-separately -disable-cmo
+
+Ld ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib normal (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -L~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -F~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -F~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -filelist ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.LinkFileList -install_name @rpath/BodyDiff.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib
+
+ConstructStubExecutorLinkFileList ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-ExecutorLinkFileList-normal-arm64.txt (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    construct-stub-executor-link-file-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'BodyDiff' from project 'BodyDiff')
+
+Ld ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff normal (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -F~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff-ExecutorLinkFileList-normal-arm64.txt ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib -Xlinker -no_adhoc_codesign -o ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff
+
+ExtractAppIntentsMetadata (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --module-name BodyDiff --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 18.0 --bundle-identifier ai.selfdeprecated.bodydiff --output ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app --target-triple arm64-apple-ios18.0 --binary-file ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff --dependency-file ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff_dependency_info.dat --stringsdata-file ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.SwiftFileList --metadata-file-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff.DependencyMetadataFileList --static-metadata-file-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff.DependencyStaticMetadataFileList --swift-const-vals-list ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/Objects-normal/arm64/BodyDiff.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-14 18:11:21.011 appintentsmetadataprocessor[83799:38847837] Starting appintentsmetadataprocessor export
+2026-10-14 18:11:21.012 appintentsmetadataprocessor[83799:38847837] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CopySwiftLibs ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-swiftStdLibTool --copy --verbose --sign [udid] --scan-executable ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib --scan-folder ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/Frameworks --scan-folder ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/PlugIns --scan-folder ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/SystemExtensions --scan-folder ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/Extensions --platform iphoneos --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ProcessInfoPlistFile ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/Info.plist ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Info.plist (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-infoPlistUtility ~/.t3/worktrees/bodydiff/t3-f88410d8/BodyDiff/Info.plist -producttype com.apple.product-type.application -genpkginfo ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/PkgInfo -expandbuildsettings -format binary -platform iphoneos -additionalcontentfile ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/assetcatalog_generated_info.plist -requiredArchitecture arm64 -o ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/Info.plist
+
+CodeSign ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.bodydiff"
+                          (3b1b971d-1bc1-406b-9883-08e7e4e066df)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/BodyDiff.debug.dylib
+
+CodeSign ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/__preview.dylib (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.bodydiff"
+                          (3b1b971d-1bc1-406b-9883-08e7e4e066df)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/__preview.dylib
+~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app/__preview.dylib: replacing existing signature
+
+CodeSign ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.bodydiff"
+                          (3b1b971d-1bc1-406b-9883-08e7e4e066df)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/BodyDiff.build/Debug-iphoneos/BodyDiff.build/BodyDiff.app.xcent --timestamp\=none --generate-entitlement-der ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app
+
+Validate ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app (in target 'BodyDiff' from project 'BodyDiff')
+    cd ~/.t3/worktrees/bodydiff/t3-f88410d8
+    builtin-validationUtility ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Products/Debug-iphoneos/BodyDiff.app -shallow-bundle -infoplist-subpath Info.plist
+
+PruneExplicitPrecompiledModules ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/.t3/worktrees/bodydiff/t3-f88410d8/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

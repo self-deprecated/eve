@@ -1,0 +1,4 @@
+error: There is no XCFramework found at '~/.t3/worktrees/barbican/t3-4d17aab6/ios/DerivedData-sim/SourcePackages/artifacts/capacitor-swift-pm/Cordova/Cordova.xcframework'. (in target 'App' from project 'App')
+error: There is no XCFramework found at '~/.t3/worktrees/barbican/t3-4d17aab6/ios/DerivedData-sim/SourcePackages/artifacts/capacitor-swift-pm/Capacitor/Capacitor.xcframework'. (in target 'App' from project 'App')
+error: There is no XCFramework found at '~/.t3/worktrees/barbican/t3-4d17aab6/ios/DerivedData-sim/SourcePackages/artifacts/capacitor-swift-pm/Cordova/Cordova.xcframework'. (in target 'App' from project 'App')
+** BUILD FAILED **

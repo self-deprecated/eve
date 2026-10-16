@@ -1,0 +1,200 @@
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/Info.plist --temp-dir-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/DriverWidgets.build/ssu --bundle-id ai.selfdeprecated.driver.widgets --product-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex --extracted-metadata-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/Metadata.appintents --metadata-file-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/DriverWidgets.build/DriverWidgets.DependencyMetadataFileList --source-file ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/Info.plist --archive-ssu-assets
+2026-10-16 13:48:41.448 appintentsnltrainingprocessor[31198:47304872] Parsing options for appintentsnltrainingprocessor
+2026-10-16 13:48:41.450 appintentsnltrainingprocessor[31198:47304872] Starting AppIntents SSU YAML Generation
+2026-10-16 13:48:41.451 appintentsnltrainingprocessor[31198:47304872] No AppShortcuts found - Skipping.
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/DriverWidgets.debug.dylib (in target 'DriverWidgets' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/DriverWidgets.debug.dylib
+
+SwiftDriverJobDiscovery normal arm64 Compiling SettingsView.swift (in target 'Driver' from project 'Driver')
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for Driver (in target 'Driver' from project 'Driver')
+
+SwiftDriver\ Compilation\ Requirements Driver normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Driver -Onone @~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -target arm64-apple-ios26.0 -g -module-cache-path ~/Developer/driver/ios/build/device/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/Developer/driver/ios/build/device/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -F ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/Developer/driver/ios/build/device/SDKStatCaches.noindex/iphoneos27.0-24A430-e829b21a6f8c9b70876ba0858053c0446c78b3cbc238196c85e1bf6c792c5915.sdkstatcache -output-file-map ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/Developer/driver/ios/build/device/ModuleCache.noindex -sdk-module-cache-path ~/Developer/driver/ios/build/device/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/Developer/driver/ios/build/device/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver_const_extract_protocols.json -Xcc -iquote -Xcc ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-generated-files.hmap -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-own-target-headers.hmap -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-all-target-headers.hmap -Xcc -iquote -Xcc ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-project-headers.hmap -Xcc -I~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/include -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources-normal/arm64 -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources/arm64 -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-Swift.h -working-directory ~/Developer/driver/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftMergeGeneratedHeaders ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources/Driver-Swift.h ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-Swift.h (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-swiftHeaderTool -arch arm64 ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-Swift.h -o ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources/Driver-Swift.h
+
+Copy ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/arm64-apple-ios.swiftdoc ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftdoc (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftdoc ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/arm64-apple-ios.swiftdoc
+
+Copy ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/arm64-apple-ios.swiftmodule ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftmodule (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftmodule ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/arm64-apple-ios.swiftmodule
+
+Copy ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/arm64-apple-ios.abi.json ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.abi.json (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.abi.json ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/arm64-apple-ios.abi.json
+
+Copy ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftsourceinfo (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftsourceinfo ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/__preview.dylib (in target 'DriverWidgets' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex/__preview.dylib
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex (in target 'DriverWidgets' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/DriverWidgets.build/DriverWidgets.appex.xcent --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex
+
+RegisterExecutionPolicyException ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex (in target 'DriverWidgets' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-RegisterExecutionPolicyException ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex
+
+Touch ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex (in target 'DriverWidgets' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /usr/bin/touch -c ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex
+
+Copy ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks/WebRTC.framework ~/Developer/driver/ios/build/device/SourcePackages/artifacts/webrtc/WebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -bitcode-strip all -bitcode-strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip -resolve-src-symlinks -remove-static-executable ~/Developer/driver/ios/build/device/SourcePackages/artifacts/webrtc/WebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip ~/Developer/driver/ios/build/device/SourcePackages/artifacts/webrtc/WebRTC/WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC -r -o ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks/WebRTC.framework/WebRTC
+
+Ld ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/__preview.dylib normal (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios26.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -F~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -install_name @rpath/Driver.debug.dylib -Xlinker -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver_dependency_info.dat -Xlinker -no_adhoc_codesign -o ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/__preview.dylib
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks/WebRTC.framework (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --preserve-metadata\=identifier,entitlements,flags --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks/WebRTC.framework
+
+SwiftDriverJobDiscovery normal arm64 Compiling SessionMachine.swift, Settings.swift (in target 'Driver' from project 'Driver')
+
+SwiftDriverJobDiscovery normal arm64 Compiling Call.swift, Captions.swift (in target 'Driver' from project 'Driver')
+
+SwiftDriverJobDiscovery normal arm64 Compiling Audio.swift, Brain.swift (in target 'Driver' from project 'Driver')
+
+SwiftDriverJobDiscovery normal arm64 Compiling ContentView.swift, Driver.swift (in target 'Driver' from project 'Driver')
+
+SwiftDriver\ Compilation Driver normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Driver -Onone @~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -target arm64-apple-ios26.0 -g -module-cache-path ~/Developer/driver/ios/build/device/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/Developer/driver/ios/build/device/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -F ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/Developer/driver/ios/build/device/SDKStatCaches.noindex/iphoneos27.0-24A430-e829b21a6f8c9b70876ba0858053c0446c78b3cbc238196c85e1bf6c792c5915.sdkstatcache -output-file-map ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/Developer/driver/ios/build/device/ModuleCache.noindex -sdk-module-cache-path ~/Developer/driver/ios/build/device/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/Developer/driver/ios/build/device/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver_const_extract_protocols.json -Xcc -iquote -Xcc ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-generated-files.hmap -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-own-target-headers.hmap -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-all-target-headers.hmap -Xcc -iquote -Xcc ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-project-headers.hmap -Xcc -I~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/include -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources-normal/arm64 -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources/arm64 -Xcc -I~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver-Swift.h -working-directory ~/Developer/driver/ios -experimental-emit-module-separately -disable-cmo
+
+Ld ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib normal (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios26.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/Developer/driver/ios/build/device/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -L~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -F~/Developer/driver/ios/build/device/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -F~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -filelist ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.LinkFileList -install_name @rpath/Driver.debug.dylib -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -framework WebRTC -Xlinker -no_adhoc_codesign -o ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib
+
+ConstructStubExecutorLinkFileList ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-ExecutorLinkFileList-normal-arm64.txt (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    construct-stub-executor-link-file-list ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'Driver' from project 'Driver')
+
+Ld ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver normal (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios26.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -F~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver-ExecutorLinkFileList-normal-arm64.txt ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib -Xlinker -no_adhoc_codesign -o ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver
+
+Copy ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PlugIns/DriverWidgets.appex ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks -remove-static-executable ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/DriverWidgets.appex ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PlugIns
+
+ProcessInfoPlistFile ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Info.plist ~/Developer/driver/ios/Driver/Info.plist (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-infoPlistUtility ~/Developer/driver/ios/Driver/Info.plist -producttype com.apple.product-type.application -genpkginfo ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PkgInfo -expandbuildsettings -format binary -platform iphoneos -additionalcontentfile ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/assetcatalog_generated_info.plist -scanforprivacyfile ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks/WebRTC.framework -scanforprivacyfile ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PlugIns/DriverWidgets.appex -requiredArchitecture arm64 -o ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Info.plist
+
+CopySwiftLibs ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-swiftStdLibTool --copy --verbose --sign [udid] --scan-executable ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib --scan-folder ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks --scan-folder ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PlugIns --scan-folder ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/SystemExtensions --scan-folder ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Extensions --platform iphoneos --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --module-name Driver --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 26.0 --bundle-identifier ai.selfdeprecated.driver --output ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app --target-triple arm64-apple-ios26.0 --binary-file ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver --dependency-file ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver_dependency_info.dat --stringsdata-file ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.SwiftFileList --metadata-file-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver.DependencyMetadataFileList --static-metadata-file-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver.DependencyStaticMetadataFileList --swift-const-vals-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Objects-normal/arm64/Driver.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-16 13:48:42.963 appintentsmetadataprocessor[31225:47305002] Starting appintentsmetadataprocessor export
+2026-10-16 13:48:43.019 appintentsmetadataprocessor[31225:47305002] Writing Metadata.appintents
+2026-10-16 13:48:43.019 appintentsmetadataprocessor[31225:47305002] Metadata root: ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Metadata.appintents
+
+AppIntentsSSUTraining (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Info.plist --temp-dir-path ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/ssu --bundle-id ai.selfdeprecated.driver --product-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app --extracted-metadata-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Metadata.appintents --metadata-file-list ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver.DependencyMetadataFileList --source-file ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Info.plist --archive-ssu-assets
+2026-10-16 13:48:43.038 appintentsnltrainingprocessor[31226:47305005] Parsing options for appintentsnltrainingprocessor
+2026-10-16 13:48:43.038 appintentsnltrainingprocessor[31226:47305005] Starting AppIntents SSU YAML Generation
+2026-10-16 13:48:43.045 appintentsnltrainingprocessor[31226:47305005] Training 'Start ${+applicationName}|Talk to ${+applicationName}' for en
+2026-10-16 13:48:43.045 appintentsnltrainingprocessor[31226:47305005] Training 'Stop ${+applicationName}' for en
+2026-10-16 13:48:43.045 appintentsnltrainingprocessor[31226:47305005] Training Negative Phrases '' for en
+2026-10-16 13:48:43.045 appintentsnltrainingprocessor[31226:47305005] Application name 'Driver' for en
+2026-10-16 13:48:43.051 appintentsnltrainingprocessor[31226:47305005] Generated AppIntents SSU YAML files in file://~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/ssu/
+2026-10-16 13:48:43.051 appintentsnltrainingprocessor[31226:47305005] Copied AppIntents SSU YAML files to file://~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Metadata.appintents/
+Archiving all locales.
+
+[------------------------------------------------------------] 0% archiving en
+[🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢] 100% archived en
+[🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢🁢] 100% archived 1 locales~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Metadata.appintents/nlu
+~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Metadata.appintents/nlu/e0ebecf2d86e722b27cb31bcdbb6f67c.version
+
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Driver.debug.dylib
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/__preview.dylib (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/__preview.dylib
+
+CodeSign ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: *"
+                          (445ab8cb-8f58-4785-b054-9c4a7db56d76)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/Driver.build/Debug-iphoneos/Driver.build/Driver.app.xcent --timestamp\=none --generate-entitlement-der ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app
+
+ValidateEmbeddedBinary ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PlugIns/DriverWidgets.appex (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/PlugIns/DriverWidgets.appex -signing-cert [udid] -info-plist-path ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app/Info.plist
+
+RegisterExecutionPolicyException ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-RegisterExecutionPolicyException ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app
+
+Validate ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    builtin-validationUtility ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app -shallow-bundle -infoplist-subpath Info.plist
+
+Touch ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app (in target 'Driver' from project 'Driver')
+    cd ~/Developer/driver/ios
+    /usr/bin/touch -c ~/Developer/driver/ios/build/device/Build/Products/Debug-iphoneos/Driver.app
+
+PruneExplicitPrecompiledModules ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/Developer/driver/ios/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/Developer/driver/ios/build/device/SDKExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

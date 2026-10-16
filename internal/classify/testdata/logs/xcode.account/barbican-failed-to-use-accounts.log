@@ -1,0 +1,143 @@
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodAppStoreDistributionVisionOS: 0x7fb032510> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAppStoreDistribution: 0x7fb032680> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Accepted distribution method <IDEDistributionMethodiOSAppStoreDistribution: 0x7fb032690>
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAppStoreDistribution: 0x7fb032760> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodWatchOSAdHoc: 0x7fb032560> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAdHoc: 0x7fb032550> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAdHoc: 0x7fb0325f0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Accepted distribution method <IDEDistributionMethodiOSAdHoc: 0x7fb032650>
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodAdHocVisionOS: 0x7fb0326a0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Accepted distribution method <IDEDistributionMethodiOSEnterprise: 0x7fb0325a0>
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSEnterprise: 0x7fb032700> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodEnterpriseVisionOS: 0x7fb032740> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodWatchOSEnterprise: 0x7fb032750> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSDevelopmentSigned: 0x7fb032530> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Accepted distribution method <IDEDistributionMethodDevelopmentSigned: 0x7fb0326b0>
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodDevelopmentSignedVisionOS: 0x7fb0326e0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodWatchOSDevelopmentSigned: 0x7fb032770> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodDeveloperID: 0x7fb0325b0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodDeveloperIDNotarizedApp: 0x7fb0326c0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodSaveBuiltProducts: 0x7fb032790> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodDevelopmentSignedMac: 0x7fb032630> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacApplication: 0x7fb0325c0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodTVOSAppStoreValidation: 0x7fb0325d0> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodMacAppStoreValidation: 0x7fb032600> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodiOSAppStoreValidation: 0x7fb032660> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodAppStoreValidationVisionOS: 0x7fb032720> because it doesn't support distributing archive
+2026-10-15 12:33:17 +0000 [MT] Rejected distribution method <IDEDistributionMethodExportArchive: 0x7fb032500> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodAppStoreDistributionVisionOS: 0x7fb032510> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacAppStoreDistribution: 0x7fb032680> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodiOSAppStoreDistribution: 0x7fb032690>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSAppStoreDistribution: 0x7fb032760> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodWatchOSAdHoc: 0x7fb032560> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacAdHoc: 0x7fb032550> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSAdHoc: 0x7fb0325f0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodiOSAdHoc: 0x7fb032650>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodAdHocVisionOS: 0x7fb0326a0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodiOSEnterprise: 0x7fb0325a0>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSEnterprise: 0x7fb032700> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodEnterpriseVisionOS: 0x7fb032740> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodWatchOSEnterprise: 0x7fb032750> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSDevelopmentSigned: 0x7fb032530> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodDevelopmentSigned: 0x7fb0326b0>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDevelopmentSignedVisionOS: 0x7fb0326e0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodWatchOSDevelopmentSigned: 0x7fb032770> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDeveloperID: 0x7fb0325b0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDeveloperIDNotarizedApp: 0x7fb0326c0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodSaveBuiltProducts: 0x7fb032790> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDevelopmentSignedMac: 0x7fb032630> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacApplication: 0x7fb0325c0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSAppStoreValidation: 0x7fb0325d0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacAppStoreValidation: 0x7fb032600> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodiOSAppStoreValidation: 0x7fb032660> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodAppStoreValidationVisionOS: 0x7fb032720> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodExportArchive: 0x7fb032500> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Available distribution methods: {(
+    <IDEDistributionMethodiOSAppStoreDistribution: 0x7fb032690>,
+    <IDEDistributionMethodiOSAdHoc: 0x7fb032650>,
+    <IDEDistributionMethodiOSEnterprise: 0x7fb0325a0>,
+    <IDEDistributionMethodDevelopmentSigned: 0x7fb0326b0>
+)}
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodAppStoreDistributionVisionOS: 0x7fb032510> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacAppStoreDistribution: 0x7fb032680> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodiOSAppStoreDistribution: 0x7fb032690>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSAppStoreDistribution: 0x7fb032760> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodWatchOSAdHoc: 0x7fb032560> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacAdHoc: 0x7fb032550> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSAdHoc: 0x7fb0325f0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodiOSAdHoc: 0x7fb032650>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodAdHocVisionOS: 0x7fb0326a0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodiOSEnterprise: 0x7fb0325a0>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSEnterprise: 0x7fb032700> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodEnterpriseVisionOS: 0x7fb032740> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodWatchOSEnterprise: 0x7fb032750> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSDevelopmentSigned: 0x7fb032530> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Accepted distribution method <IDEDistributionMethodDevelopmentSigned: 0x7fb0326b0>
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDevelopmentSignedVisionOS: 0x7fb0326e0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodWatchOSDevelopmentSigned: 0x7fb032770> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDeveloperID: 0x7fb0325b0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDeveloperIDNotarizedApp: 0x7fb0326c0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodSaveBuiltProducts: 0x7fb032790> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodDevelopmentSignedMac: 0x7fb032630> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacApplication: 0x7fb0325c0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodTVOSAppStoreValidation: 0x7fb0325d0> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodMacAppStoreValidation: 0x7fb032600> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodiOSAppStoreValidation: 0x7fb032660> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodAppStoreValidationVisionOS: 0x7fb032720> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Rejected distribution method <IDEDistributionMethodExportArchive: 0x7fb032500> because it doesn't support distributing archive
+2026-10-15 12:33:23 +0000  Available distribution methods: {(
+    <IDEDistributionMethodiOSAppStoreDistribution: 0x7fb032690>,
+    <IDEDistributionMethodiOSAdHoc: 0x7fb032650>,
+    <IDEDistributionMethodiOSEnterprise: 0x7fb0325a0>,
+    <IDEDistributionMethodDevelopmentSigned: 0x7fb0326b0>
+)}
+2026-10-15 12:33:23 +0000  IDEDistributionItem init <DVTFilePath:0x7faabd490:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework'>
+2026-10-15 12:33:23 +0000  IDEDistributionItem init <DVTFilePath:0x7faabcd20:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework'>
+2026-10-15 12:33:23 +0000  IDEDistributionItem init <DVTFilePath:0x7f6c06d60:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app'>
+2026-10-15 12:33:23 +0000  Set distributionItems on context: (
+    "<IDEDistributionItem: 0x7f7057600; bundleID='dev.barbican.app', path='<DVTFilePath:0x7f6c06d60:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7f7054c60; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7f94f1340; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.dev.barbican.app\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='dev.barbican.app', executablePath='<DVTFilePath:0x7f6c07c60:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/App'>', hardenedRuntime='0'>'>"
+)
+2026-10-15 12:33:23 +0000  Archs to thin for item ~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app are []
+2026-10-15 12:33:23 +0000  Archs to thin for item ~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework are []
+2026-10-15 12:33:23 +0000  Archs to thin for item ~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework are []
+2026-10-15 12:33:23 +0000  [OPTIONAL] Found platform <DVTPlatform:0x7f9105220:'com.apple.platform.iphoneos':<DVTFilePath:0x7f9334690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x7f94f1340; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x7f6c06d60:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app'>
+2026-10-15 12:33:23 +0000  [OPTIONAL] Profile <DVTEmbeddedProvisioningProfile 0x7f765c180: name: iOS Team Provisioning Profile: *, UUID: 445ab8cb-8f58-4785-b054-9c4a7db56d76, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.*";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: XC Wildcard, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-14 11:43:01 +0000, dateExpired: 2027-10-14 11:43:01 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+)}, certificateSHA1Hashes: {(
+    [udid]
+)}, supportedUDIDs: {(
+    "[udid]",
+    [udid],
+    "[udid]"
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0x7f91054a0:'com.apple.platform.xros':<DVTFilePath:0x7f8c296e0:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0x7f9105360:'com.apple.platform.watchos':<DVTFilePath:0x7f93347e0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0x7f9105220:'com.apple.platform.iphoneos':<DVTFilePath:0x7f9334690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0x7faabcbd0:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/embedded.mobileprovision'>> for <DVTFilePath:0x7f6c06d60:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app'> was an automatic profile
+2026-10-15 12:33:23 +0000  [OPTIONAL] Found platform <DVTPlatform:0x7f9105220:'com.apple.platform.iphoneos':<DVTFilePath:0x7f9334690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x7f94f16c0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x7faabcd20:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/Frameworks/Capacitor.framework'>
+2026-10-15 12:33:23 +0000  [OPTIONAL] Found platform <DVTPlatform:0x7f9105220:'com.apple.platform.iphoneos':<DVTFilePath:0x7f9334690:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>> and cert <DVTSigningCertificate: 0x7f94f16c0; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''> for <DVTFilePath:0x7faabd490:'~/Library/Developer/Xcode/Archives/2026-10-15/App 2.xcarchive/Products/Applications/App.app/Frameworks/Cordova.framework'>
+2026-10-15 12:33:23 +0000  Distributable's provisioning style is Automatic
+2026-10-15 12:33:23 +0000  Step failed: <IDEDistributionUploadAccountStep: 0x7fa2e33c0>: Error Domain=IDEDistributionErrorDomain Code=2 "Failed to Use Accounts" UserInfo={IDEDistributionErrorsAccountIssues=(
+), NSLocalizedDescription=Failed to Use Accounts, NSLocalizedRecoverySuggestion=App Store Connect access for “Self-Deprecated ApS” is required. Ensure that your Apple Account usernames and passwords are correct in Accounts settings.}

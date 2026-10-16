@@ -1,0 +1,200 @@
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.shieldaction"
+                          (1e799bb0-e5b0-4bde-9efa-18372aa7d488)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex/ScreenGateShieldAction.debug.dylib
+
+SwiftDriverJobDiscovery normal arm64 Compiling ScreenGateApp.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+ExtractAppIntentsMetadata (in target 'ScreenGateMonitor' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --module-name ScreenGateMonitor --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 17.0 --bundle-identifier ai.selfdeprecated.screengate.monitor --output ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex --target-triple arm64-apple-ios17.0 --binary-file ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex/ScreenGateMonitor --dependency-file ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/Objects-normal/arm64/ScreenGateMonitor_dependency_info.dat --stringsdata-file ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/Objects-normal/arm64/ScreenGateMonitor.SwiftFileList --metadata-file-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/ScreenGateMonitor.DependencyMetadataFileList --static-metadata-file-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/ScreenGateMonitor.DependencyStaticMetadataFileList --swift-const-vals-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/Objects-normal/arm64/ScreenGateMonitor.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-15 13:03:24.047 appintentsmetadataprocessor[57105:41153409] Starting appintentsmetadataprocessor export
+2026-10-15 13:03:24.049 appintentsmetadataprocessor[57105:41153409] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex/ScreenGateShield.debug.dylib (in target 'ScreenGateShield' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.shield"
+                          (5a780252-94f3-4b59-82e1-d7d9bb35c474)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex/ScreenGateShield.debug.dylib
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex/__preview.dylib (in target 'ScreenGateShieldAction' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.shieldaction"
+                          (1e799bb0-e5b0-4bde-9efa-18372aa7d488)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex/__preview.dylib
+~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex/__preview.dylib: replacing existing signature
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex/ScreenGateMonitor.debug.dylib (in target 'ScreenGateMonitor' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.monitor"
+                          (642bbce9-eb27-4a00-8dc1-5900425ed119)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex/ScreenGateMonitor.debug.dylib
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex/__preview.dylib (in target 'ScreenGateShield' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.shield"
+                          (5a780252-94f3-4b59-82e1-d7d9bb35c474)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex/__preview.dylib
+~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex/__preview.dylib: replacing existing signature
+
+SwiftDriverJobDiscovery normal arm64 Compiling AppDelegate.swift, AppModel.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex/__preview.dylib (in target 'ScreenGateMonitor' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.monitor"
+                          (642bbce9-eb27-4a00-8dc1-5900425ed119)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex/__preview.dylib
+~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex/__preview.dylib: replacing existing signature
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex (in target 'ScreenGateShieldAction' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.shieldaction"
+                          (1e799bb0-e5b0-4bde-9efa-18372aa7d488)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateShieldAction.build/ScreenGateShieldAction.appex.xcent --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex (in target 'ScreenGateShield' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.shield"
+                          (5a780252-94f3-4b59-82e1-d7d9bb35c474)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateShield.build/ScreenGateShield.appex.xcent --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex (in target 'ScreenGateMonitor' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate.monitor"
+                          (642bbce9-eb27-4a00-8dc1-5900425ed119)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGateMonitor.build/ScreenGateMonitor.appex.xcent --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex
+
+SwiftDriverJobDiscovery normal arm64 Compiling PolicyView.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+Copy ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Clerk_ClerkKitUI.bundle ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/Clerk_ClerkKitUI.bundle (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/Clerk_ClerkKitUI.bundle ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app
+
+SwiftDriverJobDiscovery normal arm64 Compiling VoiceSession.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+SwiftDriverJobDiscovery normal arm64 Compiling ChatView.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+SwiftDriverJobDiscovery normal arm64 Compiling ShieldMessageView.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+SwiftDriverJobDiscovery normal arm64 Compiling FriendsView.swift (in target 'ScreenGate' from project 'ScreenGate')
+
+SwiftDriver\ Compilation ScreenGate normal arm64 com.apple.xcode.tools.swift.compiler (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name ScreenGate -Onone @~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -target arm64-apple-ios17.0 -g -module-cache-path ~/Developer/screen-gate/ios/build/device/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path ~/Developer/screen-gate/ios/build/device/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos -F ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc ~/Developer/screen-gate/ios/build/device/SDKStatCaches.noindex/iphoneos27.0-24A430-e829b21a6f8c9b70876ba0858053c0446c78b3cbc238196c85e1bf6c792c5915.sdkstatcache -output-file-map ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path ~/Developer/screen-gate/ios/build/device/ModuleCache.noindex -sdk-module-cache-path ~/Developer/screen-gate/ios/build/device/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file ~/Developer/screen-gate/ios/build/device/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate_const_extract_protocols.json -Xcc -iquote -Xcc ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-generated-files.hmap -Xcc -I~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-own-target-headers.hmap -Xcc -I~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate-c2905fae86c264c4df6775bff3db9580-VFS-iphoneos/all-product-headers.yaml -Xcc -iquote -Xcc ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-project-headers.hmap -Xcc -I~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/include -Xcc -I~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/DerivedSources-normal/arm64 -Xcc -I~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/DerivedSources/arm64 -Xcc -I~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate-Swift.h -working-directory ~/Developer/screen-gate/ios -experimental-emit-module-separately -disable-cmo
+
+Ld ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib normal (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0 -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -L~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos -F~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphoneos -F~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos -filelist ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate.LinkFileList -install_name @rpath/ScreenGate.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -dependency_info -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib
+
+ConstructStubExecutorLinkFileList ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-ExecutorLinkFileList-normal-arm64.txt (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    construct-stub-executor-link-file-list ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'ScreenGate' from project 'ScreenGate')
+
+Ld ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate normal (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos -F~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -F~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/PackageFrameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate-ExecutorLinkFileList-normal-arm64.txt ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib -Xlinker -no_adhoc_codesign -o ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate
+
+Copy ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShieldAction.appex ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks -remove-static-executable ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShieldAction.appex ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns
+
+Copy ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShield.appex ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks -remove-static-executable ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateShield.appex ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns
+
+Copy ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateMonitor.appex ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks -remove-static-executable ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGateMonitor.appex ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns
+
+ProcessInfoPlistFile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Info.plist ~/Developer/screen-gate/ios/ScreenGate/Info.plist (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-infoPlistUtility ~/Developer/screen-gate/ios/ScreenGate/Info.plist -producttype com.apple.product-type.application -genpkginfo ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PkgInfo -expandbuildsettings -format binary -platform iphoneos -additionalcontentfile ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/assetcatalog_generated_info.plist -scanforprivacyfile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Clerk_ClerkKit.bundle -scanforprivacyfile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Clerk_ClerkKitUI.bundle -scanforprivacyfile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PhoneNumberKit_PhoneNumberKit.bundle -scanforprivacyfile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateMonitor.appex -scanforprivacyfile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShield.appex -scanforprivacyfile ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShieldAction.appex -requiredArchitecture arm64 -o ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Info.plist
+
+ExtractAppIntentsMetadata (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --module-name ScreenGate --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.0.sdk --xcode-version 27A266a --platform-family iOS --deployment-target 17.0 --bundle-identifier ai.selfdeprecated.screengate --output ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app --target-triple arm64-apple-ios17.0 --binary-file ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate --dependency-file ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate_dependency_info.dat --stringsdata-file ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate.SwiftFileList --metadata-file-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate.DependencyMetadataFileList --static-metadata-file-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate.DependencyStaticMetadataFileList --swift-const-vals-list ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/Objects-normal/arm64/ScreenGate.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-15 13:03:26.627 appintentsmetadataprocessor[57138:41153570] Starting appintentsmetadataprocessor export
+2026-10-15 13:03:26.632 appintentsmetadataprocessor[57138:41153570] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CopySwiftLibs ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-swiftStdLibTool --copy --verbose --sign [udid] --scan-executable ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib --scan-folder ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Frameworks --scan-folder ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns --scan-folder ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/SystemExtensions --scan-folder ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Extensions --platform iphoneos --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.c9sANm/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate"
+                          (77494de8-41af-4557-ae6f-fed036c27986)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/ScreenGate.debug.dylib
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/__preview.dylib (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate"
+                          (77494de8-41af-4557-ae6f-fed036c27986)
+    
+    /usr/bin/codesign --force --sign [udid] --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/__preview.dylib
+~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/__preview.dylib: replacing existing signature
+
+CodeSign ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    
+    Signing Identity:     "Apple Development: [secret] [secret] (87Q4J2X7BA)"
+    Provisioning Profile: "iOS Team Provisioning Profile: ai.selfdeprecated.screengate"
+                          (77494de8-41af-4557-ae6f-fed036c27986)
+    
+    /usr/bin/codesign --force --sign [udid] --entitlements ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ScreenGate.build/Debug-iphoneos/ScreenGate.build/ScreenGate.app.xcent --timestamp\=none --generate-entitlement-der ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app
+
+ValidateEmbeddedBinary ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShield.appex (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShield.appex -signing-cert [udid] -info-plist-path ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Info.plist
+
+ValidateEmbeddedBinary ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShieldAction.appex (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateShieldAction.appex -signing-cert [udid] -info-plist-path ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Info.plist
+
+ValidateEmbeddedBinary ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateMonitor.appex (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/PlugIns/ScreenGateMonitor.appex -signing-cert [udid] -info-plist-path ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app/Info.plist
+
+Validate ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app (in target 'ScreenGate' from project 'ScreenGate')
+    cd ~/Developer/screen-gate/ios
+    builtin-validationUtility ~/Developer/screen-gate/ios/build/device/Build/Products/Debug-iphoneos/ScreenGate.app -shallow-bundle -infoplist-subpath Info.plist
+
+PruneExplicitPrecompiledModules ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/Developer/screen-gate/ios/build/device/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules ~/Developer/screen-gate/ios/build/device/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

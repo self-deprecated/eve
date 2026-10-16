@@ -1,0 +1,200 @@
+            };
+            iconSource =             {
+                largeAppIcon = pngInBinary;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.watchos" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = unsupported;
+                primaryIcons = pngInBinary;
+            };
+        };
+        "com.apple.platform.xros" =         {
+            architectures =             {
+                defaultArch =                 {
+                    defaultProductType =                     {
+                        format =                         {
+                            bitCode =                             {
+                                supportLevel = unsupported;
+                            };
+                            compiledCode =                             {
+                                supportLevel = required;
+                            };
+                        };
+                    };
+                };
+            };
+            iconSource =             {
+                largeAppIcon = carInBinary;
+                primaryIcons = carInBinary;
+            };
+        };
+        configModelVersion = "2.0";
+    };
+    preflight =     (
+        2559B88H6C
+    );
+}', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
+2026-10-14 11:11:46 +0000  App Store Connect team IDs for account (null) are (
+    2559B88H6C
+)
+2026-10-14 11:11:47 +0000 [MT] Skipping push notification registration because context lacks a device token or push notifications are disabled.
+2026-10-14 11:11:48 +0000 [MT] Starting evaluation for distribution items:
+(
+    "<IDEDistributionItem: 0xc72d86880; bundleID='ai.selfdeprecated.bodydiff', path='<DVTFilePath:0xc71f3cd80:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc71f3e3a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc718b8380; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(\n    \"1.2.840.113635.100.6.1.12\",\n    \"1.2.840.113635.100.6.1.2\"\n), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{\n    \"application-identifier\" = \"2559B88H6C.ai.selfdeprecated.bodydiff\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n    \"get-task-allow\" = 1;\n}', teamID='2559B88H6C', identifier='ai.selfdeprecated.bodydiff', executablePath='<DVTFilePath:0xc71f3dfe0:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app/BodyDiff'>', hardenedRuntime='0'>'>"
+)
+2026-10-14 11:11:48 +0000 [MT] Evaluating <IDEDistributionItemProvisionable: 0xc737aaa80; distributionItem='<IDEDistributionItem: 0xc72d86880; bundleID='ai.selfdeprecated.bodydiff', path='<DVTFilePath:0xc71f3cd80:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc71f3e3a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc718b8380; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.bodydiff";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.bodydiff', executablePath='<DVTFilePath:0xc71f3dfe0:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app/BodyDiff'>', hardenedRuntime='0'>'>', team='<IDEProvisioningBasicTeam: 0xc71f9d1e0; teamID='2559B88H6C', teamName='(null)'>', method='<IDEDistributionMethodiOSAppStoreDistribution: 0xc73bfc030>', provisioningStyle='0', entitlementsProcessors='(
+    "<IDEiCloudEntitlementsProcessor: 0xc71fd0450>",
+    "<IDEAppAttestEnvironmentEntitlementsProcessor: 0xc71fd0480>",
+    "<IDEClassKitEntitlementsProcessor: 0xc71fd0570>",
+    "<IDEAppIdentifierPrefixedEntitlementsProcessor: 0xc71fd0000>"
+)'> with overrides <IDEProvisionableOverrides 0xc718b4b40: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xc73bfc520>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xc73094460:'com.apple.platform.iphoneos':<DVTFilePath:0xc73024fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>
+2026-10-14 11:11:49 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xc72d86880; bundleID='ai.selfdeprecated.bodydiff', path='<DVTFilePath:0xc71f3cd80:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc71f3e3a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc718b8380; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.bodydiff";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.bodydiff', executablePath='<DVTFilePath:0xc71f3dfe0:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app/BodyDiff'>', hardenedRuntime='0'>'> from <IDEiCloudEntitlementsProcessor: 0xc71fd0450>: {
+}
+2026-10-14 11:11:49 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xc72d86880; bundleID='ai.selfdeprecated.bodydiff', path='<DVTFilePath:0xc71f3cd80:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc71f3e3a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc718b8380; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.bodydiff";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.bodydiff', executablePath='<DVTFilePath:0xc71f3dfe0:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app/BodyDiff'>', hardenedRuntime='0'>'> from <IDEAppAttestEnvironmentEntitlementsProcessor: 0xc71fd0480>: {
+}
+2026-10-14 11:11:49 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xc72d86880; bundleID='ai.selfdeprecated.bodydiff', path='<DVTFilePath:0xc71f3cd80:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc71f3e3a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc718b8380; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.bodydiff";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.bodydiff', executablePath='<DVTFilePath:0xc71f3dfe0:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app/BodyDiff'>', hardenedRuntime='0'>'> from <IDEClassKitEntitlementsProcessor: 0xc71fd0570>: {
+}
+2026-10-14 11:11:49 +0000 [MT] Applying entitlements delta for <IDEDistributionItem: 0xc72d86880; bundleID='ai.selfdeprecated.bodydiff', path='<DVTFilePath:0xc71f3cd80:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc71f3e3a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc718b8380; name='Apple Development: [secret] [secret] (87Q4J2X7BA)', hash='[udid]', serialNumber='22A0BE47ACDF1427428A2186C099C3B4', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2026-10-13 17:06:33 +0000''>', entitlements='{
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.bodydiff";
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 1;
+}', teamID='2559B88H6C', identifier='ai.selfdeprecated.bodydiff', executablePath='<DVTFilePath:0xc71f3dfe0:'~/.t3/worktrees/bodydiff/t3-f88410d8/build/testflight/202610141111/BodyDiff.xcarchive/Products/Applications/BodyDiff.app/BodyDiff'>', hardenedRuntime='0'>'> from <IDEAppIdentifierPrefixedEntitlementsProcessor: 0xc71fd0000>: {
+    "application-identifier" = "$(AppIdentifierPrefix)ai.selfdeprecated.bodydiff";
+}
+2026-10-14 11:11:57 +0000 [MT] Evaluation for BodyDiff.app is <IDEProvisionableStatusEvaluation 0xc73ee50a0: inputs: <IDEProvisionableStatusEvalutorInputs 0xc71f0ba20: provisionableSnapshot: <IDEProvisionableSnapshot 0xc71fd1080: name: BodyDiff.app, configurations: {
+    Default = "<_IDEProvisionableConfigurationSnapshot 0xc73050e60: name: Default, provisioningStyle: 0, certificateSigningStyle: 2, team: <IDEProvisioningBasicTeam: 0xc71f9d1e0; teamID='2559B88H6C', teamName='(null)'>, profileSupport: <IDEProvisioningProfileSupport: 0xc73bfd2b0>, platform: <DVTPlatform:0xc73094460:'com.apple.platform.iphoneos':<DVTFilePath:0xc73024fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), bundleIdentifier: ai.selfdeprecated.bodydiff, profileSpecifier: (null), certificateIdentifier: iPhone Distribution, entitlementsFilePath: (null), baseEntitlements: <IDEProvisionableEntitlements: 0xc71f9ee20; signedEntitlements='{\n    \"application-identifier\" = \"$(AppIdentifierPrefix)ai.selfdeprecated.bodydiff\";\n    \"com.apple.developer.team-identifier\" = 2559B88H6C;\n}', simulatedEntitlements='(null)'>, entitlementsExpansion: <IDEDistributionProvisioningEntitlementsExpansion: 0xc73bfd2c0>, entitlementsDestination: 1, allowSigningWithoutTeamSelection: 0, signingRequiresTeam: 0, appIDFeatures: <DVTPortalAppIDFeatures 0xc719d5480: Features: {\n}, Containers: {\n}>, provisioningPurpose: app-store, supportsIOSMac: 0, areFeaturesUpToDate: 0>";
+}, overrides: <IDEProvisionableOverrides 0xc718b4b40: configuration: Default, profileSupport: <IDEProvisioningProfileSupport: 0xc73bfc520>, provisioningStyle: (null), certificateSigningStyle: (null), provisioningPurpose: app-store, team: (null), platform: <DVTPlatform:0xc73094460:'com.apple.platform.iphoneos':<DVTFilePath:0xc73024fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>, sdk: (null), sdkVariant: (null), profileSpecifier: (null), certificateIdentifier: (null), bundleIdentifier: (null), entitlements: (null), entitlementsFile: (null), baseEntitlements: (null), entitlementsExpansion: (null), entitlementsDestination: (null), allowSigningWithoutTeamSelection: (null), signingRequiresTeam: (null), appIDFeatures: (null)>>>, configuration: Default, codesignParameterSnapshot: <IDECodesignParameterSnapshot: 0xc7183c5a0>:
+Profile:  <DVTEmbeddedProvisioningProfile 0xc72b14a80: name: iOS Team Store Provisioning Profile: ai.selfdeprecated.bodydiff, UUID: a16febd8-026b-48ae-be22-09dce33f1bbb, teamName: Self-Deprecated ApS, teamIdentifierPrefixes: (
+    2559B88H6C
+), entitlements: {
+    "application-identifier" = "2559B88H6C.ai.selfdeprecated.bodydiff";
+    "beta-reports-active" = 1;
+    "com.apple.developer.team-identifier" = 2559B88H6C;
+    "get-task-allow" = 0;
+    "keychain-access-groups" =     (
+        "2559B88H6C.*",
+        "com.apple.token"
+    );
+}, appIdentifierName: BodyDiff, applicationIdentifierPrefixes: (
+    2559B88H6C
+), dateCreated: 2026-10-14 11:08:29 +0000, dateExpired: 2027-10-13 18:26:55 +0000, certificateKinds: {(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+)}, certificateSHA1Hashes: {(
+    [udid],
+    [udid]
+)}, supportedUDIDs: {(
+)}, isUniversal: 0, isXcodeManaged: 1, platforms: {(
+    <DVTPlatform:0xc730948c0:'com.apple.platform.xros':<DVTFilePath:0xc7281d680:'/Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform'>>,
+    <DVTPlatform:0xc73094640:'com.apple.platform.watchos':<DVTFilePath:0xc730253b0:'/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform'>>,
+    <DVTPlatform:0xc73094460:'com.apple.platform.iphoneos':<DVTFilePath:0xc73024fc0:'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform'>>
+)}, filePath: <DVTFilePath:0xc7302a3a0:'~/Library/Developer/Xcode/UserData/Provisioning Profiles/a16febd8-026b-48ae-be22-09dce33f1bbb.mobileprovision'>>
+Identity: [udid]
+Certificate <DVTSigningCertificate: 0xc718b8380; name='Apple Distribution: Self-Deprecated ApS (2559B88H6C)', hash='[udid]', serialNumber='C47D7F5BF3273E07C9E38D8CF98CD9A', certificateKinds='(
+    "1.2.840.113635.100.6.1.7",
+    "1.2.840.113635.100.6.1.4"
+), issueDate='2026-10-13 18:26:56 +0000''>>, errors: (null)>
+2026-10-14 11:11:59 +0000 [MT] Skipping push notification registration because context lacks a device token.
+2026-10-14 11:11:59 +0000 [MT] Uploading BodyDiff with device token (null)
+2026-10-14 11:11:59 +0000 [MT] Starting upload
+2026-10-14 11:12:01 +0000  Updated message: Making copy of ‘BodyDiff.ipa’…, progress: 0.000000
+2026-10-14 11:12:01 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-14 11:12:01 +0000  Updated message: Preparing to upload ‘BodyDiff.ipa’…, progress: 0.000000
+2026-10-14 11:12:09 +0000  Updated message: Analyzing package…, progress: 0.000000
+2026-10-14 11:12:10 +0000  Updated message: Sending analysis to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:10 +0000  Updated message: Sending analysis to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:11 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-14 11:12:12 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-14 11:12:14 +0000  Updated message: Checking completion status for “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml”…, progress: 0.000000
+2026-10-14 11:12:14 +0000  Updated message: “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:19 +0000  Updated message: Checking completion status for “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml”…, progress: 0.000000
+2026-10-14 11:12:19 +0000  Updated message: “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:24 +0000  Updated message: Checking completion status for “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml”…, progress: 0.000000
+2026-10-14 11:12:25 +0000  Updated message: “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:30 +0000  Updated message: Checking completion status for “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml”…, progress: 0.000000
+2026-10-14 11:12:30 +0000  Updated message: “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:35 +0000  Updated message: Checking completion status for “asset-description-CAD5AC3B-B209-42AD-910A-D7AAE9937ECD.xml”…, progress: 0.000000
+2026-10-14 11:12:36 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:36 +0000  Updated message: Sending SPI analysis to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:37 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-14 11:12:37 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-14 11:12:39 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip”…, progress: 0.000000
+2026-10-14 11:12:39 +0000  Updated message: “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:44 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip”…, progress: 0.000000
+2026-10-14 11:12:45 +0000  Updated message: “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:50 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip”…, progress: 0.000000
+2026-10-14 11:12:50 +0000  Updated message: “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip” is not yet complete; will check status in 5 seconds…, progress: 0.000000
+2026-10-14 11:12:55 +0000  Updated message: Checking completion status for “DTAppAnalyzerExtractorOutput-B00E0DE1-11FE-4028-A050-44F6B97A6DF7.zip”…, progress: 0.000000
+2026-10-14 11:12:55 +0000  Updated message: Requesting upload instructions from App Store Connect…, progress: 0.000000
+2026-10-14 11:12:57 +0000  Updated message: Preparing file for upload to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:57 +0000  Updated message: Preparing file for upload to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:57 +0000  Updated message: Uploading to App Store Connect…, progress: 0.000000
+2026-10-14 11:12:57 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-14 11:12:57 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-14 11:12:57 +0000  Updated message: , progress: 0.000000
+2026-10-14 11:12:57 +0000  Updated progress: 1.000000 (raw value: 1.000000)
+2026-10-14 11:12:57 +0000  Updated message: , progress: 1.000000
+2026-10-14 11:12:58 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-14 11:12:58 +0000  Updated message: Getting upload status…, progress: 0.000000
+2026-10-14 11:12:59 +0000  Updated message: Completing upload…, progress: 0.000000
+2026-10-14 11:13:00 +0000  Updated message: Uploading “BodyDiff.ipa” is complete., progress: 0.000000
+2026-10-14 11:13:00 +0000  Updated progress: 0.000000 (raw value: 0.000000)
+2026-10-14 11:13:00 +0000  Updated progress: 1.000000 (raw value: 1.000000)
+2026-10-14 11:13:00 +0000  Updated message: Uploading “BodyDiff.ipa” is complete., progress: 1.000000
+2026-10-14 11:13:00 +0000  Updated message: Waiting for package to begin processing…, progress: 1.000000
+2026-10-14 11:13:01 +0000  Updated message: Uploaded package is processing., progress: 1.000000
+2026-10-14 11:13:01 +0000  Updated message: Upload succeeded., progress: 1.000000
+2026-10-14 11:13:01 +0000 [MT] Distribution record info for archive: <IDEArchiveDistributionRecord: 0xc72b149c0; task='2', distributionDestination='2', uploadDestination='1', teamID='2559B88H6C', signingCertificateSHA1='[udid]', uniqueIdentifier='09091986-8356-4f2f-8da8-5aad2dd23b50', packagePath='(null)', preparationEvent='<IDEArchiveDistributionEvent: 0xc72afb750; title='Prepared archive for uploading', shortTitle='Prepared', date='2026-10-14 11:11:44 +0000', errors='(
+)', warnings='(
+)', infoMessages='(
+)', state='2'>', uploadEvent='<IDEArchiveDistributionEvent: 0xc72af96d0; title='Uploaded to Apple', shortTitle='Uploaded', date='2026-10-14 11:13:01 +0000', errors='(
+)', warnings='(
+)', infoMessages='(
+)', state='2'>', validationEvent='(null)', processingCompletedEvent='(null)'>
