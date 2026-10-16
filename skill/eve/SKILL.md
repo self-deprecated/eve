@@ -1,6 +1,6 @@
 ---
 name: eve
-description: Build the user's iOS apps on Quartz with eve — ship to TestFlight, install on their iPhone, or check that it builds — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "put it on my phone", "upload a build", "check it builds", or when you would otherwise run xcodebuild archive/export, devicectl or App Store Connect calls yourself.
+description: Build the user's iOS apps on Quartz with eve — ship to TestFlight or check that it builds and its tests pass — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "upload a build", "check it builds", or when you would otherwise run xcodebuild archive/export/test or App Store Connect calls yourself.
 ---
 
 # Eve
@@ -9,7 +9,7 @@ description: Build the user's iOS apps on Quartz with eve — ship to TestFlight
 Apple's tools, follows it through App Store Connect, and reports back. **Waiting is free**: one
 long tool call costs nothing while it blocks, whereas polling turns are expensive. So submit and
 wait in one command; never poll with `sleep`, never run `xcodebuild archive`/`-exportArchive`,
-`devicectl` or App Store Connect API calls yourself for these tasks, and never read raw
+`xcodebuild test`, `simctl` or App Store Connect API calls yourself for these tasks, and never read raw
 xcodebuild logs unless the result's excerpt is not enough.
 
 ## Ship to TestFlight
@@ -43,8 +43,10 @@ If the waiting command died (harness restart, session ended), the build carried 
 `eve wait <job> --json` picks it up again, and `eve pending` lists jobs from this machine whose
 outcome nobody has seen.
 
-Other verbs: `eve submit device --wait` (install and launch on the user's iPhone; it builds first,
-then waits for the phone to be unlocked) and `eve submit check --wait` (simulator build and tests).
+`eve submit check --wait` builds for the Simulator (signed ad hoc, never uploaded); with
+`check: {test: true}` in eve.yml it also runs the scheme's tests on a fresh Simulator. A failing
+test exits 1 with `failure.class: test.failed`; `tests.failures` names the first failing tests
+and their assertions. `eve submit device` (install on the user's iPhone) is not available yet.
 
 ## Reading the result
 
@@ -92,6 +94,9 @@ project:
   scheme: Driver
 pre:                              # optional commands run before building
   - swift test --package-path DriverCore
+check:                            # optional, for `eve submit check`
+  test: true                      # also run the scheme's tests
+  simulator: iPhone 17 Pro        # default: the newest iPhone Pro
 ```
 
 Identity (bundle id, team, signing, secrets, TestFlight group) lives on the server, not here.

@@ -299,6 +299,14 @@ func TestHappyPathToReadyForTesters(t *testing.T) {
 	if s, _ := h.st.SourceStats(context.Background(), "driver"); s == nil || s.Bytes != 1000 {
 		t.Fatal("source stats not recorded")
 	}
+
+	// The next build records which job it was measured against: once it succeeds it becomes
+	// the baseline itself, and `eve size` still has to diff it against this one.
+	next := h.submit(t, api.JobOptions{})
+	h.q.Exec(context.Background(), next)
+	if got := h.get(t, next.ID); got.Result.Size == nil || got.Result.Size.BaselineJob != j.ID {
+		t.Fatalf("baseline job not recorded: %+v", got.Result.Size)
+	}
 }
 
 func TestSizeGuardPauseThenConfirmSkipsRebuild(t *testing.T) {

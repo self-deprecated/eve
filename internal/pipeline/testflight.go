@@ -49,12 +49,7 @@ func (t *Testflight) manifestPath(jc *queue.JobCtx) string {
 // Run is the worker part: everything up to handing the build to App Store Connect.
 func (t *Testflight) Run(jc *queue.JobCtx) error {
 	resume := jc.Job.ResumeFrom
-	if err := jc.EnterWith(api.StatePreparing, "preparing workspace", func(j *store.Job) {
-		j.Result.Source = api.SourceInfo{
-			SHA256: j.Request.Source.SHA256, Path: j.Request.Source.Path,
-			Commit: j.Request.Source.Commit, Branch: j.Request.Source.Branch, Dirty: j.Request.Source.Dirty,
-		}
-	}); err != nil {
+	if err := jc.EnterWith(api.StatePreparing, "preparing workspace", recordSource); err != nil {
 		return err
 	}
 	ws, err := t.prepare(jc)
@@ -199,6 +194,9 @@ func (t *Testflight) measure(jc *queue.JobCtx, ws *workspace, archive string) (p
 		return false, errHandled
 	}
 	report := v.Report
+	if basePath != "" {
+		report.BaselineJob = base.JobID
+	}
 	switch {
 	case v.Secret:
 		report.Gate = api.GateFailed

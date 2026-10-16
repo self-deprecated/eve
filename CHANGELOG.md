@@ -2,6 +2,21 @@
 
 ## Unreleased — M1 (2026-10-16)
 
+### `check` verb (first part of M3)
+- `eve submit check`: a Simulator Debug build, plus the scheme's tests on a fresh `eve-<job>`
+  Simulator when eve.yml has `check: {test: true}` (`check.simulator` picks the device type).
+  The result's `tests` has counts and the first failures; a failing test is `test.failed` with
+  the test name and assertion. Orphaned Simulators are deleted before each run.
+- Simulator builds are signed ad hoc, not `CODE_SIGNING_ALLOWED=NO`: unsigned apps lose their
+  entitlements and the Simulator keychain refuses them (Driver's `keychainRoundTrip`).
+- Tests run with `-collect-test-diagnostics never`: a failing test made xcodebuild sysdiagnose
+  for ten minutes. The runner stops waiting 10 s after a command exits for output held open by
+  an escaped grandchild (xcodebuild's `simctl diagnose`).
+- Fixed: `eve size` diffed a build against itself once it had become the baseline; reports now
+  record the baseline job. `EVE_SERVER` works without a `client.yml`.
+- Live on Quartz with Driver: build-only check 20 s; 35 tests 1m24s; a failing test reported
+  by name and assertion.
+
 ### v4: client-side streaming replaces T3 delivery
 - Removed the T3 MCP/OAuth client, `eve t3 login` and `--notify-t3`. Agents follow jobs with
   `eve submit --wait` / `eve wait`, which reconnects forever through drops and server restarts

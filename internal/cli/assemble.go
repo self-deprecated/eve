@@ -71,7 +71,10 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 	if ascClient != nil {
 		deps.ASC = ascClient
 	}
-	pipelines := map[api.Verb]queue.Pipeline{api.VerbTestflight: pipeline.NewTestflight(deps)}
+	pipelines := map[api.Verb]queue.Pipeline{
+		api.VerbTestflight: pipeline.NewTestflight(deps),
+		api.VerbCheck:      pipeline.NewCheck(deps),
+	}
 	q := queue.New(st, cfg.DataDir, pipelines, sys.route, log)
 	sys.Queue = q
 
@@ -189,17 +192,46 @@ func (s *System) pruneWorkspaces(ctx context.Context) {
 }
 
 func (s *System) sizeDetails(ctx context.Context, j store.Job) (any, error) {
-	cur, err := sizeguard.LoadManifest(filepath.Join(s.Config.DataDir, "jobs", j.ID, "bundle-manifest.json.zst"))
+	cur, err := sizeguard.LoadManifest(s.manifestPath(j.ID))
 	if err != nil {
 		return nil, fmt.Errorf("job %s has no bundle manifest (it never got past archiving)", j.ID)
 	}
 	var base *sizeguard.Manifest
-	if b, _ := s.Store.Baseline(ctx, j.App); b != nil && b.JobID != j.ID {
-		if m, err := sizeguard.LoadManifest(b.Path); err == nil {
+	if id := s.measuredAgainst(ctx, j); id != "" {
+		if m, err := sizeguard.LoadManifest(s.manifestPath(id)); err == nil {
 			base = &m
 		}
 	}
 	return map[string]any{"report": j.Result.Size, "diff": sizeguard.Diff(cur, base)}, nil
+}
+
+func (s *System) manifestPath(jobID string) string {
+	return filepath.Join(s.Config.DataDir, "jobs", jobID, "bundle-manifest.json.zst")
+}
+
+// measuredAgainst is the job whose bundle j was measured against. Not the app's current
+// baseline: a build that succeeds becomes the baseline itself.
+func (s *System) measuredAgainst(ctx context.Context, j store.Job) string {
+	r := j.Result.Size
+	switch {
+	case r == nil:
+		return ""
+	case r.BaselineJob != "":
+		return r.BaselineJob
+	case r.BaselineBuild == "":
+		return "" // the first build: nothing to compare with
+	}
+	// Reports from before BaselineJob was recorded name only the build number.
+	jobs, err := s.Store.List(ctx, store.Filter{App: j.App, Limit: 500})
+	if err != nil {
+		return ""
+	}
+	for _, o := range jobs {
+		if o.ID != j.ID && o.BuildNumber == r.BaselineBuild {
+			return o.ID
+		}
+	}
+	return ""
 }
 
 func (s *System) builds(ctx context.Context, app string) (any, error) {

@@ -52,6 +52,10 @@ type Runner interface {
 type Exec struct {
 	// Grace is how long a cancelled process group gets after SIGINT before SIGKILL.
 	Grace time.Duration
+	// OutputDelay bounds how long Run waits for the command's output after it exits (default
+	// 10 s). A grandchild that left the process group (xcodebuild's `simctl diagnose` does)
+	// can hold the output pipe open long after the command itself is gone.
+	OutputDelay time.Duration
 }
 
 // Run starts c in a new process group and waits for it. A non-zero exit is reported in
@@ -77,6 +81,10 @@ func (e Exec) Run(ctx context.Context, c Cmd) (Result, error) {
 	cmd.Stdout = c.Stdout
 	cmd.Stderr = c.Stderr
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.WaitDelay = e.OutputDelay
+	if cmd.WaitDelay == 0 {
+		cmd.WaitDelay = 10 * time.Second
+	}
 
 	start := time.Now()
 	if err := cmd.Start(); err != nil {
@@ -87,7 +95,13 @@ func (e Exec) Run(ctx context.Context, c Cmd) (Result, error) {
 		c.OnStart(pgid)
 	}
 	done := make(chan error, 1)
-	go func() { done <- cmd.Wait() }()
+	go func() {
+		err := cmd.Wait()
+		if errors.Is(err, exec.ErrWaitDelay) {
+			err = nil // the command succeeded; only an escaped grandchild's output was cut off
+		}
+		done <- err
+	}()
 
 	var waitErr error
 	select {

@@ -293,10 +293,7 @@ func ClientDir() string {
 func LoadClient() (*Client, error) {
 	var c Client
 	err := readYAML(filepath.Join(ClientDir(), "client.yml"), &c)
-	if errors.Is(err, os.ErrNotExist) {
-		return &c, nil
-	}
-	if err != nil {
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return nil, err
 	}
 	if env := os.Getenv("EVE_SERVER"); env != "" {
@@ -327,7 +324,8 @@ type RepoProject struct {
 
 // RepoCheck configures the check verb.
 type RepoCheck struct {
-	Test bool `yaml:"test"`
+	Test      bool   `yaml:"test"`
+	Simulator string `yaml:"simulator"` // device type name, e.g. "iPhone 17 Pro"; default: the newest Pro
 }
 
 // RepoDevice configures the device verb.

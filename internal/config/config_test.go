@@ -135,3 +135,12 @@ func TestResolveSecret(t *testing.T) {
 		t.Fatal("plain accepted")
 	}
 }
+
+func TestEveServerOverridesWithoutClientFile(t *testing.T) {
+	t.Setenv("EVE_CONFIG_DIR", t.TempDir())
+	t.Setenv("EVE_SERVER", "http://127.0.0.1:4791")
+	c, err := LoadClient()
+	if err != nil || c.Server != "http://127.0.0.1:4791" {
+		t.Fatalf("%+v %v", c, err)
+	}
+}

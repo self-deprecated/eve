@@ -3,6 +3,8 @@ package run
 import (
 	"bytes"
 	"context"
+	"fmt"
+	"syscall"
 	"testing"
 	"time"
 )
@@ -67,5 +69,33 @@ func TestExecTimeout(t *testing.T) {
 	})
 	if err != ErrTimeout {
 		t.Fatalf("want ErrTimeout, got %v", err)
+	}
+}
+
+func TestExecDoesNotWaitForAnEscapedGrandchildsOutput(t *testing.T) {
+	for _, code := range []int{0, 3} {
+		escapedGrandchild(t, code)
+	}
+}
+
+func escapedGrandchild(t *testing.T, code int) {
+	t.Helper()
+	var out bytes.Buffer
+	begin := time.Now()
+	// The grandchild leaves the process group and keeps stdout open, as `simctl diagnose`
+	// does under xcodebuild.
+	res, err := Exec{OutputDelay: 300 * time.Millisecond}.Run(context.Background(), Cmd{
+		Name: "/bin/sh", Args: []string{"-c", `/usr/bin/perl -e 'setpgrp(0,0); print "$$\n"; sleep 30' & sleep 0.2; exit ` + fmt.Sprint(code)},
+		Stdout: &out,
+	})
+	if took := time.Since(begin); took > 5*time.Second {
+		t.Fatalf("waited %s for the grandchild's output", took)
+	}
+	var pid int
+	if _, scanErr := fmt.Sscan(out.String(), &pid); scanErr == nil && pid > 1 {
+		_ = syscall.Kill(pid, syscall.SIGKILL)
+	}
+	if res.ExitCode != code || err != nil {
+		t.Fatalf("exit %d, err %v; want exit %d and no error", res.ExitCode, err, code)
 	}
 }

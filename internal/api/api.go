@@ -122,8 +122,27 @@ type Result struct {
 	Failure   *Failure    `json:"failure,omitempty"`
 	Human     *Human      `json:"human,omitempty"`
 	Size      *SizeReport `json:"size,omitempty"`
+	Tests     *Tests      `json:"tests,omitempty"`
 	Notes     []Note      `json:"notes,omitempty"`
 	Artifacts []string    `json:"artifacts,omitempty"`
+}
+
+// Tests summarizes a check's test run (PLAN.md §6.5): counts and the first failures, never the
+// full log.
+type Tests struct {
+	Passed           int           `json:"passed"`
+	Failed           int           `json:"failed"`
+	Skipped          int           `json:"skipped,omitempty"`
+	ExpectedFailures int           `json:"expectedFailures,omitempty"`
+	Total            int           `json:"total"`
+	Simulator        string        `json:"simulator,omitempty"` // e.g. "iPhone 17 Pro, iOS 26.5"
+	Failures         []TestFailure `json:"failures,omitempty"`  // the first few
+}
+
+// TestFailure is one failing test.
+type TestFailure struct {
+	Test    string `json:"test"` // e.g. "LineageUITests/testOnboarding()"
+	Message string `json:"message"`
 }
 
 // SourceInfo records what was built.
@@ -194,6 +213,7 @@ type SizeReport struct {
 	BaselineBytes int64       `json:"baselineBytes,omitempty"`
 	BaselineFiles int         `json:"baselineFiles,omitempty"`
 	BaselineBuild string      `json:"baselineBuild,omitempty"`
+	BaselineJob   string      `json:"baselineJob,omitempty"` // the job whose bundle was the baseline
 	DeltaBytes    int64       `json:"deltaBytes,omitempty"`
 	DeltaFiles    int         `json:"deltaFiles,omitempty"`
 	Summary       string      `json:"summary"`

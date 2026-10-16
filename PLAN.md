@@ -374,10 +374,16 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
 
 ### 6.5 `check`
 
-Unsigned Simulator build (`CODE_SIGNING_ALLOWED=NO`, `generic/platform=iOS Simulator`), plus the
+Simulator build signed ad hoc (`CODE_SIGN_IDENTITY=-`, manual style, no team;
+`generic/platform=iOS Simulator`), plus the
 scheme's tests if `check.test: true`, on a **fresh** simulator per run (created and deleted, as
 `check-ios.sh` does). The result carries test counts and the first failing test's name and
-assertion, never the accessibility dump.
+assertion, never the accessibility dump. Not `CODE_SIGNING_ALLOWED=NO`: unsigned apps lose
+their entitlements, so the Simulator keychain refuses them (Driver's `keychainRoundTrip` failed).
+Ad-hoc signing needs no account or keychain. Tests run with `-collect-test-diagnostics never`:
+otherwise any failing test makes xcodebuild sysdiagnose the Simulator for up to ten minutes
+(seen on Driver: 0.3 s of tests, 11 minutes of job). Simulators are named `eve-<job>`; any left by a
+crash are deleted before the next run. `check.simulator` in eve.yml picks the device type.
 
 ### 6.6 `exec`
 

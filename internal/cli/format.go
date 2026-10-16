@@ -44,6 +44,16 @@ func FormatResult(r api.Result) string {
 			fmt.Fprintf(&b, "  hint     %s\n", s.Hint)
 		}
 	}
+	if t := r.Tests; t != nil {
+		fmt.Fprintf(&b, "  tests    %d passed, %d failed", t.Passed, t.Failed)
+		if t.Skipped > 0 {
+			fmt.Fprintf(&b, ", %d skipped", t.Skipped)
+		}
+		if t.Simulator != "" {
+			fmt.Fprintf(&b, "  (%s)", t.Simulator)
+		}
+		b.WriteString("\n")
+	}
 	if f := r.Failure; f != nil {
 		fmt.Fprintf(&b, "  failure  %s: %s\n", f.Class, f.Summary)
 		if f.Hint != "" {
