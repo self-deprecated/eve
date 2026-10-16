@@ -1,6 +1,6 @@
 # Eve — Design and Delivery Plan
 
-**Status:** Draft v3, 2026-10-16; M0 done (both spikes, §16). v2 was revised after independent reviews by Claude Fable 5.1
+**Status:** Draft v4, 2026-10-16; M0 done, M1 implemented. v4 replaces T3/webhook delivery with client-side streaming (§8, §19). v2 was revised after independent reviews by Claude Fable 5.1
 and GPT-6 Astra (both: "revise"; findings and resolutions in §19). v3 adds the size guard (§6.7),
 the name and the operator decisions (§18). Nothing is built yet; milestone 0 is two spikes that can
 still change the design.
@@ -36,12 +36,14 @@ and the actual bill, not raw token counts.) The same sessions show:
 
 **Success criteria for v1**
 
-1. An agent in a T3 thread ships a TestFlight build in **two turns**: one to submit, one when it is
-   woken with the result. No `sleep` or polling tool calls.
-2. The wake-up carries a result under 4 KB: outcome, build number, and for failures a classified
+1. An agent ships a TestFlight build with **one long tool call**: `eve submit testflight --wait`
+   (run as a background or long-running command). Waiting costs no tokens; there are no `sleep`
+   or polling turns.
+2. The result it gets back is under 4 KB: outcome, build number, and for failures a classified
    cause with a fix hint and a ≤40-line excerpt. Never a raw xcodebuild log.
-3. Completion still reaches the requesting thread if the agent's turn ended, T3 restarted, or the
-   Eve server restarted mid-build. Exhausted deliveries are reported, never silently dropped.
+3. The wait survives network drops and Eve server restarts (it reconnects and replays without
+   loss), the job survives the waiting process dying, and `eve pending` finds outcomes nobody
+   collected. Eve depends on no particular agent harness.
 4. A crash at any point never produces a second upload of the same build, and never turns an
    upload that succeeded into a reported failure.
 5. States only a human can resolve (phone locked, Xcode sign-in, agreement, export compliance,
@@ -61,7 +63,7 @@ and the actual bill, not raw token counts.) The same sessions show:
 - An App Store Connect API client for upload reconciliation, processing, internal distribution and
   tester invite state, ported from `bodydiff-testflight/scripts/app-store-connect.mjs`.
 - Failure classification (rules first, optional small-model fallback).
-- Durable, per-job notification delivery to the requesting agent, plus an optional human webhook.
+- A resumable event stream for each job (`eve wait`), and an optional human webhook.
 - Host diagnostics (`doctor --host`).
 
 ### Repositories own
@@ -98,8 +100,8 @@ Apple ID web session alive; isolating one app's builds from another's credential
 | UTC-minute build numbers (`%Y%m%d%H%M`) are in use and accepted | ScreenGate/Driver/BodyDiff |
 | Quartz: Xcode 27.0 (27A266a), macOS 26.6, nix-darwin, FileVault on, no auto-login, Go not on the global PATH. Tailnet ACL allows only TCP 443 and 22 to Quartz; 443 is owned exactly by Indentured's Tailscale Serve route; T3 is on `:10000` | checked on Quartz; `mono-nix/hosts/quartz/README.md`; `bodydiff-testflight/docs/testflight.md:277` |
 | Slipway's pattern: one binary, `serve` on a host behind a Tailscale Service (`svc:slipway`, own VIP on :443), bearer tokens, `login`/`doctor`, ignore-file uploads, an agent skill, a flake consumed by mono-nix, and an explicit trust model | `~/Development/projects/slipway/README.md` |
-| T3 webhook tasks: one URL per scheduled task, bound to the creating thread, URL only exists when T3 Connect's tunnel is up — and on Quartz there is none (M0). T3 does serve MCP on `127.0.0.1:3773/mcp` with local OAuth (`orchestration:operate`) | T3 `schedule_task` contract; `spike/m0-wakeup/RESULT.md` |
-| The T3 server restarting has cancelled background work in past sessions | dossier, Lineage mining |
+| Agent tokens are spent per turn, not per second of waiting: one long blocking tool call is free compared with repeated polling turns | dossier |
+| Each machine (Quartz, Lattice, Prism) runs its own T3 server; Quartz cannot SSH to Lattice | Driver brain commit `a94b285`; M1 checks |
 
 ## 4. Architecture
 
@@ -108,15 +110,15 @@ Apple ID web session alive; isolating one app's builds from another's credential
  ┌──────────────────────┐   HTTPS (tailnet)   ┌─────────────────────────────────────────────┐
  │ eve submit …         │ ──────────────────▶ │ svc:eve :443 ─▶ 127.0.0.1:4790               │
  │ eve wait <id>        │ ◀── SSE events ──── │ eve serve (LaunchAgent, gui/<uid>)           │
- │ agent skill (T3)     │                     │  ├─ API (net/http), bearer tokens            │
+ │ agent skill          │                     │  ├─ API (net/http), bearer tokens            │
  └──────────────────────┘                     │  ├─ store (SQLite WAL: jobs, events, outbox) │
           ▲                                   │  ├─ worker (one job, own process group)      │
-          │ per-job webhook (T3 task URL)     │  │   ├─ source: verified tar.zst, APFS clone  │
+          │ (optional human webhook)          │  │   ├─ source: verified tar.zst, APFS clone  │
           └───────────────────────────────────│  │   ├─ pipeline: testflight | device | check │
                                               │  │   └─ asc: reconcile, process, distribute   │
                                               │  ├─ watcher (ASC processing, off the worker) │
                                               │  ├─ classify: rules → optional Luna          │
-                                              │  └─ notify: outbox → agent, human webhook    │
+                                              │  └─ notify: outbox → human webhook           │
                                               └─────────────────────────────────────────────┘
 ```
 
@@ -211,7 +213,7 @@ terminal: succeeded | failed | rejected | needs_human | unavailable | cancelled 
   `accept_testflight_invite` is a note on a `succeeded` result, not a failure.
 - `waiting_for_device` is entered only **after** the build, so unlocking resumes at install.
 - `awaiting_confirmation` is the size guard's pause (§6.7). It is non-terminal, parks the job off
-  the worker with its archive kept, and wakes the requesting agent with the size report. Only
+  the worker with its archive kept, and ends the agent's `eve wait` (exit 76) with the size report. Only
   `eve confirm` moves it on; `eve reject` or 24 h without an answer ends it `cancelled`.
 
 ### 5.2 Outcomes and exit codes
@@ -527,63 +529,50 @@ sizeGuard:                    # defaults; any app may override under apps.<app>.
   confirmTimeout: 24h
 device: {default: 00008150-…}
 notify:
-  allowHosts: ["*.tail6e682f.ts.net", "<T3 Connect host>"]   # per-job webhook URLs must match
-  human: {url: …}             # optional (e.g. a GrokBot webhook); unset = agents only
+  allowHosts: ["*.tail6e682f.ts.net"]   # --notify-url webhooks must match
+  human: {url: …}             # optional (e.g. a GrokBot webhook)
 luna: {enabled: false}
 ```
 
-## 8. Notifications and waking agents
+## 8. Following jobs
 
-### 8.1 T3 thread delivery (the default inside T3)
+v4 (§19): the client is the stream. Agents are not called back; they wait with one long,
+cheap tool call. No harness-specific login, thread ids or callbacks.
 
-Chosen after M0 spike 2 (`spike/m0-wakeup/RESULT.md`): T3 on Quartz has no T3 Connect tunnel, so
-webhook tasks get no URL, but T3 serves MCP on `127.0.0.1:3773/mcp` behind a standard local OAuth
-server. Eve is an MCP client of it.
+### 8.1 `eve wait` and `eve submit --wait`
 
-- **One-time:** `eve t3 login` on Quartz registers Eve as a public OAuth client
-  (`/oauth/mcp/register`), opens the authorize URL for the user to approve
-  `orchestration:operate`, and stores the token 0600 in `~/.local/share/eve/t3-token`. `doctor
-  --host` reports its expiry; an expired token is a `needs_human` on the human webhook and a
-  warning on every `submit` (lifetime and refresh behaviour verified in M1).
-- **Per job:** the agent passes its own thread id: `eve submit … --notify-t3 <threadId>` (agents
-  read it from `orchestrator_capabilities.parentThreadId`). No task to create or delete.
-- **Delivery:** Eve calls the MCP tool `t3_thread_send {threadId, message, mode: auto,
-  clientRequestId: "<job>:<event>"}` with a short header line and the result document. `mode:auto`
-  starts an idle thread or queues behind a running turn; the `clientRequestId` makes redelivery
-  idempotent. Failed calls (T3 down or restarting) retry from the durable outbox with backoff for
-  24 h; exhausted deliveries are kept, shown by `eve status`, and copied to the human webhook.
+- Holds one SSE connection from wherever the CLI runs (Lattice, Quartz, a laptop) to the server
+  on Quartz, with a heartbeat every 15 s.
+- **Reconnects forever** while the server is unreachable or restarting, with `Last-Event-ID`, so
+  events are neither lost nor repeated (backoff 1 s → 30 s, reset after a good connection). It
+  stops only on answers that will not change (bad token, unknown job) or at `--timeout`.
+- **Default mode:** progress lines on stderr, the result document on stdout (`--json` for
+  agents), exit code = outcome (§5.2). Ends on a terminal state or `awaiting_confirmation` (76).
+- **`--events` mode:** every line on stdout stands alone, one per phase change
+  (`eve <job> archiving: archiving build 202610161907`), then
+  `eve <job> result <OUTCOME> <compact JSON>`. Made for harnesses that wake an agent per output
+  line (Claude Code's `Monitor`), so an agent can react to a pause or a failure as it happens.
+- A server shutdown (e.g. a switch restarting the LaunchAgent) leaves the running job for
+  restart recovery; the waiting client reconnects and follows the resumed job.
 
-### 8.1b Generic webhooks
+### 8.2 How agents use it
 
-`eve submit … --notify-url <url>` (repeatable; must match `notify.allowHosts`) POSTs the result
-document plus `{event, id, deliveryId}`, with `X-Eve-Delivery` for dedup and `X-Eve-Signature`
-(HMAC-SHA256) when a secret is configured, through the same outbox. This covers non-T3 agents and
-T3 webhook tasks if T3 Connect is ever enabled.
+- **Claude Code:** `eve submit testflight --wait --json` as a background command with a long
+  timeout (it is woken when the command exits), or `Monitor` on `eve wait <job> --events` for
+  milestone wake-ups.
+- **Codex and others:** foreground, with a long command timeout. Blocking costs no tokens.
+- If the waiting process dies (harness restart, session ended): `eve wait <job>` again replays
+  and continues. **`eve pending`** lists jobs submitted from this machine whose outcome nobody
+  collected (a local ledger in `~/.local/state/eve/jobs.json`, written by `submit`, cleared by
+  `wait`/`status`/`pending` when they show a terminal outcome).
 
-**Events** (both mechanisms): `job.succeeded|failed|rejected|needs_human|cancelled|interrupted`,
-`job.awaiting_confirmation` (size guard; the agent must answer), and `job.waiting_for_device` (so
-the agent can tell the user to unlock the phone).
+### 8.3 Webhooks (optional integrations only)
 
-### 8.1a Human webhook (optional)
-
-Eve is a tool for agents, so everything goes to the requesting agent first, and the agent relays
-`needs_human` to the user. If `notify.human.url` is set (for example a GrokBot webhook), Eve also
-posts a one-line message there for `needs_human`, `waiting_for_device` and exhausted deliveries,
-deduplicated per job and action. Size confirmations never go there: they are the agent's call.
-
-### 8.2 `eve wait` (outside T3, or as a weaker fallback)
-
-Blocks on SSE (`Last-Event-ID` resume, a heartbeat comment every 15 s) and exits with §5.2's code,
-printing the result. Run as a background command in Claude Code it costs nothing while waiting,
-but it dies with the agent's session and is cancelled by T3 restarts, so it does not meet success
-criterion 3 on its own.
-
-### 8.3 Spike results (M0, 2026-10-16)
-
-- Webhook tasks: created fine, but no URL without T3 Connect → plan A unavailable.
-- Local MCP: endpoint and OAuth metadata confirmed → plan B adopted (§8.1). Left for M1, because
-  they need the user or would end the session running the spike: the OAuth approval, token
-  lifetime, and delivery across a T3 restart.
+- `--notify-url <url>` (must match `notify.allowHosts`) POSTs the result document from the
+  durable outbox, with `X-Eve-Delivery` for dedup and `X-Eve-Signature` (HMAC-SHA256) when a
+  secret applies; retried with backoff for 24 h.
+- `notify.human.url` (e.g. a GrokBot webhook) gets one-line messages for `needs_human`,
+  `waiting_for_device` and exhausted deliveries. Size confirmations never go there.
 
 ## 9. Failure classification
 
@@ -627,11 +616,11 @@ CLIProxyAPI (`https://cliproxyapi.tail6e682f.ts.net/v1`, key from `CLIPROXY_API_
 ```
 eve login <url>                         store server URL; token into ~/.config/eve/token (0600)
 eve doctor [--host]
-eve submit <verb> [<app>] [--notify-t3 THREAD] [--notify-url URL]... [--wait] [--idempotency-key K]
+eve submit <verb> [<app>] [--wait [--events] [--timeout D]] [--notify-url URL]... [--idempotency-key K]
            [--build-number N] [--notes TEXT] [--device UDID] [--release] [--path DIR]
            [--accept-source-size REASON] [--expect-size-change REASON]
                                         prints job id + key; <app> from eve.yml
-eve wait <id> [--timeout D]             exit code per §5.2
+eve wait <id> [--timeout D] [--events]  exit code per §5.2
 eve size <id>                           size report and full diff against the baseline
 eve confirm <id> --reason TEXT          accept a size-guard pause; delivery continues
 eve reject <id>                         refuse it; the job ends cancelled
@@ -650,8 +639,7 @@ eve version
 ```
 
 `--json` everywhere. `submit` returns within a second of the upload finishing and prints:
-`queued j_… — end your turn; you will be notified` when `--notify-t3` or `--notify-url` is set.
-`eve t3 login` (server, once) authorizes Eve against T3's local MCP endpoint (§8.1).
+`eve pending` lists jobs submitted from this machine whose outcome nobody has collected.
 
 ## 11. HTTP API (v1)
 
@@ -691,7 +679,8 @@ internal/asc/                JWT (ES256, stdlib), builds, buildUploads, betaDeta
 internal/alloc/              build-number allocator
 internal/sizeguard/          source stats, bundle manifests, baselines, rules, reports
 internal/classify/           rule table, excerpts, optional Luna client
-internal/notify/             outbox delivery, HMAC, optional human webhook
+internal/notify/             outbox delivery to webhooks, HMAC, optional human webhook
+internal/ledger/             local record of submitted jobs (eve pending)
 internal/redact/             secret-value redaction for logs, results, artifacts
 internal/launchd/            LaunchAgent plist and bootstrap
 internal/config/             server.yml, client.yml, eve.yml
@@ -710,10 +699,9 @@ JWT and HMAC from the standard library. Go 1.26.
 
 `skill/eve/SKILL.md`, installed through mono-nix like slipway's:
 
-- "Ship to TestFlight / put it on my phone / check it builds", inside T3: get this thread's id
-  (`orchestrator_capabilities.parentThreadId`), `eve submit <verb> --notify-t3 <id> --json`, report the job id
-  in one line and **end the turn**. Outside T3: start `eve wait <id>` as a background command
-  with an explicit long timeout. Never poll with `sleep`; never run xcodebuild for these yourself.
+- "Ship to TestFlight / put it on my phone / check it builds": `eve submit <verb> --wait --json`
+  from the repo root as one long-running (background) command, or `Monitor` on
+  `eve wait <id> --events`. Never poll with `sleep`; never run xcodebuild for these yourself.
 - If `submit` fails with a lost response, retry with the printed `--idempotency-key`.
 - `submit` exits 76 on the source check: read the report. If the large new directories are not
   source, add them to `.gitignore`/`.eveignore` and resubmit; only if the growth is explained by
@@ -724,7 +712,7 @@ JWT and HMAC from the standard library. Go 1.26.
   meant to ship, with a reason that names it: `eve confirm <id> --reason "…"`. Repository files
   in the bundle (`.swift`, `docs/`, `project.yml`, …) are never expected: `eve reject <id>`, fix
   the project's sources or resources, and resubmit. If unsure, ask the user before confirming.
-- On wake, read only the result. `needs_human`: tell the user `human.action` in one line and stop.
+- When it returns, read only the result. `needs_human`: tell the user `human.action` in one line and stop.
   `failed`: fix using `failure.class`/`hint`; fetch `eve logs --errors` only if the excerpt is
   not enough.
 - New app: follow `docs/new-app.md` with the user.
@@ -778,25 +766,23 @@ Each milestone ends with its acceptance run on Quartz and an entry in `CHANGELOG
 - *Signing from the agent:* **passed** (`spike/m0-signing/RESULT.md`). A LaunchAgent in Aqua
   archived and exported a correctly signed Driver IPA with no GUI interaction. Produced the
   no-startup-files rule (§4.1).
-- *T3 wake-up:* webhook tasks unavailable (no T3 Connect); **local MCP + OAuth adopted** (§8.1,
-  `spike/m0-wakeup/RESULT.md`).
-- Carried into M1: `eve t3 login` and the OAuth approval, token lifetime, delivery across a T3
-  restart.
+- *T3 wake-up:* webhook tasks unavailable (no T3 Connect); local MCP + OAuth looked viable
+  (`spike/m0-wakeup/RESULT.md`), but was **dropped in v4** for client-side streaming (§8).
 
 **M1 — One durable TestFlight path (4–5 days).** Scaffold (devenv, flake, cobra, config);
 `serve`, SQLite store, worker, process groups and orphan cleanup; source upload with safe
 extraction; `testflight` with xcode-account: allocator, archive and version check, `delivering`
 with upload intent and reconciliation; ASC client (port): processing, distribution, invite note;
-transactional outbox, T3 delivery via local MCP (`eve t3 login`, `--notify-t3`) and generic webhooks; `submit`/`wait`/`status`/`logs`/`cancel`/`jobs`;
+transactional outbox and optional webhooks; resumable `eve wait` (`--events`) and `eve pending`; `submit`/`wait`/`status`/`logs`/`cancel`/`jobs`;
 size guard (source check, bundle check, `awaiting_confirmation`, `size`/`confirm`/`reject`,
 baselines seeded from each app's current archive); tokens and `login`; LaunchAgent via mono-nix;
 `svc:eve` (operator step); classifier with the seeded rules; `eve run testflight`.
 *Accept:*
-1. From Lattice, `eve submit testflight --notify-t3 <thread>` in the Driver repo puts a build in
-   TestFlight with no `sync.sh`, and the T3 thread is woken with the result.
+1. From Lattice, `eve submit testflight --wait` in the Driver repo puts a build in TestFlight
+   with no `sync.sh`, and returns the result.
 2. Killing `eve serve` during `archiving` requeues and finishes with the same build number;
    killing it during `delivering` produces exactly one build in ASC and a `succeeded` job.
-3. Restarting T3 mid-build still delivers the wake-up.
+3. Restarting `eve serve` mid-build: the waiting client reconnects and gets the result (done in a live test, 2026-10-16).
 4. A forced cloud-signing failure (ScreenGate with `signing: api-key`) yields
    `signing.cloud_permission` in the result, not a log dump.
 5. Size guard, on a scratch branch of Driver: deleting a `.gitignore` line so `build/` is packed
@@ -838,7 +824,7 @@ Estimated v1 (M0–M5): ~2 weeks of agent-assisted work.
 | No GUI session after reboot | Auto-login (requires FileVault off, §18); clear client error otherwise |
 | Size guard too noisy, agents learn to confirm everything | Thresholds per app; reasons recorded and listed; repo content never pre-approvable; skill says reject repo files; tune from real data in M5 |
 | Size guard misses a regression below thresholds | Every result reports size and delta; the baseline only moves on accepted builds |
-| T3 OAuth token expires or T3's local MCP changes | `doctor` and submit warnings, human webhook copy, `--notify-url`/`wait` fallbacks |
+| The waiting process dies with its harness | The job is durable; `eve wait` replays; `eve pending` surfaces uncollected outcomes |
 | Crash during delivery duplicates or misreports an upload | Upload intent, reconciliation window, duplicate = landed (§5.5); acceptance test in M1 |
 | Builds compete with the user's own Xcode use | Eve-owned DerivedData and simulators; one job at a time |
 | Token leak = code execution as the user | §14: few tokens, revocation, audit trail |
@@ -882,6 +868,30 @@ Estimated v1 (M0–M5): ~2 weeks of agent-assisted work.
 Also in the account and candidates for later onboarding: Barbican, Quoth, Agent Tick.
 
 ## 19. Review log
+
+### v3 → v4 (user decision, 2026-10-16)
+
+- Dropped T3 delivery (the MCP/OAuth client, `eve t3 login`, `--notify-t3`, the relay idea). Each
+  machine runs its own T3 and Quartz cannot reach Lattice's; more fundamentally, waiting is free,
+  so agents follow jobs with one long `eve wait` that reconnects through restarts, with
+  `--events` for per-milestone wake-ups and `eve pending` as the safety net. Webhooks remain only
+  for optional integrations (the human hook).
+- Found in the live restart test and fixed: a server shutdown cancelled the running job; now
+  only `eve cancel` cancels, and shutdown leaves the job for restart recovery.
+- Reviewed by GPT-6.1 Sol ("request changes"); all findings fixed:
+
+| Finding | Severity | Resolution |
+|---|---|---|
+| A new `eve wait` after `eve confirm` replayed the old pause and stopped (exit 75 without a timeout) | blocker | A pause/terminal event is checked against the job's current state; if the job moved on, the wait continues from that event |
+| Shutdown could still persist a failure through helpers (DeveloperDir, version, BundleVersions) | blocker | One guard in the job context: no terminal transition while shutting down unless a user cancelled |
+| Cancelling a watched (processing) job was resumed by the next watcher; cancel/settle race | major | Per-run lock with `settled`; watchers record a user cancel; parked jobs without a runner are cancelled directly |
+| `eve pending` used the current server for every entry; a 404 silently dropped jobs, even with `--peek` | major | Entries keyed by server + job; other servers reported, 404s reported (and dropped unless `--peek`) |
+| Outcomes were marked collected before they were printed; one lookup error hid the rest | major | Print first, then collect; per-entry errors |
+| `--timeout` did not bound the command (detached 60 s fetches) | major | Final fetch within the caller's deadline; on timeout the last seen state is returned |
+| Hub publication order could differ from commit order, losing an event on the stream | major | The SSE handler treats hub messages as wake-ups and drains events in order from SQLite |
+| The idempotency key was only printed after a successful submit | major | Key printed and recorded (ledger intent) before the POST |
+| Ledger durability and eviction of uncollected entries | minor | fsync of file and directory; only collected entries are evicted |
+| Unbounded events-mode result line; skill gaps; leftover T3 docs | minor | Result line capped at 6 KB; concrete Monitor invocation and exit-78 guidance in the skill; docs cleaned |
 
 ### v2 → v3 (user decisions)
 

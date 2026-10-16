@@ -2,6 +2,7 @@ package queue
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"time"
@@ -27,7 +28,14 @@ func bg() (context.Context, context.CancelFunc) {
 	return context.WithTimeout(context.Background(), 30*time.Second)
 }
 
+// errShuttingDown refuses terminal transitions while the server stops: whatever failed was
+// most likely interrupted by the shutdown itself, and restart recovery resumes the job.
+var errShuttingDown = errors.New("server shutting down; the job is left for restart recovery")
+
 func (jc *JobCtx) apply(t store.Transition) error {
+	if t.To.Terminal() && jc.Ctx.Err() != nil && !jc.q.cancelledByUser(jc.Job.ID) {
+		return errShuttingDown
+	}
 	ctx, cancel := bg()
 	defer cancel()
 	j, err := jc.q.transition(ctx, jc.Job.ID, t)

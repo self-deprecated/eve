@@ -28,7 +28,6 @@ type Server struct {
 	Device    DeviceDefaults `yaml:"device"`
 	Notify    Notify         `yaml:"notify"`
 	Xcode     XcodeSettings  `yaml:"xcode"`
-	T3        T3             `yaml:"t3"`
 }
 
 // ASC is the App Store Connect API key.
@@ -91,11 +90,6 @@ type HookToken struct {
 type XcodeSettings struct {
 	XcodegenVersion string `yaml:"xcodegenVersion"`
 	XcodegenSHA256  string `yaml:"xcodegenSha256"`
-}
-
-// T3 configures delivery into T3 threads via its local MCP endpoint (PLAN.md §8.1).
-type T3 struct {
-	URL string `yaml:"url"` // default http://127.0.0.1:3773
 }
 
 // Signing modes.
@@ -238,9 +232,6 @@ func (s *Server) applyDefaults() {
 	}
 	s.DataDir = ExpandHome(s.DataDir)
 	s.ASC.KeyPath = ExpandHome(s.ASC.KeyPath)
-	if s.T3.URL == "" {
-		s.T3.URL = "http://127.0.0.1:3773"
-	}
 	if s.Xcode.XcodegenVersion == "" {
 		s.Xcode.XcodegenVersion = "2.46.0"
 		s.Xcode.XcodegenSHA256 = "4d9e34b62172d645eed6457cac13fc222569974098ef4ee9c3368bedf0196806"

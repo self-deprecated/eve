@@ -1,6 +1,23 @@
 # Changelog
 
-## Unreleased — M1 in progress (2026-10-16)
+## Unreleased — M1 (2026-10-16)
+
+### v4: client-side streaming replaces T3 delivery
+- Removed the T3 MCP/OAuth client, `eve t3 login` and `--notify-t3`. Agents follow jobs with
+  `eve submit --wait` / `eve wait`, which reconnects forever through drops and server restarts
+  (Last-Event-ID), with `--events` (one stdout line per phase, final one-line result) and
+  `eve pending` (local ledger of uncollected outcomes). Webhooks stay for optional integrations.
+- Fixed: a server shutdown cancelled the running job. Only `eve cancel` cancels now; shutdown
+  leaves the job for restart recovery, and `serve` waits for the worker to stop its build.
+- Live-tested on Quartz: server killed mid-archive → job requeued with the same build number,
+  client reconnected and received the size-guard pause (exit 76).
+- Review by GPT-6.1 Sol: fixed replayed pauses ending a resumed wait, shutdown persisting
+  failures through helpers, lost cancellations of watched jobs, per-server ledger scoping,
+  collect-after-print, `--timeout` bounds, SSE event ordering (drain from the store), printing
+  the idempotency key before submitting, ledger fsync and retention. Legacy `t3` outbox rows
+  (none outside test databases) exhaust as unknown targets.
+- Nix module is now home-manager (`homeManagerModules.default`, `services.eve`); Go module path
+  `github.com/self-deprecated/eve`.
 
 ### Done
 - M0 spikes: signing from an Aqua LaunchAgent works (with the no-shell-startup-files rule); T3
@@ -28,5 +45,4 @@
 
 ### Still open for M1
 - First real TestFlight upload through eve (needs the user's go-ahead).
-- `eve t3 login` approval and delivery into a thread across a T3 restart.
 - `svc:eve` Tailscale Service and the mono-nix module on Quartz (operator steps).

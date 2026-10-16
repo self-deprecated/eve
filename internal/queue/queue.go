@@ -55,6 +55,22 @@ type Queue struct {
 type running struct {
 	cancel context.CancelFunc
 	phase  func() api.State
+
+	// mu orders Cancel against the end of a run: once settled, Cancel no longer relies on the
+	// runner and records the cancellation itself.
+	mu      sync.Mutex
+	settled bool
+	// byUser is set by Cancel. A context cancelled without it means the server is shutting
+	// down: the job is left as it is, for restart recovery to resume (PLAN.md §5.5).
+	byUser bool
+}
+
+// settle marks r finished and reports whether a user cancelled it.
+func (r *running) settle() (byUser bool) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.settled = true
+	return r.byUser
 }
 
 // ErrNotCancellable is returned when cancelling would interrupt an upload in flight.
@@ -141,8 +157,30 @@ func (q *Queue) Exec(ctx context.Context, j store.Job) {
 	q.settle(jc, err)
 }
 
+func (q *Queue) cancelledByUser(id string) bool {
+	q.mu.Lock()
+	r := q.running[id]
+	q.mu.Unlock()
+	if r == nil {
+		return false
+	}
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return r.byUser
+}
+
+func (q *Queue) runner(id string) *running {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	return q.running[id]
+}
+
 // settle makes sure a job that returned from its pipeline is terminal or parked.
 func (q *Queue) settle(jc *JobCtx, err error) {
+	byUser := false
+	if r := q.runner(jc.Job.ID); r != nil {
+		byUser = r.settle()
+	}
 	cur, gerr := q.Store.Get(context.Background(), jc.Job.ID)
 	if gerr != nil {
 		q.Log.Error("settle", "job", jc.Job.ID, "err", gerr)
@@ -152,6 +190,9 @@ func (q *Queue) settle(jc *JobCtx, err error) {
 		return
 	}
 	switch {
+	case errors.Is(jc.Ctx.Err(), context.Canceled) && !byUser:
+		// Shutdown, not a cancel: leave the job for Recover on the next start.
+		q.Log.Info("leaving job for restart recovery", "job", jc.Job.ID, "state", cur.State)
 	case errors.Is(jc.Ctx.Err(), context.Canceled):
 		_ = jc.finishDetached(api.StateCancelled, "cancelled", nil)
 	case err != nil:
@@ -205,6 +246,11 @@ func (q *Queue) watch(ctx context.Context, j store.Job) {
 	}()
 	if err := p.Watch(jc); err != nil {
 		q.Log.Warn("watcher", "job", j.ID, "err", err)
+	}
+	if r := q.runner(j.ID); r != nil && r.settle() {
+		if cur, err := q.Store.Get(context.Background(), j.ID); err == nil && !cur.State.Terminal() {
+			_, _ = q.finish(context.Background(), j.ID, api.StateCancelled, "cancelled", nil)
+		}
 	}
 }
 
@@ -278,17 +324,22 @@ func (q *Queue) Cancel(ctx context.Context, id string, force bool) (store.Job, e
 	if j.State.Terminal() {
 		return j, nil
 	}
-	q.mu.Lock()
-	r := q.running[id]
-	q.mu.Unlock()
-	if r != nil {
-		if r.phase() == api.StateDelivering && !force {
-			return j, ErrNotCancellable
+	if r := q.runner(id); r != nil {
+		r.mu.Lock()
+		if !r.settled {
+			if r.phase() == api.StateDelivering && !force {
+				r.mu.Unlock()
+				return j, ErrNotCancellable
+			}
+			r.byUser = true
+			r.mu.Unlock()
+			r.cancel()
+			// The worker or watcher records the cancellation when it returns.
+			return j, nil
 		}
-		r.cancel()
-		// The worker records the cancellation when the pipeline returns.
-		return j, nil
+		r.mu.Unlock()
 	}
+	// Queued, parked without a watcher, or its run already ended: record it here.
 	return q.finish(ctx, id, api.StateCancelled, "cancelled", nil)
 }
 

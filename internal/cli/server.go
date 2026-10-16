@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -19,7 +18,6 @@ import (
 	"github.com/self-deprecated/eve/internal/notify"
 	"github.com/self-deprecated/eve/internal/queue"
 	"github.com/self-deprecated/eve/internal/store"
-	"github.com/self-deprecated/eve/internal/t3"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +29,7 @@ func AddServerCommands(root *cobra.Command, env *Env) {
 	var cfgPath string
 	root.PersistentFlags().StringVar(&cfgPath, "config", DefaultServerConfig(), "server.yml (server commands)")
 	load := func() (*config.Server, error) { return config.LoadServer(cfgPath) }
-	root.AddCommand(serveCmd(env, load), runCmd(env, load), tokenCmd(env, load), agentCmd(env, &cfgPath), t3Cmd(env, load))
+	root.AddCommand(serveCmd(env, load), runCmd(env, load), tokenCmd(env, load), agentCmd(env, &cfgPath))
 }
 
 func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
@@ -65,7 +63,8 @@ func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 			ctx, cancel := context.WithCancel(cmd.Context())
 			defer cancel()
 			errc := make(chan error, 3)
-			go func() { errc <- sys.Queue.Run(ctx) }()
+			queueDone := make(chan struct{})
+			go func() { errc <- sys.Queue.Run(ctx); close(queueDone) }()
 			go func() { errc <- sys.Deliverer.Run(ctx) }()
 			go func() {
 				if err := httpSrv.Serve(ln); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -78,9 +77,17 @@ func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 			case <-ctx.Done():
 			case err = <-errc:
 			}
+			cancel()
 			shutdown, c2 := context.WithTimeout(context.Background(), 10*time.Second)
 			defer c2()
 			_ = httpSrv.Shutdown(shutdown)
+			// Let the worker stop its build's process group (SIGINT, then SIGKILL after 20 s);
+			// the job itself stays where it was for restart recovery.
+			select {
+			case <-queueDone:
+			case <-time.After(25 * time.Second):
+				log.Warn("worker did not stop in time; restart recovery will kill any leftover build")
+			}
 			return err
 		},
 	}
@@ -278,60 +285,6 @@ func agentCmd(env *Env, cfgPath *string) *cobra.Command {
 	})
 	return cmd
 }
-
-func t3Cmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
-	cmd := &cobra.Command{Use: "t3", Short: "Connect eve to T3 so results are posted into agent threads"}
-	cmd.AddCommand(&cobra.Command{
-		Use:   "login",
-		Short: "Authorize eve against T3's local MCP endpoint (opens a browser once)",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			cfg, err := load()
-			if err != nil {
-				return err
-			}
-			ts := &t3.TokenStore{Path: T3TokenPath(cfg)}
-			open := func(u string) error {
-				_, _ = fmt.Fprintf(env.Out, "Approve eve in T3:\n  %s\n", u)
-				return exec.Command("/usr/bin/open", u).Run()
-			}
-			ctx, cancel := context.WithTimeout(cmd.Context(), 10*time.Minute)
-			defer cancel()
-			if err := t3.Login(ctx, cfg.T3.URL, open, ts); err != nil {
-				return err
-			}
-			st := ts.Status()
-			_, _ = fmt.Fprintf(env.Out, "eve is authorized in T3 (%s", st.State)
-			if !st.ExpiresAt.IsZero() {
-				_, _ = fmt.Fprintf(env.Out, ", expires %s", st.ExpiresAt.Local().Format(time.DateTime))
-			}
-			_, _ = fmt.Fprintln(env.Out, ")")
-			return nil
-		},
-	}, &cobra.Command{
-		Use: "status", Short: "Show eve's T3 authorization", Args: cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			cfg, err := load()
-			if err != nil {
-				return err
-			}
-			st := (&t3.TokenStore{Path: T3TokenPath(cfg)}).Status()
-			if env.JSON {
-				return env.printJSON(st)
-			}
-			_, _ = fmt.Fprintf(env.Out, "%s", st.State)
-			if !st.ExpiresAt.IsZero() {
-				_, _ = fmt.Fprintf(env.Out, " (expires %s)", st.ExpiresAt.Local().Format(time.DateTime))
-			}
-			_, _ = fmt.Fprintln(env.Out)
-			return nil
-		},
-	})
-	return cmd
-}
-
-// T3TokenPath is where eve keeps its T3 authorization.
-func T3TokenPath(cfg *config.Server) string { return filepath.Join(cfg.DataDir, "t3-token.json") }
 
 // ascFromConfig returns an App Store Connect client, or nil when no key is configured.
 func ascFromConfig(cfg *config.Server) (*asc.Client, error) {

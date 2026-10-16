@@ -1,5 +1,8 @@
 # M0 spike 2 — waking a T3 thread (2026-10-16)
 
+> **Superseded (PLAN v4):** eve no longer delivers into T3. Agents follow jobs with `eve wait`
+> (client-side streaming); see PLAN.md §8. Kept for the record.
+
 ## Plan A: per-job T3 webhook task — not available on Quartz
 
 `schedule_task {type: webhook}` bound to the requesting thread succeeded, but returned no

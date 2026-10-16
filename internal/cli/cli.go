@@ -55,7 +55,7 @@ func Root(version string) (*cobra.Command, *Env) {
 	root.AddCommand(
 		versionCmd(env), loginCmd(env), doctorCmd(env), waitCmd(env), statusCmd(env), logsCmd(env),
 		jobsCmd(env), cancelCmd(env), confirmCmd(env), rejectCmd(env), sizeCmd(env), buildsCmd(env),
-		baselineCmd(env), appsCmd(env), submitCmd(env),
+		baselineCmd(env), appsCmd(env), submitCmd(env), pendingCmd(env),
 	)
 	return root, env
 }
@@ -97,14 +97,19 @@ func (e *Env) printJSON(v any) error {
 	return enc.Encode(v)
 }
 
+// writeResult prints a result document (JSON or human).
+func (e *Env) writeResult(r api.Result) error {
+	if e.JSON {
+		return e.printJSON(r)
+	}
+	_, err := fmt.Fprint(e.Out, FormatResult(r))
+	return err
+}
+
 // printResult prints a result document and returns the exit error matching its outcome.
 func (e *Env) printResult(r api.Result) error {
-	if e.JSON {
-		if err := e.printJSON(r); err != nil {
-			return err
-		}
-	} else {
-		_, _ = fmt.Fprint(e.Out, FormatResult(r))
+	if err := e.writeResult(r); err != nil {
+		return err
 	}
 	if code := api.ExitCode(r.Outcome); code != 0 {
 		return &ExitError{Code: code}

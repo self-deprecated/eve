@@ -231,7 +231,7 @@ func TestTraps(t *testing.T) {
 func TestTable(t *testing.T) {
 	humans := []string{
 		"", api.HumanUnlockPhone, api.HumanXcodeSignIn, api.HumanAcceptAgreement, api.HumanExportCompliance,
-		api.HumanCreateAppRecord, api.HumanConsoleLogin, api.HumanAcceptTestflightInvite, api.HumanT3Login,
+		api.HumanCreateAppRecord, api.HumanConsoleLogin, api.HumanAcceptTestflightInvite,
 	}
 	for _, r := range rules {
 		if !slices.Contains(humans, r.human) {

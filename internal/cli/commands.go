@@ -14,6 +14,7 @@ import (
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/client"
 	"github.com/self-deprecated/eve/internal/config"
+	"github.com/self-deprecated/eve/internal/ledger"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -132,50 +133,29 @@ func doctorCmd(env *Env) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.Flags().BoolVar(&host, "host", false, "run the server's host checks (keychain, Xcode, App Store Connect, T3, devices)")
+	cmd.Flags().BoolVar(&host, "host", false, "run the server's host checks (keychain, Xcode, App Store Connect, disk)")
 	return cmd
 }
 
 func waitCmd(env *Env) *cobra.Command {
-	var timeout time.Duration
-	var quiet bool
+	var w waitFlags
 	cmd := &cobra.Command{
 		Use:   "wait <job>",
-		Short: "Wait for a job to finish or need confirmation; the exit code is the outcome",
-		Long: "Blocks until the job is terminal or awaiting confirmation, then prints the result.\n" +
-			"Exit codes: 0 succeeded, 1 failed, 65 rejected, 69 unavailable, 75 still running at --timeout,\n" +
-			"76 confirmation required, 78 needs a human, 130 cancelled.",
+		Short: "Follow a job until it finishes or needs confirmation; the exit code is the outcome",
+		Long: "Holds one connection to the server and reconnects through network drops and server\n" +
+			"restarts without losing events. Run it as a long-running (background) command: waiting\n" +
+			"costs nothing. Exit codes: 0 succeeded, 1 failed, 65 rejected, 69 unavailable,\n" +
+			"75 still running at --timeout, 76 confirmation required, 78 needs a human, 130 cancelled.",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := env.client()
 			if err != nil {
 				return err
 			}
-			ctx := cmd.Context()
-			if timeout > 0 {
-				var cancel context.CancelFunc
-				ctx, cancel = context.WithTimeout(ctx, timeout)
-				defer cancel()
-			}
-			r, err := c.Wait(ctx, args[0], func(ev api.Event) {
-				if !quiet && !env.JSON && ev.Message != "" {
-					_, _ = fmt.Fprintf(env.Err, "%s  %-22s %s\n", ev.Time.Local().Format("15:04:05"), ev.State, ev.Message)
-				}
-			})
-			if errors.Is(err, context.DeadlineExceeded) {
-				if r.ID != "" {
-					_ = env.printResult(r)
-				}
-				return &ExitError{Code: api.ExitWaitTimeout, Err: fmt.Errorf("still %s after %s; the job keeps running", r.Outcome, timeout)}
-			}
-			if err != nil {
-				return err
-			}
-			return env.printResult(r)
+			return follow(cmd.Context(), env, c, args[0], w)
 		},
 	}
-	cmd.Flags().DurationVar(&timeout, "timeout", 0, "stop waiting after this long (exit 75); the job keeps running")
-	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "don't print progress events")
+	w.register(cmd)
 	return cmd
 }
 
@@ -196,12 +176,10 @@ func statusCmd(env *Env) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if err := env.printResult(r); err != nil {
-				var ee *ExitError
-				if !errors.As(err, &ee) {
-					return err
-				}
+			if err := env.writeResult(r); err != nil {
+				return err
 			}
+			_ = ledger.Default().Collect(c.BaseURL, r.ID, r.Outcome)
 			if d, err := c.Deliveries(cmd.Context(), args[0]); err == nil && !env.JSON {
 				_, _ = fmt.Fprint(env.Out, FormatDeliveries(d))
 			}

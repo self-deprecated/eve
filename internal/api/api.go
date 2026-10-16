@@ -161,7 +161,6 @@ const (
 	HumanCreateAppRecord        = "create_app_record"
 	HumanConsoleLogin           = "console_login"
 	HumanAcceptTestflightInvite = "accept_testflight_invite"
-	HumanT3Login                = "t3_login"
 )
 
 // Human describes what a person has to do.
@@ -225,7 +224,6 @@ type JobRequest struct {
 	Verb           Verb       `json:"verb"`
 	Source         JobSource  `json:"source"`
 	Options        JobOptions `json:"options"`
-	NotifyT3       []string   `json:"notifyT3,omitempty"`
 	NotifyURLs     []string   `json:"notifyUrls,omitempty"`
 	IdempotencyKey string     `json:"idempotencyKey,omitempty"`
 }
@@ -315,7 +313,7 @@ func NotifyEventFor(s State) string {
 	return ""
 }
 
-// Notification is what eve delivers to a webhook or a T3 thread.
+// Notification is what eve delivers to a webhook.
 type Notification struct {
 	Event      string `json:"event"`
 	ID         string `json:"id"`

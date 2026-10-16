@@ -44,7 +44,7 @@ in {
           apps.driver = { bundleId = "ai.selfdeprecated.driver"; testflight.group = "Driver"; };
         }
       '';
-      description = "The rest of server.yml: team, asc, apps, sizeGuard, device, notify, t3.";
+      description = "The rest of server.yml: team, asc, apps, sizeGuard, device, notify.";
     };
     claudeSkill = lib.mkOption {
       type = lib.types.bool;
@@ -78,7 +78,7 @@ in {
         }
       ];
       home.packages = [cfg.package];
-      # `eve token`, `eve t3 login` and `eve run` read server.yml from here by default.
+      # `eve token`, `eve run` and `eve doctor` read server.yml from here by default.
       xdg.configFile."eve/server.yml".source = configFile;
 
       launchd.agents.eve = {

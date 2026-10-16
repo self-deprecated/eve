@@ -7,11 +7,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/client"
 	"github.com/self-deprecated/eve/internal/config"
+	"github.com/self-deprecated/eve/internal/ledger"
 	"github.com/self-deprecated/eve/internal/sizeguard"
 	"github.com/self-deprecated/eve/internal/source"
 	"github.com/self-deprecated/eve/internal/store"
@@ -21,9 +21,9 @@ import (
 type submitFlags struct {
 	app, key, buildNumber, notes, device, path string
 	acceptSource, expectSize                   string
-	notifyT3, notifyURLs                       []string
+	notifyURLs                                 []string
 	release, wait                              bool
-	timeout                                    time.Duration
+	follow                                     waitFlags
 }
 
 func submitCmd(env *Env) *cobra.Command {
@@ -32,14 +32,13 @@ func submitCmd(env *Env) *cobra.Command {
 		Use:   "submit <testflight|device|check> [-- command for exec]",
 		Short: "Send the working tree to Quartz and start a job; returns at once (or waits with --wait)",
 		Long: "Uploads the repository (git-tracked and untracked-but-not-ignored files; never build output or\n" +
-			"secrets) after the size guard's source check, then queues the job. Pass --notify-t3 <thread id>\n" +
-			"and end your turn: the result is posted into the thread when the job finishes.",
+			"secrets) after the size guard's source check, then queues the job. With --wait it then follows\n" +
+			"the job until it finishes or needs confirmation; the exit code is the outcome.",
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error { return runSubmit(cmd.Context(), env, f, args) },
 	}
 	fl := cmd.Flags()
 	fl.StringVar(&f.app, "app", "", "app name (default: from eve.yml)")
-	fl.StringArrayVar(&f.notifyT3, "notify-t3", nil, "T3 thread id to post the result into (repeatable)")
 	fl.StringArrayVar(&f.notifyURLs, "notify-url", nil, "webhook to POST the result to (repeatable; must be allow-listed on the server)")
 	fl.StringVar(&f.key, "idempotency-key", "", "retry key: the same key returns the same job")
 	fl.StringVar(&f.buildNumber, "build-number", "", "explicit build number (default: allocated by eve)")
@@ -49,8 +48,8 @@ func submitCmd(env *Env) *cobra.Command {
 	fl.StringVar(&f.acceptSource, "accept-source-size", "", "upload despite the source check, with a reason")
 	fl.StringVar(&f.expectSize, "expect-size-change", "", "pre-approve app bundle growth for this job, with a reason")
 	fl.StringVar(&f.path, "path", "", "build this checkout in place on Quartz instead of uploading (owner token only)")
-	fl.BoolVar(&f.wait, "wait", false, "wait for the result; the exit code is the outcome")
-	fl.DurationVar(&f.timeout, "timeout", 0, "with --wait: stop waiting after this long (exit 75)")
+	fl.BoolVar(&f.wait, "wait", false, "then follow the job like `eve wait`; the exit code is the outcome")
+	f.follow.register(cmd)
 	return cmd
 }
 
@@ -64,7 +63,7 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 		return err
 	}
 	req := api.JobRequest{
-		Verb: verb, NotifyT3: f.notifyT3, NotifyURLs: f.notifyURLs,
+		Verb: verb, NotifyURLs: f.notifyURLs,
 		Options: api.JobOptions{BuildNumber: f.buildNumber, Notes: f.notes, Device: f.device, Release: f.release, ExpectSizeChange: f.expectSize},
 	}
 	if verb == api.VerbExec {
@@ -77,6 +76,7 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 	if req.IdempotencyKey == "" {
 		req.IdempotencyKey = store.NewKey()
 	}
+	lg := ledger.Default()
 
 	if f.path != "" {
 		abs, err := filepath.Abs(f.path)
@@ -106,10 +106,17 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 		req.Source = src
 	}
 
+	// Known before the server answers: if the response is lost, the same key returns the same job.
+	_, _ = fmt.Fprintf(env.Err, "eve: submitting %s for %s (idempotency key %s; if this command dies, rerun it with --idempotency-key %s)\n",
+		verb, req.App, req.IdempotencyKey, req.IdempotencyKey)
+	if err := lg.Intend(ledger.Entry{Server: c.BaseURL, Key: req.IdempotencyKey, App: req.App, Verb: verb, Dir: workDir()}); err != nil {
+		_, _ = fmt.Fprintln(env.Err, "eve: could not record the submission locally:", err)
+	}
 	created, err := c.Submit(ctx, req)
 	if err != nil {
 		return err
 	}
+	_ = lg.Resolve(c.BaseURL, req.IdempotencyKey, created.ID)
 	if !f.wait {
 		if env.JSON {
 			return env.printJSON(created)
@@ -120,31 +127,11 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 			state = "already submitted (" + string(created.State) + ")"
 		}
 		_, _ = fmt.Fprintf(env.Out, "%s %s %s for %s (idempotency key %s)\n", state, created.ID, verbWord, req.App, created.IdempotencyKey)
-		if len(f.notifyT3)+len(f.notifyURLs) > 0 {
-			_, _ = fmt.Fprintln(env.Out, "End your turn; the result will be posted when the job finishes.")
-		} else {
-			_, _ = fmt.Fprintf(env.Out, "Follow it with: eve wait %s\n", created.ID)
-		}
+		_, _ = fmt.Fprintf(env.Out, "Follow it with: eve wait %s\n", created.ID)
 		return nil
 	}
-	wctx := ctx
-	if f.timeout > 0 {
-		var cancel context.CancelFunc
-		wctx, cancel = context.WithTimeout(ctx, f.timeout)
-		defer cancel()
-	}
-	r, err := c.Wait(wctx, created.ID, func(ev api.Event) {
-		if !env.JSON && ev.Message != "" {
-			_, _ = fmt.Fprintf(env.Err, "%s  %-22s %s\n", ev.Time.Local().Format("15:04:05"), ev.State, ev.Message)
-		}
-	})
-	if errors.Is(err, context.DeadlineExceeded) {
-		return &ExitError{Code: api.ExitWaitTimeout, Err: fmt.Errorf("still running after %s; follow with eve wait %s", f.timeout, created.ID)}
-	}
-	if err != nil {
-		return err
-	}
-	return env.printResult(r)
+	_, _ = fmt.Fprintf(env.Err, "eve: job %s accepted; following it\n", created.ID)
+	return follow(ctx, env, c, created.ID, f.follow)
 }
 
 // upload lists, size-checks, packs and uploads the tree; it returns the job's source.
@@ -217,4 +204,9 @@ func pick(flag, fromRepo string) string {
 		return flag
 	}
 	return fromRepo
+}
+
+func workDir() string {
+	d, _ := os.Getwd()
+	return d
 }

@@ -138,7 +138,6 @@ func TestCreateJobValidation(t *testing.T) {
 		{"unknown source", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: strings.Repeat("b", 64)}}, "unknown_source"},
 		{"path needs owner", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{Path: "/Users/jmo/Developer/driver"}}, "path_needs_owner"},
 		{"url not allowed", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: f.sha}, NotifyURLs: []string{"https://evil.example/x"}}, "notify_url_not_allowed"},
-		{"bad thread", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: f.sha}, NotifyT3: []string{"a b"}}, "bad_thread"},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
@@ -156,7 +155,7 @@ func TestCreateJobIdempotentAndRecordsToken(t *testing.T) {
 	f := newFixture(t, nil)
 	req := api.JobRequest{
 		App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: f.sha}, IdempotencyKey: "k1",
-		NotifyT3: []string{"518788a8-d442-462a-8da6-bb474382946f"}, NotifyURLs: []string{"https://quartz.tail6e682f.ts.net/hook"},
+		NotifyURLs: []string{"https://quartz.tail6e682f.ts.net/hook"},
 	}
 	resp, body := f.do(t, "POST", "/v1/jobs", f.tok, req)
 	if resp.StatusCode != 201 {
@@ -171,7 +170,7 @@ func TestCreateJobIdempotentAndRecordsToken(t *testing.T) {
 		t.Fatalf("retry with the same key must return the job: %d %s", resp.StatusCode, body)
 	}
 	j, _ := f.st.Get(context.Background(), a.ID)
-	if j.TokenName != "lattice" || len(j.Request.NotifyT3) != 1 {
+	if j.TokenName != "lattice" || len(j.Request.NotifyURLs) != 1 {
 		t.Fatalf("%+v", j)
 	}
 	// Owner may build a path in place.

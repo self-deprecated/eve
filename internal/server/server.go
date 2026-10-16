@@ -151,8 +151,6 @@ func (s *Server) putSource(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, map[string]string{"sha256": sha})
 }
 
-var threadRe = regexp.MustCompile(`^[A-Za-z0-9._:%-]{1,200}$`)
-
 func (s *Server) createJob(w http.ResponseWriter, r *http.Request) {
 	var req api.JobRequest
 	if err := json.NewDecoder(io.LimitReader(r.Body, 1<<20)).Decode(&req); err != nil {
@@ -184,12 +182,6 @@ func (s *Server) createJob(w http.ResponseWriter, r *http.Request) {
 	if req.Source.Path != "" && !filepath.IsAbs(req.Source.Path) {
 		writeErr(w, http.StatusBadRequest, "bad_path", "path must be absolute")
 		return
-	}
-	for _, t := range req.NotifyT3 {
-		if !threadRe.MatchString(t) {
-			writeErr(w, http.StatusBadRequest, "bad_thread", fmt.Sprintf("invalid T3 thread id %q", t))
-			return
-		}
 	}
 	for _, u := range req.NotifyURLs {
 		if s.AllowURL == nil {
@@ -283,14 +275,23 @@ func (s *Server) events(w http.ResponseWriter, r *http.Request) {
 		after = ev.Seq
 		return ev.State.Terminal() && ev.Kind == api.EventTransition
 	}
-	past, err := s.Store.Events(r.Context(), j.ID, after)
-	if err != nil {
-		return
-	}
-	for _, ev := range past {
-		if send(ev) {
-			return
+	// drain sends every committed event after the cursor, in order, from the store. Hub
+	// messages only wake it up: publication order across concurrent transitions is not commit
+	// order, so events are never taken from the hub itself.
+	drain := func() (done bool, ok bool) {
+		evs, err := s.Store.Events(r.Context(), j.ID, after)
+		if err != nil {
+			return false, false
 		}
+		for _, ev := range evs {
+			if send(ev) {
+				return true, true
+			}
+		}
+		return false, true
+	}
+	if done, ok := drain(); done || !ok {
+		return
 	}
 	heartbeat := time.NewTicker(15 * time.Second)
 	defer heartbeat.Stop()
@@ -298,14 +299,11 @@ func (s *Server) events(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-r.Context().Done():
 			return
-		case ev, open := <-live:
+		case _, open := <-live:
 			if !open {
 				return // fell behind; the client reconnects with Last-Event-ID
 			}
-			if ev.Seq <= after {
-				continue
-			}
-			if send(ev) {
+			if done, ok := drain(); done || !ok {
 				return
 			}
 		case <-heartbeat.C:

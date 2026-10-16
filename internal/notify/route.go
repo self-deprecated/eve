@@ -9,14 +9,14 @@ import (
 )
 
 // BuildDeliveries decides who receives event for a job (PLAN.md §8.1a, §8.1b). The requesting
-// agents (T3 threads and notify URLs) get every event. The human hook gets only events a person
+// notify URLs get every event. The human hook gets only events a person
 // must act on: needs_human and waiting_for_device. awaiting_confirmation never goes to the
 // human; size confirmations are the agent's call. Exhausted deliveries reach the human through
 // ExhaustedCopy instead. event defaults to n.Event; duplicate and blank addresses are dropped.
 //
 // Deduplicating one human message per job and action across repeated events is the store's
 // job (a unique key on job, event and target).
-func BuildDeliveries(n api.Notification, t3Threads, urls []string, human *config.HumanHook, event string) []Target {
+func BuildDeliveries(n api.Notification, urls []string, human *config.HumanHook, event string) []Target {
 	if event == "" {
 		event = n.Event
 	}
@@ -28,9 +28,6 @@ func BuildDeliveries(n api.Notification, t3Threads, urls []string, human *config
 			seen[t] = true
 			out = append(out, t)
 		}
-	}
-	for _, id := range t3Threads {
-		add(Target{Kind: KindT3, Address: id})
 	}
 	for _, u := range urls {
 		add(Target{Kind: KindWebhook, Address: u})
@@ -82,7 +79,6 @@ var humanActions = map[string]string{
 	api.HumanCreateAppRecord:        "create the app record in App Store Connect",
 	api.HumanConsoleLogin:           "log in to the Mac's console session",
 	api.HumanAcceptTestflightInvite: "accept the TestFlight invitation",
-	api.HumanT3Login:                "run `eve t3 login` on Quartz",
 }
 
 // HumanText is the one-line chat message for event about n.

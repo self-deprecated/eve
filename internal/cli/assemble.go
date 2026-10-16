@@ -25,7 +25,6 @@ import (
 	"github.com/self-deprecated/eve/internal/sizeguard"
 	"github.com/self-deprecated/eve/internal/source"
 	"github.com/self-deprecated/eve/internal/store"
-	"github.com/self-deprecated/eve/internal/t3"
 )
 
 // System is a fully wired eve server.
@@ -37,7 +36,6 @@ type System struct {
 	Deliverer *notify.Deliverer
 	Sources   source.Store
 	ASC       *asc.Client
-	T3        *t3.TokenStore
 	Log       *slog.Logger
 }
 
@@ -59,7 +57,7 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 	}
 	sys := &System{
 		Config: cfg, Store: st, Sources: source.Store{Dir: filepath.Join(cfg.DataDir, "sources")}, ASC: ascClient,
-		T3: &t3.TokenStore{Path: T3TokenPath(cfg)}, Log: log,
+		Log: log,
 	}
 
 	home, _ := os.UserHomeDir()
@@ -80,7 +78,6 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 	sys.Deliverer = &notify.Deliverer{
 		Outbox: outboxAdapter{st}, Secrets: notify.ConfigSecrets{Notify: cfg.Notify}, AllowHosts: cfg.Notify.AllowHosts,
 		Version: version, Logger: log,
-		T3: &t3.Client{BaseURL: cfg.T3.URL, Store: sys.T3, Version: version},
 		OnExhausted: func(d notify.Delivery) {
 			if tgt, ok := notify.ExhaustedCopy(d, cfg.Notify.Human); ok {
 				_ = st.Enqueue(context.Background(), d.JobID, store.NewDelivery{
@@ -119,7 +116,7 @@ func (s *System) route(j store.Job, st api.State) []store.NewDelivery {
 	}
 	n := api.Notification{Event: event, ID: j.ID, Result: j.Result}
 	var out []store.NewDelivery
-	for _, t := range notify.BuildDeliveries(n, j.Request.NotifyT3, j.Request.NotifyURLs, s.Config.Notify.Human, event) {
+	for _, t := range notify.BuildDeliveries(n, j.Request.NotifyURLs, s.Config.Notify.Human, event) {
 		out = append(out, store.NewDelivery{Event: event, TargetKind: t.Kind, TargetAddress: t.Address, Payload: n})
 	}
 	return out
@@ -294,15 +291,6 @@ func (s *System) Doctor(ctx context.Context) any {
 		add("app store connect", status, detail)
 	} else {
 		add("app store connect", "warn", "no API key configured (asc.keyId)")
-	}
-	ts := s.T3.Status()
-	switch ts.State {
-	case t3.TokenValid:
-		add("t3", "ok", "authorized")
-	case t3.TokenExpiringSoon:
-		add("t3", "warn", "authorization expires "+ts.ExpiresAt.Local().Format(time.DateTime)+"; run `eve t3 login`")
-	default:
-		add("t3", "warn", string(ts.State)+": run `eve t3 login` on Quartz to deliver results into T3 threads")
 	}
 	var stfs syscallStatfs
 	if free, ok := stfs.free(s.Config.DataDir); ok {

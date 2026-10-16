@@ -308,36 +308,96 @@ func (c *Client) PutJSON(ctx context.Context, path string, in any) (json.RawMess
 	return out, err
 }
 
-// Wait follows a job's events until it is terminal or awaiting confirmation, reconnecting with
-// Last-Event-ID after network errors. onEvent (optional) sees every event. It returns the final
-// result document; ctx's deadline bounds the wait.
-func (c *Client) Wait(ctx context.Context, id string, onEvent func(api.Event)) (api.Result, error) {
+// WaitOptions configures Wait.
+type WaitOptions struct {
+	// OnEvent sees every event (replayed history first, then live events).
+	OnEvent func(api.Event)
+	// OnReconnect is called before each reconnection attempt with the error that ended the
+	// previous connection and the delay before the next try.
+	OnReconnect func(err error, delay time.Duration)
+}
+
+// Wait follows a job's events until it is terminal or awaiting confirmation and returns the
+// final result document. It never gives up while the server is merely unreachable or
+// restarting: it reconnects with Last-Event-ID, so events are neither lost nor repeated. It
+// stops on answers that will not change (bad token, unknown job) and when ctx ends; everything,
+// including the final result fetch, stays within ctx's deadline. On a deadline it returns the
+// last state it saw with ctx.Err().
+func (c *Client) Wait(ctx context.Context, id string, o WaitOptions) (api.Result, error) {
 	var last int64
+	lastState := api.State("")
 	backoff := time.Second
 	for {
-		done, err := c.follow(ctx, id, &last, onEvent)
-		if done {
-			return c.Job(context.WithoutCancel(ctx), id)
+		connected := false
+		stop, err := c.follow(ctx, id, &last, func(ev api.Event) {
+			connected = true
+			if ev.Kind == api.EventTransition {
+				lastState = ev.State
+			}
+			if o.OnEvent != nil {
+				o.OnEvent(ev)
+			}
+		})
+		if stop {
+			r, err := c.finalResult(ctx, id)
+			if err != nil {
+				return api.Result{ID: id, Outcome: lastState}, err
+			}
+			// A replayed pause from before an `eve confirm` is history: the job has moved on,
+			// so keep following from where the stream stopped.
+			if r.Outcome.Terminal() || r.Outcome == api.StateAwaitingConfirmation {
+				return r, nil
+			}
+			continue
 		}
 		if ctx.Err() != nil {
-			r, jerr := c.Job(context.WithoutCancel(ctx), id)
-			if jerr != nil {
-				return r, ctx.Err()
-			}
-			return r, ctx.Err()
+			return api.Result{ID: id, Outcome: lastState}, ctx.Err()
 		}
-		var apiErr *APIError
-		if errors.As(err, &apiErr) && apiErr.Status < 500 {
+		if permanent(err) {
 			return api.Result{}, err
+		}
+		if connected {
+			backoff = time.Second
+		}
+		if o.OnReconnect != nil {
+			o.OnReconnect(err, backoff)
 		}
 		select {
 		case <-ctx.Done():
+			return api.Result{ID: id, Outcome: lastState}, ctx.Err()
 		case <-time.After(backoff):
 		}
-		if backoff < 30*time.Second {
-			backoff *= 2
-		}
+		backoff = min(backoff*2, 30*time.Second)
 	}
+}
+
+// finalResult fetches the current result document, retrying while the server is unreachable,
+// within ctx.
+func (c *Client) finalResult(ctx context.Context, id string) (api.Result, error) {
+	backoff := time.Second
+	for {
+		r, err := c.Job(ctx, id)
+		if err == nil || permanent(err) {
+			return r, err
+		}
+		if ctx.Err() != nil {
+			return r, ctx.Err()
+		}
+		select {
+		case <-ctx.Done():
+			return r, ctx.Err()
+		case <-time.After(backoff):
+		}
+		backoff = min(backoff*2, 30*time.Second)
+	}
+}
+
+// permanent reports whether retrying cannot help: the server answered with a client error
+// (401 bad token, 404 unknown job, 400…). Timeouts and rate limits are not permanent.
+func permanent(err error) bool {
+	var apiErr *APIError
+	return errors.As(err, &apiErr) && apiErr.Status >= 400 && apiErr.Status < 500 &&
+		apiErr.Status != 408 && apiErr.Status != 429
 }
 
 // follow reads one SSE connection. It reports done when a terminal or awaiting_confirmation

@@ -4,7 +4,7 @@
 
 ### 1. Install through mono-nix
 
-Add the flake input and the module to `hosts/quartz` (nix-darwin):
+Done in mono/nix (`hosts/quartz/eve/_home.nix`, home-manager): the flake input and the module:
 
 ```nix
 # flake.nix inputs
@@ -13,17 +13,17 @@ eve = {
   inputs.nixpkgs.follows = "nixpkgs";
 };
 
-# hosts/quartz/default.nix
-imports = [ inputs.eve.darwinModules.default ];
+# hosts/quartz/eve/_home.nix (imported by home-manager.users.jmo)
+imports = [ inputs.eve.homeManagerModules.default ];
 services.eve = {
   enable = true;
-  user = "jmo";
-  settings = import ./_eve-settings.nix;   # the contents of server.yml below, as Nix
+  tailscaleService.enable = false;   # true once svc:eve exists (step 3)
+  settings = { … };                  # the contents of server.yml below, as Nix
 };
 ```
 
-Before the first `darwin-rebuild`, set `vendorHash` in `nix/package.nix`: build once
-(`nix build .#eve`), copy the expected hash from the error.
+After changing go.mod, update `vendorHash` in `nix/package.nix` (set `lib.fakeHash`, build,
+copy the hash from the error).
 
 Without Nix: `eve agent install --config ~/.config/eve/server.yml`.
 
@@ -75,16 +75,7 @@ gets its own Tailscale Service (like `svc:slipway`):
    and its drift classifier must accept that service entry.
 3. Clients use `https://eve.tail6e682f.ts.net`.
 
-### 4. Connect T3 (results posted into agent threads)
-
-```bash
-eve t3 login     # opens T3's approval page once; stores the token in ~/.local/share/eve
-eve t3 status
-```
-
-`eve doctor --host` warns before the authorization expires.
-
-### 5. Tokens
+### 4. Tokens
 
 The owner token is created on first start (`~/.local/share/eve/token`) and never leaves Quartz.
 For each other machine:
@@ -96,9 +87,10 @@ eve login https://eve.tail6e682f.ts.net --token eve_…
 eve doctor
 ```
 
-Agents running on Quartz itself log in the same way with a `quartz-agents` token.
+Agents on Quartz itself need no login: with no `client.yml`, the CLI uses the local server and
+its owner token.
 
-### 6. Auto-login after reboots
+### 5. Auto-login after reboots
 
 Decided in PLAN.md §18: Quartz logs in automatically so eve comes back by itself. macOS refuses
 automatic login while FileVault is on, so: `sudo fdesetup disable` (wait for decryption), then
@@ -137,13 +129,15 @@ pre:
   - swift test --package-path BodyDiffCore
 ```
 
-Then from the repo: `eve submit testflight --wait`.
+Then from the repo: `eve submit testflight --wait` (agents: as a background command; see the skill).
 
 ## Day to day
 
 | Task | Command |
 |---|---|
 | What's running | `eve jobs` |
+| Outcomes nobody has seen (this machine) | `eve pending` |
+| Follow a job again | `eve wait <job>` (`--events` for one line per phase) |
 | A job's result and notifications | `eve status <job>` |
 | Logs | `eve logs <job> --errors` (or `--phase archive`) |
 | Size report | `eve size <job>` |

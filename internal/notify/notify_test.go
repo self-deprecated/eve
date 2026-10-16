@@ -17,7 +17,6 @@ import (
 
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/config"
-	"github.com/self-deprecated/eve/internal/t3"
 )
 
 // fakeOutbox is an in-memory Outbox.
@@ -86,13 +85,6 @@ func (o *fakeOutbox) Exhausted(_ context.Context, id int64, lastErr string) erro
 	return nil
 }
 
-// senderFunc adapts a function to Sender.
-type senderFunc func(ctx context.Context, threadID, message, clientRequestID string) error
-
-func (f senderFunc) SendThread(ctx context.Context, threadID, message, clientRequestID string) error {
-	return f(ctx, threadID, message, clientRequestID)
-}
-
 type clock struct{ t time.Time }
 
 func (c *clock) Now() time.Time { return c.t }
@@ -117,28 +109,6 @@ func TestBackoff(t *testing.T) {
 	}
 }
 
-func TestDeliverT3(t *testing.T) {
-	ob := &fakeOutbox{}
-	var got []string
-	d := &Deliverer{Outbox: ob, Now: (&clock{t0}).Now, T3: senderFunc(func(_ context.Context, th, msg, crid string) error {
-		got = append(got, th, crid, msg)
-		return nil
-	})}
-	row := ob.add(Delivery{
-		JobID: "j_1", Event: api.NotifySucceeded, Target: Target{KindT3, "thread-9"},
-		Payload: notification(api.NotifySucceeded), CreatedAt: t0,
-	})
-	if err := d.DeliverOnce(context.Background()); err != nil {
-		t.Fatal(err)
-	}
-	if !ob.get(row.ID).delivered {
-		t.Fatal("not delivered")
-	}
-	if got[0] != "thread-9" || got[1] != "j_1:job.succeeded" || !strings.HasPrefix(got[2], "[eve] testflight driver j_1 → succeeded") {
-		t.Errorf("sent %q", got)
-	}
-}
-
 func TestRetryScheduleUntilExhausted(t *testing.T) {
 	ob := &fakeOutbox{}
 	clk := &clock{t0}
@@ -146,14 +116,12 @@ func TestRetryScheduleUntilExhausted(t *testing.T) {
 	var errs int
 	d := &Deliverer{
 		Outbox: ob, Now: clk.Now,
-		T3: senderFunc(func(context.Context, string, string, string) error {
-			return fmt.Errorf("%w: connection refused", t3.ErrUnavailable)
-		}),
 		OnExhausted: func(d Delivery) { exhausted = append(exhausted, d) },
 		OnError:     func(Delivery, error) { errs++ },
 	}
 	row := ob.add(Delivery{
-		JobID: "j_1", Event: api.NotifyFailed, Target: Target{KindT3, "th"},
+		// Nothing listens on port 1: every attempt is refused.
+		JobID: "j_1", Event: api.NotifyFailed, Target: Target{KindWebhook, "http://127.0.0.1:1/hook"},
 		Payload: notification(api.NotifyFailed), CreatedAt: t0,
 	})
 
@@ -211,20 +179,15 @@ func TestPermanentFailuresExhaustAtOnce(t *testing.T) {
 	for _, tc := range []struct {
 		name   string
 		target Target
-		sender Sender
 	}{
-		{"t3 rejected", Target{KindT3, "th"}, senderFunc(func(context.Context, string, string, string) error {
-			return fmt.Errorf("%w: thread not found", t3.ErrRejected)
-		})},
-		{"t3 not configured", Target{KindT3, "th"}, nil},
-		{"webhook 400", Target{KindWebhook, hook.URL + "/bad"}, nil},
-		{"webhook redirect", Target{KindWebhook, hook.URL + "/redirect"}, nil},
-		{"unknown kind", Target{"pager", "x"}, nil},
+		{"webhook 400", Target{KindWebhook, hook.URL + "/bad"}},
+		{"webhook redirect", Target{KindWebhook, hook.URL + "/redirect"}},
+		{"unknown kind", Target{"pager", "x"}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			ob := &fakeOutbox{}
 			var exhausted int
-			d := &Deliverer{Outbox: ob, Now: (&clock{t0}).Now, T3: tc.sender, OnExhausted: func(Delivery) { exhausted++ }}
+			d := &Deliverer{Outbox: ob, Now: (&clock{t0}).Now, OnExhausted: func(Delivery) { exhausted++ }}
 			row := ob.add(Delivery{
 				JobID: "j_1", Event: api.NotifyFailed, Target: tc.target,
 				Payload: notification(api.NotifyFailed), CreatedAt: t0,
@@ -236,26 +199,6 @@ func TestPermanentFailuresExhaustAtOnce(t *testing.T) {
 				t.Errorf("row %+v, OnExhausted %d", r, exhausted)
 			}
 		})
-	}
-}
-
-func TestUnauthorizedIsRetried(t *testing.T) {
-	ob := &fakeOutbox{}
-	var seen error
-	d := &Deliverer{
-		Outbox: ob, Now: (&clock{t0}).Now,
-		T3: senderFunc(func(context.Context, string, string, string) error {
-			return fmt.Errorf("%w: HTTP 401", t3.ErrUnauthorized)
-		}),
-		OnError: func(_ Delivery, err error) { seen = err },
-	}
-	row := ob.add(Delivery{JobID: "j_1", Event: api.NotifyFailed, Target: Target{KindT3, "th"}, CreatedAt: t0})
-	_ = d.DeliverOnce(context.Background())
-	if r := ob.get(row.ID); r.exhausted || r.Attempts != 1 || !r.next.Equal(t0.Add(10*time.Second)) {
-		t.Errorf("row %+v", r)
-	}
-	if !errors.Is(seen, t3.ErrUnauthorized) {
-		t.Errorf("OnError got %v", seen)
 	}
 }
 
@@ -384,16 +327,15 @@ func TestHumanTextExhausted(t *testing.T) {
 func TestKickDeliversPromptly(t *testing.T) {
 	ob := &fakeOutbox{}
 	delivered := make(chan struct{}, 1)
-	d := &Deliverer{Outbox: ob, Interval: time.Hour, T3: senderFunc(func(context.Context, string, string, string) error {
-		delivered <- struct{}{}
-		return nil
-	})}
+	hook := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { delivered <- struct{}{} }))
+	defer hook.Close()
+	d := &Deliverer{Outbox: ob, Interval: time.Hour}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	done := make(chan error)
 	go func() { done <- d.Run(ctx) }()
 
-	ob.add(Delivery{JobID: "j_1", Event: api.NotifySucceeded, Target: Target{KindT3, "th"}, CreatedAt: time.Now().Add(-time.Second)})
+	ob.add(Delivery{JobID: "j_1", Event: api.NotifySucceeded, Target: Target{KindWebhook, hook.URL}, CreatedAt: time.Now().Add(-time.Second)})
 	d.Kick()
 	select {
 	case <-delivered:
@@ -409,12 +351,18 @@ func TestKickDeliversPromptly(t *testing.T) {
 func TestCancelledAttemptIsNotRecorded(t *testing.T) {
 	ob := &fakeOutbox{}
 	ctx, cancel := context.WithCancel(context.Background())
-	d := &Deliverer{Outbox: ob, Now: (&clock{t0}).Now, T3: senderFunc(func(ctx context.Context, _, _, _ string) error {
+	hook := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// The server notices the client going away only once the body has been read.
+		_, _ = io.Copy(io.Discard, r.Body)
 		cancel()
-		<-ctx.Done()
-		return ctx.Err()
-	})}
-	row := ob.add(Delivery{JobID: "j_1", Event: api.NotifySucceeded, Target: Target{KindT3, "th"}, CreatedAt: t0})
+		select {
+		case <-r.Context().Done():
+		case <-time.After(5 * time.Second):
+		}
+	}))
+	defer hook.Close()
+	d := &Deliverer{Outbox: ob, Now: (&clock{t0}).Now}
+	row := ob.add(Delivery{JobID: "j_1", Event: api.NotifySucceeded, Target: Target{KindWebhook, hook.URL}, CreatedAt: t0})
 	_ = d.DeliverOnce(ctx)
 	if r := ob.get(row.ID); r.Attempts != 0 || r.exhausted || r.delivered {
 		t.Errorf("row %+v", r)

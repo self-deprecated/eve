@@ -1,5 +1,6 @@
-// Package notify delivers job notifications from Eve's durable outbox (PLAN.md §8): into T3
-// threads through internal/t3, to generic webhooks, and to an optional human webhook.
+// Package notify delivers job notifications from Eve's durable outbox (PLAN.md §8) to generic
+// webhooks and an optional human webhook. Agents are not notified here: they follow their jobs
+// with `eve wait`, which streams events from the server.
 //
 // The store writes one outbox row per (event, target) in the same transaction as the job
 // transition, then calls Deliverer.Kick. The Deliverer sends due rows, records success, and
@@ -49,12 +50,10 @@ import (
 	"time"
 
 	"github.com/self-deprecated/eve/internal/api"
-	"github.com/self-deprecated/eve/internal/t3"
 )
 
 // Target kinds.
 const (
-	KindT3      = "t3"
 	KindWebhook = "webhook"
 	KindHuman   = "human"
 )
@@ -67,8 +66,8 @@ const MaxAge = 24 * time.Hour
 
 // Target is one recipient of a notification.
 type Target struct {
-	Kind    string // KindT3, KindWebhook or KindHuman
-	Address string // T3 thread id, or webhook URL
+	Kind    string // KindWebhook or KindHuman
+	Address string // webhook URL
 }
 
 // Delivery is one outbox row: a notification for one target.
@@ -97,18 +96,13 @@ type Outbox interface {
 	Exhausted(ctx context.Context, id int64, lastErr string) error
 }
 
-// Sender posts a message into a T3 thread; *t3.Client implements it.
-type Sender interface {
-	SendThread(ctx context.Context, threadID, message, clientRequestID string) error
-}
-
-// ErrPermanent marks a failure that retrying cannot fix. Deliveries failing with it (or with
-// t3.ErrRejected) are exhausted at once.
+// ErrPermanent marks a failure that retrying cannot fix. Deliveries failing with it are
+// exhausted at once.
 var ErrPermanent = errors.New("permanent delivery failure")
 
 // IsPermanent reports whether err should end a delivery without retrying.
 func IsPermanent(err error) bool {
-	return errors.Is(err, ErrPermanent) || errors.Is(err, t3.ErrRejected)
+	return errors.Is(err, ErrPermanent)
 }
 
 // backoff is the retry schedule; the last step repeats until MaxAge.
@@ -125,11 +119,10 @@ func Backoff(attempt int) time.Duration {
 	return backoff[min(attempt, len(backoff))-1]
 }
 
-// Deliverer drains an Outbox. Its zero value is not usable: set Outbox, and T3, HTTP and
-// Secrets as needed.
+// Deliverer drains an Outbox. Its zero value is not usable: set Outbox, and HTTP and Secrets
+// as needed.
 type Deliverer struct {
 	Outbox  Outbox
-	T3      Sender       // nil: T3 targets fail permanently
 	HTTP    *http.Client // nil: a plain client; redirects are never followed
 	Secrets Secrets      // nil: webhooks are unsigned
 	// AllowHosts, when set, re-checks webhook URLs at delivery time (see AllowedURL), so a
@@ -139,8 +132,7 @@ type Deliverer struct {
 	// OnExhausted is called after a delivery is given up; the server uses it to copy a
 	// one-liner to the human hook (ExhaustedCopy).
 	OnExhausted func(Delivery)
-	// OnError is called after every failed attempt, e.g. to raise t3_login when the error is
-	// t3.ErrUnauthorized.
+	// OnError is called after every failed attempt (logging).
 	OnError   func(Delivery, error)
 	Version   string        // for User-Agent; empty means "dev"
 	Interval  time.Duration // poll interval; 0 means 5 s
@@ -278,11 +270,6 @@ func (d *Deliverer) handle(ctx context.Context, row Delivery) error {
 // deliver performs one attempt.
 func (d *Deliverer) deliver(ctx context.Context, row Delivery) error {
 	switch row.Target.Kind {
-	case KindT3:
-		if d.T3 == nil {
-			return fmt.Errorf("%w: T3 delivery is not configured", ErrPermanent)
-		}
-		return d.T3.SendThread(ctx, row.Target.Address, t3.FormatMessage(row.Payload), ClientRequestID(row))
 	case KindWebhook:
 		if d.AllowHosts != nil {
 			if err := AllowedURL(row.Target.Address, d.AllowHosts); err != nil {
@@ -294,11 +281,6 @@ func (d *Deliverer) deliver(ctx context.Context, row Delivery) error {
 		return d.postWebhook(ctx, row, HumanBody(row))
 	}
 	return fmt.Errorf("%w: unknown target kind %q", ErrPermanent, row.Target.Kind)
-}
-
-// ClientRequestID is the idempotency key for a T3 delivery: "<job>:<event>" (PLAN.md §8.1).
-func ClientRequestID(row Delivery) string {
-	return row.JobID + ":" + row.Event
 }
 
 func truncate(s string, n int) string {

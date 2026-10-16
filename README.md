@@ -1,13 +1,17 @@
 # eve
 
-The one who takes the apple. Fire-and-forget iOS builds on your own Mac: an agent (or you) runs
-`eve submit testflight`, ends its turn, and is woken with a short result when the build is ready
-for testers — or with exactly what needs fixing.
+The one who takes the apple. Fire-and-forget iOS builds on your own Mac: an agent (or you) runs one long command and gets
+back a short result when the build is ready for testers — or exactly what needs fixing. Waiting
+costs no agent tokens; polling did.
 
 ```console
-$ eve submit testflight --notify-t3 518788a8-… --notes "new onboarding"
-queued j_mvb9t7wh26ba25ff27 TestFlight for driver (idempotency key ca8dcd41…)
-End your turn; the result will be posted when the job finishes.
+$ eve submit testflight --wait --events
+eve j_mvbcdz6285e96fe933 preparing: preparing workspace
+eve j_mvbcdz6285e96fe933 archiving: archiving build 202610161909
+eve j_mvbcdz6285e96fe933 measuring: measuring the app bundle
+eve j_mvbcdz6285e96fe933 delivering: signing and uploading build 202610161909
+eve j_mvbcdz6285e96fe933 processing: uploaded; waiting for App Store Connect to process it
+eve j_mvbcdz6285e96fe933 result SUCCEEDED {"id":"j_mvbcdz6285e96fe933",…}
 ```
 
 - **One binary.** `eve` is the CLI on every machine and, as `eve serve`, the build server on the
@@ -25,8 +29,10 @@ End your turn; the result will be posted when the job finishes.
   pause the job until the agent runs `eve confirm <job> --reason "…"` or `eve reject <job>`.
   Secret material in the bundle always fails.
 - **Results for agents.** A < 4 KB result with a classified failure, a fix hint and a short
-  excerpt — never a raw xcodebuild log. Delivered into the requesting T3 thread through T3's local
-  MCP endpoint, to webhooks, or via `eve wait` (exit code = outcome).
+  excerpt — never a raw xcodebuild log. `eve wait` holds one connection, reconnects through
+  network drops and server restarts without losing events, and exits with the outcome as its
+  code; `--events` prints one line per phase for harnesses that wake an agent per line.
+  `eve pending` finds outcomes nobody collected. No harness-specific integration.
 
 Design and decisions: [PLAN.md](PLAN.md). Operating it: [docs/operations.md](docs/operations.md).
 Agent instructions: [skill/eve/SKILL.md](skill/eve/SKILL.md).

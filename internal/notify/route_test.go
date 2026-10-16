@@ -57,9 +57,8 @@ func TestAllowedURL(t *testing.T) {
 
 func TestBuildDeliveries(t *testing.T) {
 	human := &config.HumanHook{URL: "https://grok.example/hook"}
-	threads := []string{"th-1", "th-1", " "}
-	urls := []string{"https://hooks.example.com/a"}
-	agents := []Target{{KindT3, "th-1"}, {KindWebhook, "https://hooks.example.com/a"}}
+	urls := []string{"https://hooks.example.com/a", "https://hooks.example.com/a", " "}
+	agents := []Target{{KindWebhook, "https://hooks.example.com/a"}}
 	withHuman := append(append([]Target{}, agents...), Target{KindHuman, human.URL})
 
 	for _, tc := range []struct {
@@ -79,14 +78,14 @@ func TestBuildDeliveries(t *testing.T) {
 		{api.NotifyNeedsHuman, nil, agents},
 	} {
 		t.Run(fmt.Sprintf("%s/human=%v", tc.event, tc.human != nil), func(t *testing.T) {
-			got := BuildDeliveries(api.Notification{Event: tc.event}, threads, urls, tc.human, "")
+			got := BuildDeliveries(api.Notification{Event: tc.event}, urls, tc.human, "")
 			if fmt.Sprint(got) != fmt.Sprint(tc.want) {
 				t.Errorf("got %v, want %v", got, tc.want)
 			}
 		})
 	}
 	// The explicit event argument wins over n.Event.
-	got := BuildDeliveries(api.Notification{Event: api.NotifySucceeded}, nil, nil, human, api.NotifyNeedsHuman)
+	got := BuildDeliveries(api.Notification{Event: api.NotifySucceeded}, nil, human, api.NotifyNeedsHuman)
 	if len(got) != 1 || got[0].Kind != KindHuman {
 		t.Errorf("explicit event: %v", got)
 	}
@@ -94,7 +93,7 @@ func TestBuildDeliveries(t *testing.T) {
 
 func TestExhaustedCopy(t *testing.T) {
 	human := &config.HumanHook{URL: "https://grok.example/hook"}
-	if tg, ok := ExhaustedCopy(Delivery{Target: Target{KindT3, "th"}}, human); !ok || tg != (Target{KindHuman, human.URL}) {
+	if tg, ok := ExhaustedCopy(Delivery{Target: Target{KindWebhook, "https://hooks.example.com/a"}}, human); !ok || tg != (Target{KindHuman, human.URL}) {
 		t.Errorf("t3 exhausted: %v %v", tg, ok)
 	}
 	if _, ok := ExhaustedCopy(Delivery{Target: Target{KindHuman, human.URL}}, human); ok {
@@ -125,7 +124,6 @@ func TestConfigSecrets(t *testing.T) {
 		{Target{KindWebhook, "https://other.example/"}, ""},
 		{Target{KindHuman, "https://grok.example/hook"}, "env:H"},
 		{Target{KindHuman, "https://changed.example/"}, ""},
-		{Target{KindT3, "https://hooks.example.com/x"}, ""},
 	} {
 		got, err := cs.Secret(tc.target)
 		if err != nil || got != tc.want {

@@ -283,3 +283,94 @@ func TestRouterCalledOnTransitions(t *testing.T) {
 		t.Fatalf("outbox %+v (states %v)", rows, seen)
 	}
 }
+
+// A server shutdown cancels the job's context but must not end the job: Recover resumes it.
+func TestShutdownLeavesJobForRecovery(t *testing.T) {
+	entered := make(chan struct{})
+	q, st := setup(t, fakePipeline{run: func(jc *JobCtx) error {
+		_ = jc.Enter(api.StateArchiving, "archiving")
+		close(entered)
+		<-jc.Ctx.Done()
+		return jc.Ctx.Err()
+	}})
+	j := submit(t, st)
+	ctx, shutdown := context.WithCancel(context.Background())
+	done := make(chan struct{})
+	go func() { q.Exec(ctx, j); close(done) }()
+	<-entered
+	shutdown()
+	<-done
+	if s := get(t, st, j.ID).State; s != api.StateArchiving {
+		t.Fatalf("shutdown changed the job to %s", s)
+	}
+	if err := q.Recover(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	if got := get(t, st, j.ID); got.State != api.StateQueued || got.ResumeFrom != api.StateArchiving {
+		t.Fatalf("not requeued: %+v", got)
+	}
+}
+
+// A helper that fails because the shutdown interrupted it must not end the job.
+func TestShutdownBlocksTerminalWrites(t *testing.T) {
+	entered := make(chan struct{})
+	q, st := setup(t, fakePipeline{run: func(jc *JobCtx) error {
+		_ = jc.Enter(api.StateArchiving, "archiving")
+		close(entered)
+		<-jc.Ctx.Done()
+		// e.g. xcode-select failing because its process was killed by the shutdown
+		return jc.Fail("config", "no Xcode selected: signal: interrupt", "", nil)
+	}})
+	j := submit(t, st)
+	ctx, shutdown := context.WithCancel(context.Background())
+	done := make(chan struct{})
+	go func() { q.Exec(ctx, j); close(done) }()
+	<-entered
+	shutdown()
+	<-done
+	if s := get(t, st, j.ID).State; s != api.StateArchiving {
+		t.Fatalf("shutdown let a failure through: %s", s)
+	}
+}
+
+// Cancelling a job a watcher is following is recorded, not resumed by the next watcher.
+func TestCancelWatchedJobIsDurable(t *testing.T) {
+	watching := make(chan struct{})
+	q, st := setup(t, fakePipeline{
+		run: func(jc *JobCtx) error { return nil },
+		watch: func(jc *JobCtx) error {
+			close(watching)
+			<-jc.Ctx.Done()
+			return nil // like Testflight.Watch on cancellation
+		},
+	})
+	ctx := context.Background()
+	j := submit(t, st)
+	_, _, _ = st.Transition(ctx, j.ID, store.Transition{To: api.StateProcessing})
+	q.startWatchers(ctx)
+	<-watching
+	if _, err := q.Cancel(ctx, j.ID, false); err != nil {
+		t.Fatal(err)
+	}
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) && get(t, st, j.ID).State != api.StateCancelled {
+		time.Sleep(20 * time.Millisecond)
+	}
+	if s := get(t, st, j.ID).State; s != api.StateCancelled {
+		t.Fatalf("watched job not cancelled: %s", s)
+	}
+}
+
+// A parked job nobody is watching (a size-guard pause) is cancelled directly.
+func TestCancelPausedJob(t *testing.T) {
+	q, st := setup(t, fakePipeline{run: func(jc *JobCtx) error { return nil }})
+	ctx := context.Background()
+	j := submit(t, st)
+	_, _, _ = st.Transition(ctx, j.ID, store.Transition{To: api.StateAwaitingConfirmation})
+	if _, err := q.Cancel(ctx, j.ID, false); err != nil {
+		t.Fatal(err)
+	}
+	if s := get(t, st, j.ID).State; s != api.StateCancelled {
+		t.Fatal(s)
+	}
+}
