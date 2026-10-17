@@ -372,10 +372,12 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
 3. Install, then launch with `--terminate-existing`, straight away: no lock-state check first.
    The old scripts never needed one (install works on a locked phone), and `lockState`'s
    `passcodeRequired` may only mean the phone has a passcode, which would make every job wait.
-4. Wait only when devicectl itself says so: an install or launch whose failure class asks for
-   `unlock_phone` (`device.locked`: the launch was refused because the phone is locked;
-   `device.unavailable`: "A connection to this device could not be established", the phone is
-   asleep or off Wi-Fi) enters `waiting_for_device` once (which notifies the human webhook, if
+4. A launch refused because the phone is locked (`device.locked`) ends the job `succeeded` with a
+   `not_launched` note: the app is installed, and the old scripts' users just opened it. Wait only
+   when the phone can't take the step at all: `device.unavailable` (CoreDevice errors 4000 "A
+   connection to this device could not be established" and 4016 "usage assertion requirements",
+   the phone asleep or off Wi-Fi; 12040 "developer disk image could not be mounted", locked before
+   the DDI is mounted, which needs one unlock after each restart) enters `waiting_for_device` once (which notifies the human webhook, if
    set) and retries that step every 5 s for up to 10 min from the first wait, then ends
    `needs_human: unlock_phone`. Any other failure fails at once. Device jobs wait on the worker,
    so another build waits at most those 10 minutes.

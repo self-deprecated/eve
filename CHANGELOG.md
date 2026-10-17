@@ -25,6 +25,10 @@
 - Live on Quartz: ScreenGate's mockup screenshots via `eve submit exec` from Lattice (a fresh
   Simulator, `xcodebuild test -scheme ScreenGateMockups` into `$EVE_ARTIFACTS`) in 3m23s;
   `eve artifacts` brought back all 22, 21 byte-identical to the committed ones.
+- A locked phone no longer makes the job wait for the launch: when only the launch is refused
+  (`device.locked`), the job succeeds with a `not_launched` note. An unlock is needed only when
+  Xcode's developer disk image isn't mounted yet (once after the phone restarts); it stays mounted
+  for later locked installs.
 - Each install or launch attempt is classified on its own output: an early "unreachable" in the
   phase log no longer keeps a later, real failure waiting.
 - No lock-state check before install: an earlier draft checked `devicectl device info lockState`

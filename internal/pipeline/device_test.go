@@ -180,7 +180,7 @@ func TestDeviceBuildsInstallsAndLaunchesOnThePairedIPhone(t *testing.T) {
 }
 
 func TestDeviceWaitsOnlyWhenThePhoneSaysSo(t *testing.T) {
-	sim := &deviceSim{install: []string{away, away, ok}, launch: []string{locked, locked, ok}}
+	sim := &deviceSim{install: []string{away, away, ok}, launch: []string{away, away, ok}}
 	h := newDeviceHarness(t, sim)
 	got := h.run(t, api.JobOptions{})
 	if got.State != api.StateSucceeded {
@@ -195,16 +195,28 @@ func TestDeviceWaitsOnlyWhenThePhoneSaysSo(t *testing.T) {
 	}
 }
 
+func TestDeviceLockedPhoneGetsTheInstallWithoutAWait(t *testing.T) {
+	sim := &deviceSim{install: []string{ok}, launch: []string{locked}}
+	h := newDeviceHarness(t, sim)
+	got := h.run(t, api.JobOptions{})
+	if got.State != api.StateSucceeded || !slices.Equal(sim.order, []string{"build", "install", "launch"}) || h.waits(t, got.ID) != 0 {
+		t.Fatalf("%s order %v: installed, not launched, no wait", got.State, sim.order)
+	}
+	if n := got.Result.Notes; len(n) != 1 || n[0].Kind != "not_launched" || !strings.Contains(n[0].Detail, "Jordan’s iPhone is locked") {
+		t.Fatalf("notes %+v", n)
+	}
+}
+
 func TestDeviceGivesUpAfterTenMinutesAndAsksForAnUnlock(t *testing.T) {
-	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{locked}})
+	h := newDeviceHarness(t, &deviceSim{install: []string{away}, launch: []string{ok}})
 	got := h.run(t, api.JobOptions{})
 	if got.State != api.StateNeedsHuman || got.Result.Human == nil || got.Result.Human.Action != api.HumanUnlockPhone {
 		t.Fatalf("%s %+v", got.State, got.Result.Human)
 	}
-	if !strings.Contains(got.Result.Human.Detail, "Unlock Jordan’s iPhone (The app is installed but couldn't launch because the phone is locked)") {
+	if !strings.Contains(got.Result.Human.Detail, "Unlock Jordan’s iPhone (The phone isn't available as a destination") {
 		t.Fatalf("detail %q", got.Result.Human.Detail)
 	}
-	if f := got.Result.Failure; f == nil || f.Class != "device.locked" {
+	if f := got.Result.Failure; f == nil || f.Class != "device.unavailable" {
 		t.Fatalf("failure %+v", f)
 	}
 }

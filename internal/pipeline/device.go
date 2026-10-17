@@ -130,9 +130,11 @@ func (p *Device) build(jc *queue.JobCtx, ws *workspace, kept string) (string, er
 	return app, nil
 }
 
-// installAndLaunch installs and launches straight away, like a person at Xcode would. Only when
-// devicectl says the phone is locked or unreachable does the job wait: it enters
-// waiting_for_device once and retries that step every DevicePoll, for at most DeviceWait.
+// installAndLaunch installs and launches straight away, like a person at Xcode would. A launch
+// refused because the phone is locked still succeeds (installed, not launched). Only when the
+// phone can't take the install (unreachable, or locked before Xcode's developer disk image is
+// mounted) or can't be reached for the launch does the job wait: it enters waiting_for_device
+// once and retries that step every DevicePoll, for at most DeviceWait.
 func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Device, app string) error {
 	var deadline time.Time
 	steps := []struct {
@@ -166,6 +168,15 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 				return jc.Ctx.Err()
 			}
 			f, h := p.classify(ws, s.state, attempt.Bytes(), runErr)
+			if s.state == api.StateLaunching && f != nil && f.Class == "device.locked" {
+				// Installed, and only the launch needs an unlocked phone: done, as with a person
+				// at Xcode. Waiting would make every locked phone a ten-minute job.
+				return jc.Succeed("installed on "+dev.Name+"; not launched because the phone is locked", func(j *store.Job) {
+					j.Result.Notes = append(j.Result.Notes, api.Note{
+						Kind: "not_launched", Detail: dev.Name + " is locked, so the app is installed but not launched; open it on the phone",
+					})
+				})
+			}
 			if h == nil || h.Action != api.HumanUnlockPhone {
 				p.failFrom(jc, string(s.state), s.state, attempt.Bytes(), runErr, ws.app)
 				return errHandled
