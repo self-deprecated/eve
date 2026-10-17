@@ -304,14 +304,13 @@ func LoadClient() (*Client, error) {
 
 // Repo is a repository's eve.yml.
 type Repo struct {
-	App     string        `yaml:"app"`
-	Project RepoProject   `yaml:"project"`
-	Xcode   string        `yaml:"xcode"`
-	Pre     []string      `yaml:"pre"`
-	Check   RepoCheck     `yaml:"check"`
-	Device  RepoDevice    `yaml:"device"`
-	Ignore  []string      `yaml:"ignore"`
-	Exec    *RepoExecConf `yaml:"exec"`
+	App     string      `yaml:"app"`
+	Project RepoProject `yaml:"project"`
+	Xcode   string      `yaml:"xcode"`
+	Pre     []string    `yaml:"pre"`
+	Check   RepoCheck   `yaml:"check"`
+	Device  RepoDevice  `yaml:"device"`
+	Ignore  []string    `yaml:"ignore"`
 }
 
 // RepoProject locates the Xcode project.
@@ -331,11 +330,6 @@ type RepoCheck struct {
 // RepoDevice configures the device verb.
 type RepoDevice struct {
 	Configuration string `yaml:"configuration"`
-}
-
-// RepoExecConf is reserved for exec defaults.
-type RepoExecConf struct {
-	Artifacts []string `yaml:"artifacts"`
 }
 
 // RepoFile is the conventional name of a repository's config.

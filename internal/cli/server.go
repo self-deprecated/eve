@@ -98,10 +98,17 @@ func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 func runCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 	var f submitFlags
 	cmd := &cobra.Command{
-		Use:   "run <testflight|device|check> [path]",
+		Use:   "run <testflight|device|check|exec> [path] [-- command for exec]",
 		Short: "Run a job in-process on this machine (no server), following it to the end",
-		Args:  cobra.RangeArgs(1, 2),
+		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			var command []string
+			if dash := cmd.ArgsLenAtDash(); dash >= 0 {
+				args, command = args[:dash], args[dash:]
+			}
+			if len(args) < 1 || len(args) > 2 {
+				return &ExitError{Code: api.ExitUsage, Err: errors.New("usage: eve run <verb> [path] [-- command for exec]")}
+			}
 			cfg, err := load()
 			if err != nil {
 				return err
@@ -109,6 +116,9 @@ func runCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 			verb := api.Verb(args[0])
 			if !verb.Valid() {
 				return &ExitError{Code: api.ExitUsage, Err: fmt.Errorf("unknown verb %q", args[0])}
+			}
+			if (verb == api.VerbExec) != (len(command) > 0) {
+				return &ExitError{Code: api.ExitUsage, Err: errors.New("exec, and only exec, takes a command after --")}
 			}
 			dir := "."
 			if len(args) == 2 {
@@ -137,7 +147,10 @@ func runCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 				App: pick(f.app, repo.App), Verb: verb, TokenName: "eve-run",
 				Request: api.JobRequest{
 					App: pick(f.app, repo.App), Verb: verb, Source: api.JobSource{Path: root},
-					Options: api.JobOptions{BuildNumber: f.buildNumber, Notes: f.notes, Device: f.device, Release: f.release, ExpectSizeChange: f.expectSize},
+					Options: api.JobOptions{
+						BuildNumber: f.buildNumber, Notes: f.notes, Device: f.device, Release: f.release,
+						ExpectSizeChange: f.expectSize, Command: command,
+					},
 				},
 			})
 			if err != nil {
@@ -172,7 +185,7 @@ func runCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 	cmd.Flags().StringVar(&f.app, "app", "", "app name (default: from eve.yml)")
 	cmd.Flags().StringVar(&f.buildNumber, "build-number", "", "explicit build number")
 	cmd.Flags().StringVar(&f.notes, "notes", "", "What to Test text")
-	cmd.Flags().StringVar(&f.device, "device", "", "device UDID")
+	cmd.Flags().StringVar(&f.device, "device", "", "phone for device: name or UDID")
 	cmd.Flags().BoolVar(&f.release, "release", false, "Release configuration for device")
 	cmd.Flags().StringVar(&f.expectSize, "expect-size-change", "", "pre-approve bundle growth, with a reason")
 	return cmd

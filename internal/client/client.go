@@ -241,6 +241,20 @@ func (c *Client) Log(ctx context.Context, id, phase string, errorsOnly bool, tai
 	return s, err
 }
 
+// Artifact opens one of an exec job's artifacts. A directory (a name ending in "/") arrives as a
+// tar stream. The caller closes the body.
+func (c *Client) Artifact(ctx context.Context, id, name string) (io.ReadCloser, error) {
+	resp, err := c.req(ctx, "GET", "/v1/jobs/"+url.PathEscape(id)+"/artifacts/"+url.PathEscape(strings.TrimSuffix(name, "/")), nil, "")
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode >= 300 {
+		defer func() { _ = resp.Body.Close() }()
+		return nil, decode(resp, nil)
+	}
+	return resp.Body, nil
+}
+
 // Logs lists the phases that have logs.
 func (c *Client) Logs(ctx context.Context, id string) ([]string, error) {
 	var out []string

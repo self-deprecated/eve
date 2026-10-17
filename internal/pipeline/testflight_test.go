@@ -116,6 +116,10 @@ func (fakeClassifier) Classify(phase api.State, log []byte, exit int, facts map[
 		return &api.Failure{Class: "xcode.account", Summary: "Xcode account", By: "rules"},
 			&api.Human{Action: api.HumanXcodeSignIn, Detail: "sign in to Xcode on Quartz"}
 	}
+	if strings.Contains(string(log), "could not be, unlocked") {
+		return &api.Failure{Class: "device.locked", Summary: "The app is installed but couldn't launch because the phone is locked.", By: "rules"},
+			&api.Human{Action: api.HumanUnlockPhone}
+	}
 	return &api.Failure{Class: "unknown", Summary: "unrecognised failure", By: "rules"}, nil
 }
 

@@ -361,16 +361,23 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
 
 ### 6.4 `device`
 
-1. Pick the device: `--device`, the app's default, the server default, or the first paired
-   physical iPhone (`devicectl list devices --json-output`).
-2. **Build first** (`-destination id=<udid> -allowProvisioningUpdates
-   -allowProvisioningDeviceRegistration`), so the wait for the human happens after the slow part.
-3. Check availability and lock state (Xcode 27's `devicectl device info lockState` JSON; the exact
-   fields are confirmed in M2). If not ready, enter `waiting_for_device`, notify the agent (and
-   the human webhook, if set) once, and poll every 5 s for up to 10 min, then
-   `needs_human: unlock_phone`.
+1. Pick the device: `--device` (name, UDID or CoreDevice identifier), the app's default, the
+   server default, or the first paired physical iPhone (`devicectl list devices --json-output`,
+   read from Xcode 27's `properties` dictionary with the deprecated fields as fallback).
+2. **Build first**, for `generic/platform=iOS` with `-allowProvisioningUpdates` (Debug, eve.yml's
+   `device.configuration`, or Release with `--release`), so the wait for the human happens after
+   the slow part. A generic destination needs no reachable phone: the development profile already
+   lists every registered device. The built app is kept in the job directory, so a restart in
+   `installing`/`waiting_for_device`/`launching` resumes at install without rebuilding.
+3. Check reachability and lock state (`devicectl device info lockState`: ready unless it cannot
+   connect or reports `passcodeRequired: true`; still to be confirmed against a live, locked phone).
+   If not ready, enter `waiting_for_device` (which notifies the human webhook, if set) once, and
+   poll every 5 s for up to 10 min from the first wait, then `needs_human: unlock_phone`.
 4. Re-check immediately before install and before launch (the phone can relock during a build);
-   install, then launch with `--terminate-existing`.
+   install, then launch with `--terminate-existing`. An install or launch that fails with a class
+   whose human action is `unlock_phone` (e.g. `device.locked`) waits again within the same
+   deadline instead of failing. The device jobs wait on the worker, so another build waits at most
+   those 10 minutes.
 5. Failure classes: `device.locked` (FBSOpenApplicationErrorDomain 7), `device.unavailable`,
    `device.untrusted_developer`, `device.attestation` ("Unable to Verify App": hint restart the
    phone).
@@ -390,16 +397,22 @@ crash are deleted before the next run. `check.simulator` in eve.yml picks the de
 
 ### 6.6 `exec`
 
-`eve submit exec -- <command…>` runs a repo command in the job workspace with the child
-environment, inside the Aqua session, with `$EVE_ARTIFACTS` exported. It retires `gui-run.sh`
+`eve submit exec -- <command…>` runs a repo command in the job workspace (from the repository
+root; a relative command path is relative to it) with the child environment, inside the Aqua
+session, after the usual preparation (XcodeGen, `pre`), with `$EVE_ARTIFACTS`, `$EVE_PROJECT_DIR`
+and `$EVE_JOB` exported. It may run for an hour (`exec.timeout`); a non-zero exit is
+`exec.failed` with the log's last lines, and artifacts written before the failure are kept. It retires `gui-run.sh`
 and covers ScreenGate's `screenshots.sh` and Lineage's `check-ios.sh`. Artifacts are listed in the
 result, never inlined. It adds no new trust (§14), so it needs only `allowExec: true` on the app to
 avoid accidents.
 
 Artifacts may be directories: ScreenGate's screenshots are `current/` and `mockups/`. Each
-top-level entry of `$EVE_ARTIFACTS` is one artifact; a directory is served as a tar stream.
-`eve artifacts <job> [--out DIR]` downloads them all (unpacking directories), so retiring
-`screenshots.sh` needs no HTTP calls.
+top-level entry of `$EVE_ARTIFACTS` is one artifact (`result.artifacts`, directories with a
+trailing `/`); a directory is served as a tar stream of its directories and regular files.
+Symlinks and special files are never served, and are listed in an `artifacts` note.
+`eve artifacts <job> [--out DIR]` downloads them all: a file becomes `DIR/<name>`, a directory
+is unpacked beside `DIR/<name>` and then replaces it, so retiring `screenshots.sh` needs no HTTP
+calls and a failed download changes nothing.
 
 ### 6.7 Size guard
 
@@ -514,6 +527,7 @@ pre:
   - swift test --package-path BodyDiffCore
 check: {test: false}
 device: {configuration: Debug}
+ignore: [docs/screenshots/]
 ```
 
 ### 7.2 Server: `~/.config/eve/server.yml`
@@ -691,8 +705,8 @@ internal/store/              SQLite (modernc.org/sqlite), migrations, transactio
 internal/queue/              worker, lock, watcher, restart recovery, process groups
 internal/source/             upload store, safe extraction, ignore rules, APFS clone
 internal/pipeline/           testflight, device, check, exec; phases
-internal/xcode/              xcodebuild, child env, xcodegen, xcconfig secrets, archive inspection
-internal/devicectl/          discovery, lock state, install, launch
+internal/xcode/              xcodebuild, simctl, devicectl (discovery, lock state, install, launch),
+                             child env, xcodegen, xcconfig secrets, archive inspection
 internal/asc/                JWT (ES256, stdlib), builds, buildUploads, betaDetail, groups, testers
 internal/alloc/              build-number allocator
 internal/sizeguard/          source stats, bundle manifests, baselines, rules, reports

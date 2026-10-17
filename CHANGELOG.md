@@ -2,6 +2,27 @@
 
 ## Unreleased — M1 (2026-10-16)
 
+### M2 `device` and the rest of M3: `exec` and `eve artifacts`
+- `eve submit device`: a development build for `generic/platform=iOS` (Debug, eve.yml's
+  `device.configuration`, or `--release`), then install and launch with `devicectl` on
+  `--device` (name or UDID), the app's or server's default, or the first paired iPhone. The build
+  comes first and needs no reachable phone; then the phone's lock state is checked before install
+  and before launch. A locked or unreachable phone puts the job in `waiting_for_device` once,
+  polls every 5 s and continues on unlock, or ends `needs_human: unlock_phone` after 10 minutes. A
+  launch refused because the phone relocked waits again. A restart resumes at install from the
+  build kept in the job directory. Success carries a `launched` note naming the phone.
+- `eve submit exec -- <command…>` (apps with `allowExec`): runs the command from the job's copy
+  of the repo in the GUI session, after XcodeGen and `pre`, with `$EVE_ARTIFACTS`,
+  `$EVE_PROJECT_DIR` and `$EVE_JOB`; at most an hour (`exec.timeout`); `exec.failed` carries the
+  log's last lines. Each top-level entry of `$EVE_ARTIFACTS` is an artifact; directories are
+  served as tar streams, symlinks never.
+- `eve artifacts <job> [--out DIR]` downloads them; a directory artifact replaces `DIR/<name>`
+  only after it has fully unpacked, and paths escaping it are refused.
+- Removed the reserved eve.yml key `exec: {artifacts}`: everything in `$EVE_ARTIFACTS` is one.
+- Not yet run live: the device path against a locked phone (the iPhone was unreachable when
+  `lockState` was probed, so its JSON fields are from documentation), and ScreenGate's
+  screenshots through `exec`.
+
 ### Feedback from converting ScreenGate
 - `submit` refuses a verb the server cannot run for the app with exit 64 **before uploading**
   (it used to queue the job and fail with `eve.unsupported`). `eve apps` lists each app's `Verbs`

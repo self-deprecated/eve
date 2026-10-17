@@ -124,12 +124,12 @@ func (c *Check) test(jc *queue.JobCtx, ws *workspace, spec xcode.SimSpec) error 
 }
 
 // writeLog runs fn with a redacting log file at path, without classifying a failure.
-func (c *Check) writeLog(ws *workspace, path string, fn func(io.Writer) error) error {
+func (d *Deps) writeLog(ws *workspace, path string, fn func(io.Writer) error) error {
 	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600)
 	if err != nil {
 		return err
 	}
-	w := c.RedactLog(f, ws.secrets)
+	w := d.RedactLog(f, ws.secrets)
 	runErr := fn(w)
 	_ = w.Close()
 	_ = f.Close()

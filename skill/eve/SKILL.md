@@ -1,6 +1,6 @@
 ---
 name: eve
-description: Build the user's iOS apps on Quartz with eve — ship to TestFlight or check that it builds and its tests pass — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "upload a build", "check it builds", or when you would otherwise run xcodebuild archive/export/test or App Store Connect calls yourself.
+description: Build the user's iOS apps on Quartz with eve — ship to TestFlight, install and launch on their iPhone, check that it builds and its tests pass, or run a repo script (screenshots) on Quartz — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "put it on my phone", "upload a build", "check it builds", "update the screenshots", or when you would otherwise run xcodebuild archive/export/test, devicectl, simctl, App Store Connect calls, or ssh/rsync to Quartz yourself.
 ---
 
 # Eve
@@ -9,8 +9,9 @@ description: Build the user's iOS apps on Quartz with eve — ship to TestFlight
 Apple's tools, follows it through App Store Connect, and reports back. **Waiting is free**: one
 long tool call costs nothing while it blocks, whereas polling turns are expensive. So submit and
 wait in one command; never poll with `sleep`, never run `xcodebuild archive`/`-exportArchive`,
-`xcodebuild test`, `simctl` or App Store Connect API calls yourself for these tasks, and never read raw
-xcodebuild logs unless the result's excerpt is not enough.
+`xcodebuild test`, `simctl`, `devicectl`, App Store Connect API calls or ssh/rsync to Quartz
+yourself for these tasks, and never read raw xcodebuild logs unless the result's excerpt is not
+enough.
 
 ## Ship to TestFlight
 
@@ -48,9 +49,25 @@ outcome nobody has seen.
 failing test exits 1 with `failure.class: test.failed`; `tests.failures` names the first failing
 tests and their assertions.
 
-Only `testflight` and `check` are available today; `device` (install on the user's iPhone) and
-`exec` (run a repo script on Quartz) are not. `eve apps --json` lists each app's `Verbs`, and
-`submit` refuses any other verb with exit 64 before uploading anything.
+`eve submit device --wait` puts a development build on the user's iPhone and launches it. It
+builds first (Debug, or eve.yml's `device.configuration`; `--release` for Release), then checks
+the phone: if it is locked or asleep, the job waits in `waiting_for_device` for up to 10 minutes,
+continues within seconds of the unlock, and otherwise ends `needs_human` (`unlock_phone`, exit 78)
+with the build kept. If you run it in the background, tell the user to unlock their phone when you
+start it. `--device <name or UDID>` picks another paired device. Success has a `launched` note
+naming the phone.
+
+`eve submit exec --wait -- <command> [args…]` runs a repo command on Quartz in the job's copy of
+the repo, from its root, in the GUI session, so it can drive the Simulator. The app needs
+`allowExec` on the server. The command gets `$EVE_ARTIFACTS` (a directory: everything at its top
+level becomes an artifact, directories included), `$EVE_PROJECT_DIR` (the Xcode project's
+directory, after XcodeGen) and `$EVE_JOB`. It may run for up to an hour. Then
+`eve artifacts <job> --out <dir>` downloads them; a directory artifact replaces `<dir>/<name>`
+entirely, so `--out docs/screenshots` refreshes `docs/screenshots/current/`. A failing command
+exits 1 with `failure.class: exec.failed` and the log's last lines; artifacts it wrote are kept.
+
+`eve apps --json` lists the `Verbs` each app allows, and `submit` refuses any other verb with
+exit 64 before uploading anything.
 
 ## Reading the result
 
@@ -60,7 +77,7 @@ job is, or where it stopped if it did not succeed (absent once it has); `source.
 
 | Exit | Outcome | What to do |
 |---|---|---|
-| 0 | `succeeded` | Report the build number in one line. The `distributed` note says which group got it, that What to Test was set and that the tester has accepted their invite: only then say it's on their phone. Pass on any other `notes` (e.g. `accept_testflight_invite`: the user must accept the TestFlight invite first). |
+| 0 | `succeeded` | Report the build number in one line. The `distributed` note says which group got it, that What to Test was set and that the tester has accepted their invite: only then say it's on their phone. Pass on any other `notes` (e.g. `accept_testflight_invite`: the user must accept the TestFlight invite first). For `device`, say it's running on the phone the `launched` note names; for `exec`, fetch `artifacts` with `eve artifacts`. |
 | 1 | `failed` | Use `failure.class`, `summary`, `hint` and `excerpt` to fix it, then resubmit. Only if that is not enough: `eve logs <job> --errors`. |
 | 65 | `rejected` | Apple refused the build (`failure.excerpt` has Apple's reasons). Fix and resubmit. |
 | 69 | `unavailable` | Quartz or Apple unreachable. Try again later. |
@@ -112,8 +129,8 @@ check:                            # for `eve submit check`
 xcode: "26"                       # fail unless Quartz's selected Xcode is this version (26 matches 26.x)
 ```
 
-`device: {configuration}` and `exec: {artifacts}` are also accepted, for verbs that are not
-available yet. Unknown keys are an error. Identity (bundle id, team, signing, secrets, TestFlight
+`device: {configuration: Release}` sets the configuration `eve submit device` builds (default
+Debug). Unknown keys are an error. Identity (bundle id, team, signing, secrets, TestFlight
 group) lives on the server, not here.
 
 Before the first submit, make sure big directories the build doesn't need (screenshots, design
@@ -122,6 +139,6 @@ uploads that look wrong, and every submit uploads everything else.
 
 ## Useful commands
 
-`eve apps` · `eve init` · `eve status <job>` · `eve jobs` · `eve pending` · `eve logs <job> --errors` · `eve size <job>` ·
+`eve apps` · `eve init` · `eve artifacts <job> --out <dir>` · `eve status <job>` · `eve jobs` · `eve pending` · `eve logs <job> --errors` · `eve size <job>` ·
 `eve builds <app>` · `eve cancel <job>` (`--force` while uploading) · `eve doctor`
 (`--host` for Quartz's checks).

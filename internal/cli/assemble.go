@@ -74,6 +74,8 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 	pipelines := map[api.Verb]queue.Pipeline{
 		api.VerbTestflight: pipeline.NewTestflight(deps),
 		api.VerbCheck:      pipeline.NewCheck(deps),
+		api.VerbDevice:     pipeline.NewDevice(deps),
+		api.VerbExec:       pipeline.NewExec(deps),
 	}
 	q := queue.New(st, cfg.DataDir, pipelines, sys.route, log)
 	sys.Queue = q

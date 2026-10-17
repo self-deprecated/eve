@@ -75,6 +75,9 @@ func FormatResult(r api.Result) string {
 			fmt.Fprintf(&b, "             %s\n", h.URL)
 		}
 	}
+	if len(r.Artifacts) > 0 {
+		fmt.Fprintf(&b, "  artifacts %s  (eve artifacts %s --out DIR)\n", strings.Join(r.Artifacts, ", "), r.ID)
+	}
 	for _, n := range r.Notes {
 		fmt.Fprintf(&b, "  note     %s: %s\n", n.Kind, n.Detail)
 	}

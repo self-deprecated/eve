@@ -81,6 +81,9 @@ type Deps struct {
 	ReconcileWindow    time.Duration // default 10 min
 	ReconcileInterval  time.Duration // default 30 s
 	ProcessingDeadline time.Duration // default 4 h
+	DeviceWait         time.Duration // how long device waits for the phone, default 10 min
+	DevicePoll         time.Duration // how often it checks, default 5 s
+	ExecTimeout        time.Duration // longest an exec command may run, default 1 h
 }
 
 func (d *Deps) defaults() {
@@ -107,6 +110,15 @@ func (d *Deps) defaults() {
 	}
 	if d.ProcessingDeadline == 0 {
 		d.ProcessingDeadline = 4 * time.Hour
+	}
+	if d.DeviceWait == 0 {
+		d.DeviceWait = 10 * time.Minute
+	}
+	if d.DevicePoll == 0 {
+		d.DevicePoll = 5 * time.Second
+	}
+	if d.ExecTimeout == 0 {
+		d.ExecTimeout = time.Hour
 	}
 	if d.RedactLog == nil {
 		d.RedactLog = func(w io.Writer, _ []string) io.WriteCloser { return nopCloser{w} }

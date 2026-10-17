@@ -4,12 +4,14 @@
 package server
 
 import (
+	"archive/tar"
 	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"log/slog"
 	"net/http"
 	"os"
@@ -372,11 +374,56 @@ func (s *Server) getArtifact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := filepath.Join(s.jobDir(j.ID), "artifacts", name)
-	if fi, err := os.Lstat(p); err != nil || !fi.Mode().IsRegular() {
+	fi, err := os.Lstat(p)
+	switch {
+	case err == nil && fi.Mode().IsRegular():
+		http.ServeFile(w, r, p)
+	case err == nil && fi.IsDir():
+		// A directory goes out as a tar stream of its regular files (PLAN.md §6.6).
+		w.Header().Set("Content-Type", "application/x-tar")
+		if err := writeTar(w, p); err != nil {
+			s.Log.Warn("artifact tar", "job", j.ID, "artifact", name, "err", err)
+		}
+	default:
 		writeErr(w, http.StatusNotFound, "not_found", "no such artifact")
-		return
 	}
-	http.ServeFile(w, r, p)
+}
+
+// writeTar streams dir's directories and regular files; symlinks and special files are left out.
+func writeTar(w io.Writer, dir string) error {
+	tw := tar.NewWriter(w)
+	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil || path == dir || !d.IsDir() && !d.Type().IsRegular() {
+			return err
+		}
+		fi, err := d.Info()
+		if err != nil {
+			return err
+		}
+		h, err := tar.FileInfoHeader(fi, "")
+		if err != nil {
+			return err
+		}
+		rel, _ := filepath.Rel(dir, path)
+		h.Name, h.Uname, h.Gname = filepath.ToSlash(rel), "", ""
+		if d.IsDir() {
+			h.Name += "/"
+		}
+		if err := tw.WriteHeader(h); err != nil || d.IsDir() {
+			return err
+		}
+		f, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer func() { _ = f.Close() }()
+		_, err = io.Copy(tw, f)
+		return err
+	})
+	if err != nil {
+		return err
+	}
+	return tw.Close()
 }
 
 func (s *Server) size(w http.ResponseWriter, r *http.Request) {

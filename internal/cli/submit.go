@@ -35,8 +35,11 @@ func submitCmd(env *Env) *cobra.Command {
 		Long: "Uploads the repository (git-tracked and untracked-but-not-ignored files; never build output or\n" +
 			"secrets) after the size guard's source check, then queues the job. With --wait it then follows\n" +
 			"the job until it finishes or needs confirmation; the exit code is the outcome.\n\n" +
-			"Not every verb is available yet: `eve apps` lists what the server can run for each app, and\n" +
-			"submit refuses anything else with exit 64 before uploading.",
+			"testflight uploads to TestFlight; device installs and launches on the paired iPhone (built\n" +
+			"first, then it waits up to 10 minutes for the phone to be unlocked); check builds for the\n" +
+			"Simulator (and tests with check.test); exec runs a repo command on Quartz with $EVE_ARTIFACTS\n" +
+			"set (fetch them with `eve artifacts <job>`). `eve apps` lists what the server allows for each\n" +
+			"app (exec needs allowExec); submit refuses anything else with exit 64 before uploading.",
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error { return runSubmit(cmd.Context(), env, f, args) },
 	}
@@ -46,7 +49,7 @@ func submitCmd(env *Env) *cobra.Command {
 	fl.StringVar(&f.key, "idempotency-key", "", "retry key: the same key returns the same job")
 	fl.StringVar(&f.buildNumber, "build-number", "", "explicit build number (default: allocated by eve)")
 	fl.StringVar(&f.notes, "notes", "", "\"What to Test\" text for TestFlight")
-	fl.StringVar(&f.device, "device", "", "device UDID for `device` (default: the server's)")
+	fl.StringVar(&f.device, "device", "", "phone for `device`: name or UDID (default: the server's, else the paired iPhone)")
 	fl.BoolVar(&f.release, "release", false, "Release configuration for `device`")
 	fl.StringVar(&f.acceptSource, "accept-source-size", "", "upload despite the source check, with a reason")
 	fl.StringVar(&f.expectSize, "expect-size-change", "", "pre-approve app bundle growth for this job, with a reason")

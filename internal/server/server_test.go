@@ -1,6 +1,7 @@
 package server
 
 import (
+	"archive/tar"
 	"bufio"
 	"bytes"
 	"context"
@@ -9,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -56,6 +58,7 @@ type fixture struct {
 	tok   string
 	owner string
 	sha   string
+	dir   string
 }
 
 func newFixture(t *testing.T, run func(jc *queue.JobCtx) error) *fixture {
@@ -87,7 +90,7 @@ func newFixture(t *testing.T, run func(jc *queue.JobCtx) error) *fixture {
 	t.Cleanup(srv.Close)
 	tok, _ := st.CreateToken(context.Background(), "lattice", false)
 	owner, _ := st.CreateToken(context.Background(), "owner", true)
-	return &fixture{srv: srv, st: st, q: q, tok: tok, owner: owner, sha: sha}
+	return &fixture{srv: srv, st: st, q: q, tok: tok, owner: owner, sha: sha, dir: dir}
 }
 
 func (f *fixture) do(t *testing.T, method, path, tok string, body any) (*http.Response, []byte) {
@@ -303,5 +306,38 @@ func TestLogTailAndTraversal(t *testing.T) {
 	}
 	if got := string(tail([]byte("a\nb\nc\nd\n"), 2)); got != "c\nd\n" {
 		t.Fatal(got)
+	}
+}
+
+func TestDirectoryArtifactIsATarOfItsFiles(t *testing.T) {
+	f := newFixture(t, nil)
+	_, body := f.do(t, "POST", "/v1/jobs", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: f.sha}})
+	var c api.JobCreated
+	_ = json.Unmarshal(body, &c)
+	dir := filepath.Join(f.dir, "jobs", c.ID, "artifacts")
+	_ = os.MkdirAll(filepath.Join(dir, "current", "dark"), 0o755)
+	_ = os.WriteFile(filepath.Join(dir, "current", "01-home.png"), []byte("png"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "current", "dark", "01-home.png"), []byte("dark"), 0o644)
+	_ = os.Symlink("/etc/passwd", filepath.Join(dir, "current", "passwd"))
+	_ = os.Symlink("/etc", filepath.Join(dir, "etc"))
+
+	resp, b := f.do(t, "GET", "/v1/jobs/"+c.ID+"/artifacts/current", f.tok, nil)
+	if resp.StatusCode != 200 || resp.Header.Get("Content-Type") != "application/x-tar" {
+		t.Fatalf("%d %s", resp.StatusCode, resp.Header.Get("Content-Type"))
+	}
+	var names []string
+	tr := tar.NewReader(bytes.NewReader(b))
+	for {
+		h, err := tr.Next()
+		if err != nil {
+			break
+		}
+		names = append(names, h.Name)
+	}
+	if strings.Join(names, " ") != "01-home.png dark/ dark/01-home.png" {
+		t.Fatalf("tar entries %v: regular files and directories only", names)
+	}
+	if resp, _ := f.do(t, "GET", "/v1/jobs/"+c.ID+"/artifacts/etc", f.tok, nil); resp.StatusCode != 404 {
+		t.Fatalf("a symlinked artifact was served: %d", resp.StatusCode)
 	}
 }
