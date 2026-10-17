@@ -157,11 +157,23 @@ func decode(resp *http.Response, out any) error {
 	return json.Unmarshal(b, out)
 }
 
-// Version returns the server's version.
-func (c *Client) Version(ctx context.Context) (string, error) {
-	var v struct{ Version string }
+// Version returns the server's version and API level.
+func (c *Client) Version(ctx context.Context) (api.VersionInfo, error) {
+	var v api.VersionInfo
 	err := c.doJSON(ctx, "GET", "/v1/version", nil, &v)
-	return v.Version, err
+	return v, err
+}
+
+// CheckServer fails when the server is older than this client needs (api.APILevel).
+func (c *Client) CheckServer(ctx context.Context) error {
+	v, err := c.Version(ctx)
+	if err != nil {
+		return err
+	}
+	if v.API < api.APILevel {
+		return fmt.Errorf("the eve server at %s is older than this client (API level %d, needs %d): update it (on Quartz, switch to the latest mono-nix)", c.BaseURL, v.API, api.APILevel)
+	}
+	return nil
 }
 
 // HasSource reports whether the server already has an upload with this digest.

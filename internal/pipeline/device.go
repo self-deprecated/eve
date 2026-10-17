@@ -177,27 +177,29 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 					})
 				})
 			}
-			if h == nil || h.Action != api.HumanUnlockPhone {
+			if h == nil || h.Action != api.HumanUnlockPhone && h.Action != api.HumanConnectPhone {
 				p.failFrom(jc, string(s.state), s.state, attempt.Bytes(), runErr, ws.app)
 				return errHandled
 			}
+			// why says what's wrong and what to do: "Quartz can't reach the phone: … Turn on its Wi-Fi …".
 			why := "the phone refused the " + string(s.state)
 			if f != nil {
-				why = strings.TrimSuffix(f.Summary, ".")
+				why = strings.TrimSpace(f.Summary + " " + f.Hint)
 			}
 			switch {
 			case deadline.IsZero():
 				// The first wait: entering the state notifies the human webhook, once per job.
 				deadline = p.Now().Add(p.DeviceWait)
-				if err := jc.Enter(api.StateWaitingForDevice, fmt.Sprintf("waiting for %s: %s; unlock it to continue", dev.Name, why)); err != nil {
+				if err := jc.Enter(api.StateWaitingForDevice, fmt.Sprintf("waiting for %s: %s", dev.Name, why)); err != nil {
 					return err
 				}
 			case !refused:
-				jc.Note(why + "; waiting again")
+				jc.Note(why + " Waiting again.")
 			}
 			refused = true
 			if p.Now().After(deadline) {
-				_ = jc.NeedsHuman(api.HumanUnlockPhone, fmt.Sprintf("Unlock %s (%s); the build is ready and eve gave up waiting.", dev.Name, why), "", func(j *store.Job) { j.Result.Failure = f })
+				_ = jc.NeedsHuman(h.Action, fmt.Sprintf("%s: %s eve gave up after %s; the build was fine, so resubmit once it's sorted.", dev.Name, why, p.DeviceWait),
+					"", func(j *store.Job) { j.Result.Failure = f })
 				return errHandled
 			}
 			if err := p.Sleep(jc.Ctx, p.DevicePoll); err != nil {

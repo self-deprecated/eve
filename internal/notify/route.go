@@ -73,6 +73,7 @@ func HumanBody(row Delivery) HumanMessage {
 // humanActions phrases api.Human actions for a person.
 var humanActions = map[string]string{
 	api.HumanUnlockPhone:            "unlock the iPhone",
+	api.HumanConnectPhone:           "turn on the iPhone's Wi-Fi (Quartz's network) and wake it",
 	api.HumanXcodeSignIn:            "sign in to Xcode (Settings → Accounts) on Quartz",
 	api.HumanAcceptAgreement:        "accept the new agreement in App Store Connect",
 	api.HumanExportCompliance:       "answer export compliance in App Store Connect",

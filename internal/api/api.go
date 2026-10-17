@@ -106,6 +106,17 @@ func ExitCode(s State) int {
 	return ExitWaitTimeout
 }
 
+// APILevel is the server behaviour this client relies on. Bump it whenever the client starts
+// depending on something a server must have; a server without it (an older one reports 0) is
+// refused before anything is uploaded, rather than misreading its answers. 2: apps list verbs.
+const APILevel = 2
+
+// VersionInfo is GET /v1/version.
+type VersionInfo struct {
+	Version string `json:"version"`
+	API     int    `json:"api"`
+}
+
 // Result is the document an agent reads when it is woken (PLAN.md §5.3). Keep it small:
 // everything else stays behind `eve logs`.
 type Result struct {
@@ -174,6 +185,7 @@ type Failure struct {
 // Human actions a person must take (PLAN.md §5.1).
 const (
 	HumanUnlockPhone            = "unlock_phone"
+	HumanConnectPhone           = "connect_phone" // Quartz can't reach it: Wi-Fi off, away, or asleep
 	HumanXcodeSignIn            = "xcode_sign_in"
 	HumanAcceptAgreement        = "accept_agreement"
 	HumanExportCompliance       = "export_compliance"

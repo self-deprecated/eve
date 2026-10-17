@@ -283,6 +283,29 @@ func (s *Store) Unfinished(ctx context.Context) ([]Job, error) {
 	return listJobs(ctx, s.db, `state NOT IN (`+terminalList+`) ORDER BY created_at ASC`)
 }
 
+// FinishedBefore returns terminal jobs that finished before t, oldest first.
+func (s *Store) FinishedBefore(ctx context.Context, t time.Time) ([]Job, error) {
+	return listJobs(ctx, s.db, `state IN (`+terminalList+`) AND finished_at > 0 AND finished_at < ? ORDER BY finished_at ASC`, ms(t))
+}
+
+// BaselineJobs returns the ids of the jobs whose bundle manifests are an app's size baseline.
+func (s *Store) BaselineJobs(ctx context.Context) (map[string]bool, error) {
+	rows, err := s.db.QueryContext(ctx, `SELECT job_id FROM baselines`)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = rows.Close() }()
+	out := map[string]bool{}
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		out[id] = true
+	}
+	return out, rows.Err()
+}
+
 // NewDelivery is an outbox row to create with a transition.
 type NewDelivery struct {
 	Event         string

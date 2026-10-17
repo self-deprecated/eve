@@ -98,6 +98,9 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 		return &ExitError{Code: api.ExitUsage, Err: err}
 	}
 	req.App = pick(f.app, repo.App)
+	if err := c.CheckServer(ctx); err != nil {
+		return &ExitError{Code: api.ExitUnavailable, Err: fmt.Errorf("%w; nothing was uploaded", err)}
+	}
 	if err := checkVerb(ctx, c, req.App, verb); err != nil {
 		return err
 	}

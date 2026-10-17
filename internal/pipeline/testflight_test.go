@@ -117,8 +117,11 @@ func (fakeClassifier) Classify(phase api.State, log []byte, exit int, facts map[
 			&api.Human{Action: api.HumanXcodeSignIn, Detail: "sign in to Xcode on Quartz"}
 	}
 	if strings.Contains(string(log), "could not be established") {
-		return &api.Failure{Class: "device.unavailable", Summary: "The phone isn't available as a destination (asleep, locked, or not on the network).", By: "rules"},
-			&api.Human{Action: api.HumanUnlockPhone}
+		return &api.Failure{
+			Class: "device.unavailable", By: "rules",
+			Summary: "Quartz can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
+			Hint:    "Turn on the phone's Wi-Fi on Quartz's network (or plug it into Quartz) and wake it.",
+		}, &api.Human{Action: api.HumanConnectPhone}
 	}
 	if strings.Contains(string(log), "could not be, unlocked") {
 		return &api.Failure{Class: "device.locked", Summary: "The app is installed but couldn't launch because the phone is locked.", By: "rules"},

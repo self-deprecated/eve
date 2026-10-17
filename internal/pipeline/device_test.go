@@ -207,13 +207,14 @@ func TestDeviceLockedPhoneGetsTheInstallWithoutAWait(t *testing.T) {
 	}
 }
 
-func TestDeviceGivesUpAfterTenMinutesAndAsksForAnUnlock(t *testing.T) {
+func TestDeviceSaysWhenQuartzCannotReachThePhone(t *testing.T) {
 	h := newDeviceHarness(t, &deviceSim{install: []string{away}, launch: []string{ok}})
 	got := h.run(t, api.JobOptions{})
-	if got.State != api.StateNeedsHuman || got.Result.Human == nil || got.Result.Human.Action != api.HumanUnlockPhone {
+	if got.State != api.StateNeedsHuman || got.Result.Human == nil || got.Result.Human.Action != api.HumanConnectPhone {
 		t.Fatalf("%s %+v", got.State, got.Result.Human)
 	}
-	if !strings.Contains(got.Result.Human.Detail, "Unlock Jordan’s iPhone (The phone isn't available as a destination") {
+	if !strings.Contains(got.Result.Human.Detail, "Jordan’s iPhone: Quartz can't reach the phone: its Wi-Fi is off") ||
+		!strings.Contains(got.Result.Human.Detail, "gave up after 10m0s") {
 		t.Fatalf("detail %q", got.Result.Human.Detail)
 	}
 	if f := got.Result.Failure; f == nil || f.Class != "device.unavailable" {

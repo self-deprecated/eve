@@ -30,7 +30,7 @@ func versionCmd(env *Env) *cobra.Command {
 				ctx, cancel := context.WithTimeout(cmd.Context(), 5*time.Second)
 				defer cancel()
 				if v, err := c.Version(ctx); err == nil {
-					out["server"] = v
+					out["server"] = v.Version
 				}
 			}
 			if env.JSON {
@@ -86,7 +86,7 @@ func loginCmd(env *Env) *cobra.Command {
 			if err := os.WriteFile(client.TokenPath(), []byte(token+"\n"), 0o600); err != nil {
 				return err
 			}
-			_, _ = fmt.Fprintf(env.Out, "logged in to %s (server %s)\n", args[0], v)
+			_, _ = fmt.Fprintf(env.Out, "logged in to %s (server %s)\n", args[0], v.Version)
 			return nil
 		},
 	}
@@ -111,14 +111,17 @@ func doctorCmd(env *Env) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if v != env.Version {
-				_, _ = fmt.Fprintf(env.Err, "warning: client %s, server %s\n", env.Version, v)
+			switch {
+			case v.API < api.APILevel:
+				_, _ = fmt.Fprintf(env.Err, "warning: the server is older than this client (API level %d, needs %d); switch Quartz to update it\n", v.API, api.APILevel)
+			case v.API > api.APILevel:
+				_, _ = fmt.Fprintf(env.Err, "warning: this client is older than the server (API level %d, server %d); update it (sd fast-lane update)\n", api.APILevel, v.API)
 			}
 			if !host {
 				if env.JSON {
-					return env.printJSON(map[string]string{"server": c.BaseURL, "serverVersion": v, "status": "ok"})
+					return env.printJSON(map[string]any{"server": c.BaseURL, "serverVersion": v.Version, "serverAPI": v.API, "status": "ok"})
 				}
-				_, _ = fmt.Fprintf(env.Out, "ok: %s (server %s)\n", c.BaseURL, v)
+				_, _ = fmt.Fprintf(env.Out, "ok: %s (server %s, API level %d)\n", c.BaseURL, v.Version, v.API)
 				return nil
 			}
 			raw, err := c.Raw(ctx, "/v1/doctor")

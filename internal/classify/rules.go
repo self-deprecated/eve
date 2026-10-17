@@ -287,14 +287,26 @@ var rules = []rule{
 	},
 	{
 		class: ClassDeviceLocked,
-		keys:  []string{"FBSOpenApplicationErrorDomain error 7", "BSErrorCodeDescription = Locked", "could not be, unlocked", "for reason: Locked"},
+		keys: []string{
+			"FBSOpenApplicationErrorDomain error 7", "BSErrorCodeDescription = Locked", "could not be, unlocked", "for reason: Locked",
+			"developer disk image could not be mounted",
+		},
 		match: []*regexp.Regexp{
 			re(`Unable to launch (?P<bundle>\S+) because the device was not, or could not be, unlocked`),
 			re(`FBSOpenApplicationErrorDomain error 7\b|BSErrorCodeDescription = Locked|for reason: Locked`),
+			// CoreDeviceError 12040: reachable, but locked before Xcode's developer disk image is mounted.
+			re(`developer disk image could not be mounted`),
 		},
 		summary: "The app is installed but couldn't launch because the phone is locked.",
-		hint:    "Unlock the phone; eve resumes at install.",
+		hint:    "Unlock the phone, or open the app yourself.",
 		human:   api.HumanUnlockPhone,
+		detail: func(_ map[string]string, in Input) (string, string) {
+			if in.Phase == api.StateInstalling {
+				return "The phone is locked and Xcode's developer disk image isn't mounted on it, which needs one unlock.",
+					"Unlock the phone once; later installs work while it's locked."
+			}
+			return "", ""
+		},
 	},
 	{
 		class:   ClassDeviceUntrustedDeveloper,
@@ -309,16 +321,23 @@ var rules = []rule{
 		hint:    "Restart the phone, then resubmit; this fixed it last time.",
 	},
 	{
+		// devicectl can't reach the phone at all (CoreDeviceError 4000 and 4016; seen 2026-10-17 with
+		// the phone's Wi-Fi off). Locking alone doesn't cause these.
+		class: ClassDeviceUnavailable,
+		keys:  []string{"A connection to this device could not be established", "not able to fulfill the requested usage assertion requirements"},
+		match: []*regexp.Regexp{
+			re(`A connection to this device could not be established`),
+			re(`not able to fulfill the requested usage assertion requirements`),
+		},
+		summary: "Quartz can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
+		hint:    "Turn on the phone's Wi-Fi on Quartz's network (or plug it into Quartz) and wake it.",
+		human:   api.HumanConnectPhone,
+	},
+	{
 		class: ClassDeviceUnavailable,
 		// Swift's "'UIDevice' is unavailable" diagnostics are why there is no looser pattern.
-		keys: []string{
-			"Unable to find a destination matching", "not a valid destination", "Device State: unavailable", "platform:iOS, id:", "A connection to this device could not be established",
-			"not able to fulfill the requested usage assertion requirements", "developer disk image could not be mounted",
-		},
+		keys: []string{"Unable to find a destination matching", "not a valid destination", "Device State: unavailable", "platform:iOS, id:"},
 		match: []*regexp.Regexp{
-			re(`A connection to this device could not be established`),           // devicectl, phone asleep or off Wi-Fi (seen 2026-10-17)
-			re(`not able to fulfill the requested usage assertion requirements`), // devicectl install, locked phone asleep (CoreDeviceError 4016)
-			re(`developer disk image could not be mounted`),                      // reachable but still locked (CoreDeviceError 12040)
 			re(`Unable to find a destination matching`),
 			re(`not a valid destination`),
 			re(`Device State: unavailable`),

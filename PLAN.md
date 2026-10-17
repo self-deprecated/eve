@@ -181,14 +181,18 @@ Apple ID web session alive; isolating one app's builds from another's credential
   eve.lock                        flock shared by `serve` and `eve run` for the allocator and worker
   sources/<sha256>.tar.zst        content-addressed uploads, pruned after 7 days
   derived/<app>/<verb>/           persistent DerivedData per app and verb
-  jobs/<id>/                      workspace (APFS clone), logs/, artifacts/, secrets.xcconfig (0600), result.json,
-                                  bundle-manifest.json.zst (every file in the .app with its size)
-  baselines/<app>.json.zst        manifest of the last accepted TestFlight bundle (size guard, §6.7)
+  jobs/<id>/                      workspace (APFS clone), logs/, artifacts/, secrets.xcconfig (0600),
+                                  bundle-manifest.json.zst (every file in the .app with its size);
+                                  the baselines table points at the last accepted one per app (§6.7)
   tools/xcodegen-<ver>/           pinned, sha256-verified tools
 ```
 
-Retention: logs and result.json for the last 50 jobs per app; archives for 7 days, except the last
-successful TestFlight archive per app.
+Retention (the worker applies it at most hourly; unfinished jobs are never touched): a day after
+a job ends, its directory keeps only `logs/`, `artifacts/` and its bundle manifest (the workspace,
+unpacked upload, archive and build products go); after 30 days the directory goes too, except a
+baseline job's manifest. Uploads no unfinished job needs go after 7 days without use (a client's
+"already uploaded?" check counts as use). `derived/` is one cache per app and verb and is kept.
+Job rows stay in the database. Measured before retention existed: 5.3 GB after ~30 jobs.
 
 ## 5. Jobs
 
@@ -208,7 +212,8 @@ terminal: succeeded | failed | rejected | needs_human | unavailable | cancelled 
   between export and upload. (Manual signing, M7, splits it into `exporting` and `uploading`.)
 - Every transition is committed with its `events` row **and**, for terminal states, its `outbox`
   rows in one SQLite transaction, then fanned out over SSE.
-- `needs_human` carries `{action, detail, url?}`: `unlock_phone`, `xcode_sign_in`,
+- `needs_human` carries `{action, detail, url?}`: `unlock_phone`, `connect_phone` (Quartz can't
+  reach it: Wi-Fi off, away, asleep), `xcode_sign_in`,
   `accept_agreement`, `export_compliance`, `create_app_record`, `console_login`.
   `accept_testflight_invite` is a note on a `succeeded` result, not a failure.
 - `waiting_for_device` is entered only **after** the build, so unlocking resumes at install.
@@ -374,13 +379,16 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
    `passcodeRequired` may only mean the phone has a passcode, which would make every job wait.
 4. A launch refused because the phone is locked (`device.locked`) ends the job `succeeded` with a
    `not_launched` note: the app is installed, and the old scripts' users just opened it. Wait only
-   when the phone can't take the step at all: `device.unavailable` (CoreDevice errors 4000 "A
-   connection to this device could not be established" and 4016 "usage assertion requirements",
-   the phone asleep or off Wi-Fi; 12040 "developer disk image could not be mounted", locked before
-   the DDI is mounted, which needs one unlock after each restart) enters `waiting_for_device` once (which notifies the human webhook, if
-   set) and retries that step every 5 s for up to 10 min from the first wait, then ends
-   `needs_human: unlock_phone`. Any other failure fails at once. Device jobs wait on the worker,
-   so another build waits at most those 10 minutes.
+   when the phone can't take the step at all, saying which case it is:
+   - Quartz can't reach it (CoreDevice 4000 "A connection to this device could not be
+     established", 4016 "usage assertion requirements"; seen with the phone's Wi-Fi off):
+     `device.unavailable`, action `connect_phone`, "turn on its Wi-Fi on Quartz's network".
+   - Reachable but locked before Xcode's developer disk image is mounted (12040, "the device was
+     still locked"; one unlock after a restart): `device.locked`, action `unlock_phone`.
+   Either enters `waiting_for_device` once (which notifies the human webhook, if set) and retries
+   that step every 5 s for up to 10 min from the first wait, then ends `needs_human` with that
+   action. Each attempt is classified on its own output. Any other failure fails at once. Device
+   jobs wait on the worker, so another build waits at most those 10 minutes.
 5. Failure classes: `device.locked` (FBSOpenApplicationErrorDomain 7), `device.unavailable`,
    `device.untrusted_developer`, `device.attestation` ("Unable to Verify App": hint restart the
    phone).
@@ -508,7 +516,10 @@ explicitly.
 ### 6.8 Diagnostics
 
 - `eve doctor`: reachability (distinguishing "tailnet up, service down → console login?"),
-  token, version skew.
+  token, version skew. Skew is an API level (`api.APILevel`, in `/v1/version`), bumped whenever
+  the client starts relying on new server behaviour; `submit` refuses an older server with exit 69
+  before uploading ("switch Quartz"), and `doctor` warns either way. Version strings can't do it:
+  every build is 0.1.0, and the fast lane updates clients before Quartz switches.
 - `eve doctor --host`: GUI session present, login keychain unlocked, codesigning identities and
   expiry (warn at 30 days), WWDR G3 present, Xcode version and license, **time since the last
   successful signing** (there is no cheap "Xcode account signed in" probe; warn after 14 days),

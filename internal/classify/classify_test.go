@@ -144,9 +144,9 @@ func TestDetails(t *testing.T) {
 		{path: "asc.agreement/asc-403-required-agreements.log", human: api.HumanAcceptAgreement},
 		{path: "xcode.account/barbican-failed-to-use-accounts.log", human: api.HumanXcodeSignIn},
 		{path: "device.locked/bodydiff-launch.log", human: api.HumanUnlockPhone},
-		{path: "device.unavailable/devicectl-connection-timeout.log", human: api.HumanUnlockPhone},
-		{path: "device.unavailable/devicectl-install-asleep.log", human: api.HumanUnlockPhone},
-		{path: "device.unavailable/devicectl-install-ddi-locked.log", human: api.HumanUnlockPhone},
+		{path: "device.unavailable/devicectl-connection-timeout.log", human: api.HumanConnectPhone, summary: []string{"Quartz can't reach the phone"}, hint: []string{"Wi-Fi"}},
+		{path: "device.unavailable/devicectl-install-asleep.log", human: api.HumanConnectPhone},
+		{path: "device.locked/devicectl-install-ddi-locked.log", phase: api.StateInstalling, human: api.HumanUnlockPhone, summary: []string{"developer disk image"}},
 		{path: "upload.export_compliance/asc-missing-compliance.log", human: api.HumanExportCompliance},
 		{path: "upload.export_compliance/itms-90592.log", hint: []string{"ITSEncryptionExportComplianceCode"}},
 		{path: "signing.cloud_permission/screengate-export.log", hint: []string{"Admin"}},
@@ -233,7 +233,7 @@ func TestTraps(t *testing.T) {
 
 func TestTable(t *testing.T) {
 	humans := []string{
-		"", api.HumanUnlockPhone, api.HumanXcodeSignIn, api.HumanAcceptAgreement, api.HumanExportCompliance,
+		"", api.HumanUnlockPhone, api.HumanConnectPhone, api.HumanXcodeSignIn, api.HumanAcceptAgreement, api.HumanExportCompliance,
 		api.HumanCreateAppRecord, api.HumanConsoleLogin, api.HumanAcceptTestflightInvite,
 	}
 	for _, r := range rules {

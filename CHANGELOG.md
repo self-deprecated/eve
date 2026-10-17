@@ -2,6 +2,19 @@
 
 ## Unreleased — M1 (2026-10-16)
 
+### M5 start: retention, version skew, "no phone connected"
+- Retention: a day after a job ends its directory keeps only `logs/`, `artifacts/` and the bundle
+  manifest; after 30 days it goes, except a baseline's manifest. Uploads unused for 7 days go
+  unless an unfinished job needs them. The worker applies it at most hourly. Quartz had 5.3 GB
+  after ~30 jobs (1.5 GB of job directories, one 791 MB).
+- Version skew: `/v1/version` reports an API level; `submit` refuses an older server with exit 69
+  before uploading ("switch Quartz"), and `eve doctor` warns either way. Level 2 = apps list verbs.
+  An older client meeting a newer server is fine.
+- `device` says when Quartz can't reach the phone (CoreDevice 4000/4016, e.g. its Wi-Fi is off):
+  `connect_phone` with "turn on its Wi-Fi on Quartz's network", instead of "asleep, locked, or not
+  on the network; unlock it". A phone that is reachable but locked before the developer disk image
+  is mounted (12040) is `device.locked` and asks for an unlock.
+
 ### M2 `device` and the rest of M3: `exec` and `eve artifacts`
 - `eve submit device`: a development build for `generic/platform=iOS` (Debug, eve.yml's
   `device.configuration`, or `--release`), then install and launch with `devicectl` on

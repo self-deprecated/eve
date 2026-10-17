@@ -15,18 +15,27 @@ import (
 	"github.com/self-deprecated/eve/internal/client"
 )
 
-func TestSubmitRefusesUnavailableVerbBeforeUploading(t *testing.T) {
+// fakeServer answers the version and apps endpoints only, recording every request.
+func fakeServer(t *testing.T, apiLevel int) (*httptest.Server, *[]string) {
+	t.Helper()
 	var paths []string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		paths = append(paths, r.Method+" "+r.URL.Path)
-		if r.URL.Path == "/v1/apps" {
+		switch r.URL.Path {
+		case "/v1/version":
+			_ = json.NewEncoder(w).Encode(api.VersionInfo{Version: "0.1.0", API: apiLevel})
+		case "/v1/apps":
 			_ = json.NewEncoder(w).Encode([]api.App{{Name: "screengate", Verbs: []api.Verb{api.VerbTestflight, api.VerbCheck}}})
-			return
+		default:
+			http.Error(w, "unexpected", http.StatusTeapot)
 		}
-		http.Error(w, "unexpected", http.StatusTeapot)
 	}))
-	defer srv.Close()
+	t.Cleanup(srv.Close)
+	return srv, &paths
+}
 
+func submitIn(t *testing.T, srv *httptest.Server, verb string) error {
+	t.Helper()
 	dir := t.TempDir()
 	yml := "app: screengate\nproject: {xcodeproj: ScreenGate.xcodeproj, scheme: ScreenGate}\n"
 	if err := os.WriteFile(filepath.Join(dir, "eve.yml"), []byte(yml), 0o600); err != nil {
@@ -36,17 +45,32 @@ func TestSubmitRefusesUnavailableVerbBeforeUploading(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
 	root, env := Root("test")
-	var stderr bytes.Buffer
-	env.Out, env.Err = &bytes.Buffer{}, &stderr
+	env.Out, env.Err = &bytes.Buffer{}, &bytes.Buffer{}
 	env.NewClient = func() (*client.Client, error) { return client.New(srv.URL, "tok"), nil }
-	root.SetArgs([]string{"submit", "device", "--wait"})
-	err := root.Execute()
+	root.SetArgs([]string{"submit", verb, "--wait"})
+	return root.Execute()
+}
 
+func TestSubmitRefusesUnavailableVerbBeforeUploading(t *testing.T) {
+	srv, paths := fakeServer(t, api.APILevel)
+	err := submitIn(t, srv, "device")
 	var ee *ExitError
 	if !errors.As(err, &ee) || ee.Code != api.ExitUsage || !strings.Contains(ee.Error(), "available: testflight, check") {
 		t.Fatalf("err %v", err)
 	}
-	if len(paths) != 1 || paths[0] != "GET /v1/apps" {
-		t.Fatalf("requests %v: only the apps list may be fetched", paths)
+	if strings.Join(*paths, ", ") != "GET /v1/version, GET /v1/apps" {
+		t.Fatalf("requests %v: only the version and apps list may be fetched", *paths)
+	}
+}
+
+func TestSubmitRefusesAnOlderServerBeforeUploading(t *testing.T) {
+	srv, paths := fakeServer(t, 0) // a server from before API levels reports none
+	err := submitIn(t, srv, "testflight")
+	var ee *ExitError
+	if !errors.As(err, &ee) || ee.Code != api.ExitUnavailable || !strings.Contains(ee.Error(), "older than this client (API level 0, needs") {
+		t.Fatalf("err %v", err)
+	}
+	if strings.Join(*paths, ", ") != "GET /v1/version" {
+		t.Fatalf("requests %v", *paths)
 	}
 }

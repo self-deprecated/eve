@@ -116,7 +116,7 @@ func tokenOf(r *http.Request) store.TokenInfo {
 }
 
 func (s *Server) version(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]string{"version": s.Version})
+	writeJSON(w, http.StatusOK, api.VersionInfo{Version: s.Version, API: api.APILevel})
 }
 
 var shaRe = regexp.MustCompile(`^[0-9a-f]{64}$`)

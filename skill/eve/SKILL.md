@@ -55,8 +55,9 @@ launches. A locked phone still gets the install: the job succeeds with a `not_la
 (tell the user to open the app). Only if the phone can't take the install (asleep, off Wi-Fi, or
 locked before Xcode's developer disk image is mounted, which needs one unlock after the phone
 restarts) does the job wait in `waiting_for_device`, retrying every 5 s for up to 10 minutes; it
-continues within seconds, and otherwise ends `needs_human` (`unlock_phone`, exit 78) with the
-build kept. Pass that on to the user in one line. `--device <name or UDID>` picks another paired device. Success has a `launched` note
+continues within seconds, and otherwise ends `needs_human` (exit 78). `connect_phone` means
+Quartz can't reach the phone at all (its Wi-Fi is off, it's away, or asleep); `unlock_phone`
+means it's locked. Pass `human.detail` on to the user in one line; resubmit once it's sorted. `--device <name or UDID>` picks another paired device. Success has a `launched` note
 naming the phone.
 
 `eve submit exec --wait -- <command> [args…]` runs a repo command on Quartz in the job's copy of
@@ -82,7 +83,7 @@ job is, or where it stopped if it did not succeed (absent once it has); `source.
 | 0 | `succeeded` | Report the build number in one line. The `distributed` note says which group got it, that What to Test was set and that the tester has accepted their invite: only then say it's on their phone. Pass on any other `notes` (e.g. `accept_testflight_invite`: the user must accept the TestFlight invite first). For `device`, say it's running on the phone the `launched` note names (or, with a `not_launched` note, that it's installed and they should open it); for `exec`, fetch `artifacts` with `eve artifacts`. |
 | 1 | `failed` | Use `failure.class`, `summary`, `hint` and `excerpt` to fix it, then resubmit. Only if that is not enough: `eve logs <job> --errors`. |
 | 65 | `rejected` | Apple refused the build (`failure.excerpt` has Apple's reasons). Fix and resubmit. |
-| 69 | `unavailable` | Quartz or Apple unreachable. Try again later. |
+| 69 | `unavailable` | Quartz or Apple unreachable, or Quartz's eve server is older than this client ("switch Quartz": tell the user). Try again later. |
 | 75 | still running | Your `--timeout` elapsed; the job continues. `eve wait <job>` again. |
 | 76 | `awaiting_confirmation` | The size guard paused before anything reached Apple. See below. |
 | 78 | `needs_human` | Tell the user `human.action` and `human.detail` in one line and stop (unlock the phone, sign in to Xcode on Quartz, accept an agreement, answer export compliance). Once they say it's done, resubmit. |

@@ -50,6 +50,8 @@ type Queue struct {
 	mu       sync.Mutex
 	running  map[string]*running // job id → cancel
 	watching map[string]bool
+	// lastPrune is when the worker last applied the retention rules (prune.go).
+	lastPrune time.Time
 }
 
 type running struct {
@@ -106,6 +108,7 @@ func (q *Queue) Run(ctx context.Context) error {
 	for {
 		q.startWatchers(ctx)
 		q.expireConfirmations(ctx)
+		q.prunePeriodically(ctx)
 		if err := q.runNext(ctx); err != nil && !errors.Is(err, store.ErrNotFound) {
 			q.Log.Error("worker", "err", err)
 		}
