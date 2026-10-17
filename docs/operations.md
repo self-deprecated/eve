@@ -99,37 +99,7 @@ System Settings → Users & Groups → Automatically log in as `jmo`, then reboo
 
 ## In each app repository
 
-Add `eve.yml` at the repo root:
-
-```yaml
-# Driver (~/Developer/driver)
-app: driver
-project: {dir: ios, xcodegen: project.yml, scheme: Driver}
-```
-
-```yaml
-# Lineage
-app: lineage
-project: {xcodeproj: Lineage.xcodeproj, scheme: Lineage}
-pre:
-  - swift test --package-path LineageKit
-```
-
-```yaml
-# ScreenGate
-app: screengate
-project: {dir: ios, xcodegen: project.yml, scheme: ScreenGate}
-```
-
-```yaml
-# BodyDiff (native)
-app: bodydiff
-project: {xcodegen: project.yml, scheme: BodyDiff}
-pre:
-  - swift test --package-path BodyDiffCore
-```
-
-Then from the repo: `eve submit testflight --wait` (agents: as a background command; see the skill).
+See [new-app.md](new-app.md): the server entry, `eve init` for `eve.yml`, and the first runs.
 
 ## Day to day
 
@@ -144,7 +114,12 @@ Then from the repo: `eve submit testflight --wait` (agents: as a background comm
 | Accept / refuse a size pause | `eve confirm <job> --reason "…"` / `eve reject <job>` |
 | Latest builds in App Store Connect | `eve builds <app>` |
 | Reset an app's size baseline | `eve baseline <app> --from <job>` |
-| Build in-process on Quartz (no server) | `eve run testflight` in the repo |
+| Apps and the verbs each allows | `eve apps` |
+| Dev build on the phone | `eve submit device --wait` |
+| Run a repo script on Quartz, fetch its output | `eve submit exec --wait -- <script>`, then `eve artifacts <job> --out <dir>` |
+| Build in-process on Quartz (no server) | `eve run testflight` in the repo (`eve run exec -- <cmd>` too) |
 | Server health | `eve doctor --host` |
 
 Logs: `~/.local/share/eve/logs/eve.err.log` (server), `~/.local/share/eve/jobs/<id>/logs/` (jobs).
+
+When something goes wrong: [troubleshooting.md](troubleshooting.md).

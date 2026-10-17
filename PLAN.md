@@ -840,11 +840,17 @@ baselines seeded from each app's current archive); tokens and `login`; LaunchAge
 re-checks, human notification, device classes.
 *Accept:* submitting `device` with the phone locked builds, notifies once, and **resumes install
 within 10 s of unlocking**; relocking during the build is handled.
+*Status (2026-10-17):* live with Driver: build, install and launch in 12 s; an unreachable phone
+waited and gave up with the right message. Not yet seen live: a locked phone ending
+`not_launched`, and the unlock resuming the install.
 
 **M3 — Check and exec (1–2 days).** `check` with fresh simulators and test summaries; `exec`
 (retire `gui-run.sh`).
 *Accept:* `check` on Lineage reports the first failing test without the accessibility dump;
 ScreenGate's `screenshots.sh` runs via `exec` from Lattice and returns its artifacts.
+*Status (2026-10-17):* `check` live on Driver (a failing test reported by name and assertion;
+Lineage not run). ScreenGate's screenshots run through `exec` and come back with `eve artifacts`,
+both the mockups and the real app against the e2e backend.
 
 **M4 — Skill, doctor, docs (1–2 days).** `skill/eve`, `doctor`/`doctor --host`,
 `docs/new-app.md`, operations and troubleshooting docs; migrate BodyDiff, Lineage and ScreenGate
@@ -854,6 +860,8 @@ locked login keychain and a missing GUI session.
 
 **M5 — Hardening (1 day).** Retention and pruning, exhausted-delivery reporting, version skew,
 `--path`, load test of the allocator and outbox.
+*Status (2026-10-17):* retention (§4.3), exhausted-delivery copies to the human hook and in
+`eve status`, and the API-level skew check (§6.8) are done; `--path` exists; the load test is not.
 
 **M7 — Later, each independent and on demand.** Manual signing (dedicated keychain, API-key upload,
 `exporting`/`uploading` split; verify the unverified bodydiff-testflight design first); Luna

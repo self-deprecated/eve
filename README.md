@@ -34,7 +34,7 @@ eve j_mvbcdz6285e96fe933 result SUCCEEDED {"id":"j_mvbcdz6285e96fe933",…}
   code; `--events` prints one line per phase for harnesses that wake an agent per line.
   `eve pending` finds outcomes nobody collected. No harness-specific integration.
 
-Design and decisions: [PLAN.md](PLAN.md). Operating it: [docs/operations.md](docs/operations.md).
+Design and decisions: [PLAN.md](PLAN.md). Operating it: [docs/operations.md](docs/operations.md). Adding an app: [docs/new-app.md](docs/new-app.md). When something fails: [docs/troubleshooting.md](docs/troubleshooting.md).
 Agent instructions: [skill/eve/SKILL.md](skill/eve/SKILL.md).
 
 ## Develop
