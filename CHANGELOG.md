@@ -10,7 +10,8 @@
   Only an install or launch refused because the phone is locked (`device.locked`) or unreachable
   (`device.unavailable`, now also devicectl's "A connection to this device could not be
   established" and, from the first live run with a locked phone, CoreDeviceError 4016 "not able to
-  fulfill the requested usage assertion requirements" on install) puts the job in `waiting_for_device` once and retries every 5 s, continuing on
+  fulfill the requested usage assertion requirements" on install, and 12040 "The developer disk
+  image could not be mounted", which CoreDevice explains as "the device was still locked") puts the job in `waiting_for_device` once and retries every 5 s, continuing on
   unlock, or ends `needs_human: unlock_phone` after 10 minutes. A restart resumes at install from
   the build kept in the job directory. Success carries a `launched` note naming the phone.
 - `eve submit exec -- <command…>` (apps with `allowExec`): runs the command from the job's copy
@@ -24,6 +25,8 @@
 - Live on Quartz: ScreenGate's mockup screenshots via `eve submit exec` from Lattice (a fresh
   Simulator, `xcodebuild test -scheme ScreenGateMockups` into `$EVE_ARTIFACTS`) in 3m23s;
   `eve artifacts` brought back all 22, 21 byte-identical to the committed ones.
+- Each install or launch attempt is classified on its own output: an early "unreachable" in the
+  phase log no longer keeps a later, real failure waiting.
 - No lock-state check before install: an earlier draft checked `devicectl device info lockState`
   first, but the old scripts never needed it and `passcodeRequired` may just mean a passcode is
   set, so it could have made every job wait.

@@ -1,0 +1,12 @@
+ERROR: The developer disk image could not be mounted on this device. (com.apple.dt.CoreDeviceError error 12040 (0x2F08))
+       DeviceIdentifier = [secret]
+       ----------------------------------------
+           The developer disk image could not be mounted on this device. (com.apple.dt.CoreDeviceError error 12040 (0x2F08))
+           NSURL = file:///Library/Developer/DeveloperDiskImages/iOS_DDI/
+           DeviceIdentifier = [secret]
+       ----------------------------------------
+               The operation failed because the device was still locked. (com.apple.dt.CoreDeviceError error 10003 (0x2713))
+               NSLocalizedFailureReason = The device is currently locked.
+               NSLocalizedRecoverySuggestion = Unlock the device and try again.
+ERROR: The developer disk image could not be mounted on this device. (com.apple.dt.CoreDeviceError error 12040 (0x2F08))
+       DeviceIdentifier = [secret]

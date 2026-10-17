@@ -146,6 +146,7 @@ func TestDetails(t *testing.T) {
 		{path: "device.locked/bodydiff-launch.log", human: api.HumanUnlockPhone},
 		{path: "device.unavailable/devicectl-connection-timeout.log", human: api.HumanUnlockPhone},
 		{path: "device.unavailable/devicectl-install-asleep.log", human: api.HumanUnlockPhone},
+		{path: "device.unavailable/devicectl-install-ddi-locked.log", human: api.HumanUnlockPhone},
 		{path: "upload.export_compliance/asc-missing-compliance.log", human: api.HumanExportCompliance},
 		{path: "upload.export_compliance/itms-90592.log", hint: []string{"ITSEncryptionExportComplianceCode"}},
 		{path: "signing.cloud_permission/screengate-export.log", hint: []string{"Admin"}},

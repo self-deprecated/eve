@@ -317,6 +317,11 @@ func (d *Deps) logged(ws *workspace, phase string, state api.State, fn func(log 
 
 func (d *Deps) failFromLog(jc *queue.JobCtx, phase string, state api.State, path string, runErr error, app config.App) {
 	b, _ := os.ReadFile(path)
+	d.failFrom(jc, phase, state, b, runErr, app)
+}
+
+// failFrom classifies log, the failed phase's output, and ends the job.
+func (d *Deps) failFrom(jc *queue.JobCtx, phase string, state api.State, b []byte, runErr error, app config.App) {
 	exit := -1
 	var ee *xcode.ExitError
 	if errors.As(runErr, &ee) {

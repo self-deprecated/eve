@@ -1,6 +1,7 @@
 package pipeline
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -150,17 +151,23 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 		}
 		refused := false
 		for {
-			path := jc.LogPath(string(s.state))
-			runErr := p.writeLog(ws, path, s.run)
+			// The phase log keeps every attempt; only this attempt's output is classified, so an
+			// earlier "unreachable" never keeps a real failure waiting.
+			var attempt bytes.Buffer
+			redacted := p.RedactLog(&attempt, ws.secrets)
+			runErr := p.writeLog(ws, jc.LogPath(string(s.state)), func(log io.Writer) error {
+				return s.run(io.MultiWriter(log, redacted))
+			})
+			_ = redacted.Close()
 			if runErr == nil {
 				break
 			}
 			if errors.Is(jc.Ctx.Err(), context.Canceled) {
 				return jc.Ctx.Err()
 			}
-			f, h := p.classifyLog(jc, ws, s.state, path, runErr)
+			f, h := p.classify(ws, s.state, attempt.Bytes(), runErr)
 			if h == nil || h.Action != api.HumanUnlockPhone {
-				p.failFromLog(jc, string(s.state), s.state, path, runErr, ws.app)
+				p.failFrom(jc, string(s.state), s.state, attempt.Bytes(), runErr, ws.app)
 				return errHandled
 			}
 			why := "the phone refused the " + string(s.state)
@@ -196,12 +203,11 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 	})
 }
 
-// classifyLog classifies a failed step's log without ending the job.
-func (p *Device) classifyLog(jc *queue.JobCtx, ws *workspace, state api.State, path string, runErr error) (*api.Failure, *api.Human) {
+// classify classifies one attempt's output without ending the job.
+func (p *Device) classify(ws *workspace, state api.State, b []byte, runErr error) (*api.Failure, *api.Human) {
 	if p.Classifier == nil {
 		return nil, nil
 	}
-	b, _ := os.ReadFile(path)
 	exit := -1
 	var ee *xcode.ExitError
 	if errors.As(runErr, &ee) {

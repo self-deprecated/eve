@@ -218,6 +218,18 @@ func TestDeviceOtherFailuresFailAtOnce(t *testing.T) {
 	}
 }
 
+func TestDeviceClassifiesOnlyTheLatestAttempt(t *testing.T) {
+	sim := &deviceSim{install: []string{away, "ERROR: The application's signature is invalid"}, launch: []string{ok}}
+	h := newDeviceHarness(t, sim)
+	got := h.run(t, api.JobOptions{})
+	if got.State != api.StateFailed || !slices.Equal(sim.order, []string{"build", "install", "install"}) {
+		t.Fatalf("%s order %v: the second attempt's real failure must end the job", got.State, sim.order)
+	}
+	if f := got.Result.Failure; f == nil || f.Class != "unknown" || slices.ContainsFunc(f.Excerpt, func(l string) bool { return strings.Contains(l, "could not be established") }) {
+		t.Fatalf("failure %+v: only the last attempt's output", f)
+	}
+}
+
 func TestDeviceUnknownNameListsThePhysicalDevices(t *testing.T) {
 	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{ok}})
 	got := h.run(t, api.JobOptions{Device: "Work Phone"})

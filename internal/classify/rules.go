@@ -313,11 +313,12 @@ var rules = []rule{
 		// Swift's "'UIDevice' is unavailable" diagnostics are why there is no looser pattern.
 		keys: []string{
 			"Unable to find a destination matching", "not a valid destination", "Device State: unavailable", "platform:iOS, id:", "A connection to this device could not be established",
-			"not able to fulfill the requested usage assertion requirements",
+			"not able to fulfill the requested usage assertion requirements", "developer disk image could not be mounted",
 		},
 		match: []*regexp.Regexp{
 			re(`A connection to this device could not be established`),           // devicectl, phone asleep or off Wi-Fi (seen 2026-10-17)
 			re(`not able to fulfill the requested usage assertion requirements`), // devicectl install, locked phone asleep (CoreDeviceError 4016)
+			re(`developer disk image could not be mounted`),                      // reachable but still locked (CoreDeviceError 12040)
 			re(`Unable to find a destination matching`),
 			re(`not a valid destination`),
 			re(`Device State: unavailable`),
