@@ -9,7 +9,8 @@
   needs no reachable phone; install and launch then run straight away, as the old scripts did.
   Only an install or launch refused because the phone is locked (`device.locked`) or unreachable
   (`device.unavailable`, now also devicectl's "A connection to this device could not be
-  established") puts the job in `waiting_for_device` once and retries every 5 s, continuing on
+  established" and, from the first live run with a locked phone, CoreDeviceError 4016 "not able to
+  fulfill the requested usage assertion requirements" on install) puts the job in `waiting_for_device` once and retries every 5 s, continuing on
   unlock, or ends `needs_human: unlock_phone` after 10 minutes. A restart resumes at install from
   the build kept in the job directory. Success carries a `launched` note naming the phone.
 - `eve submit exec -- <command…>` (apps with `allowExec`): runs the command from the job's copy
