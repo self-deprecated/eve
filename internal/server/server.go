@@ -169,6 +169,9 @@ func (s *Server) createJob(w http.ResponseWriter, r *http.Request) {
 	case req.Verb == api.VerbExec && !app.AllowExec:
 		writeErr(w, http.StatusForbidden, "exec_not_allowed", fmt.Sprintf("app %s does not allow exec (allowExec in server.yml)", req.App))
 		return
+	case s.Queue.Pipelines[req.Verb] == nil:
+		writeErr(w, http.StatusBadRequest, "unsupported_verb", fmt.Sprintf("%s is not available on this server yet", req.Verb))
+		return
 	case req.Source.SHA256 == "" && req.Source.Path == "":
 		writeErr(w, http.StatusBadRequest, "no_source", "a job needs an uploaded source (sha256) or a path")
 		return
@@ -447,16 +450,26 @@ func (s *Server) respondJob(w http.ResponseWriter, j store.Job, err error) {
 }
 
 func (s *Server) apps(w http.ResponseWriter, r *http.Request) {
-	type app struct {
-		Name, BundleID, Signing string
-		InternalOnly, AllowExec bool
-	}
-	out := []app{}
+	out := []api.App{}
 	for name, a := range s.Config.Apps {
-		out = append(out, app{name, a.BundleID, a.SigningMode(), a.InternalOnly(), a.AllowExec})
+		out = append(out, api.App{
+			Name: name, BundleID: a.BundleID, Signing: a.SigningMode(), InternalOnly: a.InternalOnly(),
+			AllowExec: a.AllowExec, Verbs: s.verbs(a),
+		})
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
 	writeJSON(w, http.StatusOK, out)
+}
+
+// verbs lists what the server can run for app: verbs with a pipeline, exec only with allowExec.
+func (s *Server) verbs(app config.App) []api.Verb {
+	out := []api.Verb{}
+	for _, v := range api.Verbs {
+		if s.Queue.Pipelines[v] != nil && (v != api.VerbExec || app.AllowExec) {
+			out = append(out, v)
+		}
+	}
+	return out
 }
 
 func (s *Server) knownApp(w http.ResponseWriter, r *http.Request) (string, bool) {

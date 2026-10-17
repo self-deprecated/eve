@@ -4,6 +4,7 @@ package api
 
 import (
 	"encoding/json"
+	"slices"
 	"time"
 )
 
@@ -17,14 +18,11 @@ const (
 	VerbExec       Verb = "exec"
 )
 
+// Verbs lists every verb in the order eve presents them.
+var Verbs = []Verb{VerbTestflight, VerbCheck, VerbDevice, VerbExec}
+
 // Valid reports whether v is a known verb.
-func (v Verb) Valid() bool {
-	switch v {
-	case VerbTestflight, VerbDevice, VerbCheck, VerbExec:
-		return true
-	}
-	return false
-}
+func (v Verb) Valid() bool { return slices.Contains(Verbs, v) }
 
 // State is a job's phase while it runs, or its outcome once terminal (PLAN.md §5.1).
 type State string
@@ -115,7 +113,7 @@ type Result struct {
 	App       string      `json:"app"`
 	Verb      Verb        `json:"verb"`
 	Outcome   State       `json:"outcome"`
-	Phase     State       `json:"phase"`
+	Phase     State       `json:"phase,omitempty"` // where it is, or where it stopped; omitted once it succeeded
 	DurationS int         `json:"durationS"`
 	Source    SourceInfo  `json:"source"`
 	Build     *BuildInfo  `json:"build,omitempty"`
@@ -152,6 +150,8 @@ type SourceInfo struct {
 	Commit string `json:"commit,omitempty"`
 	Branch string `json:"branch,omitempty"`
 	Dirty  bool   `json:"dirty,omitempty"`
+	Files  int    `json:"files,omitempty"` // uploaded files (none for a path build)
+	Bytes  int64  `json:"bytes,omitempty"` // their size, uncompressed
 }
 
 // BuildInfo identifies an App Store Connect build.
@@ -236,6 +236,13 @@ type SourceStats struct {
 	Bytes  int64            `json:"bytes"`
 	Files  int              `json:"files"`
 	TopDir map[string]int64 `json:"topDirs"` // bytes per top-level entry
+}
+
+// App is one entry of GET /v1/apps.
+type App struct {
+	Name, BundleID, Signing string
+	InternalOnly, AllowExec bool
+	Verbs                   []Verb // what this server can run for the app
 }
 
 // JobRequest is the body of POST /v1/jobs.

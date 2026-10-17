@@ -409,34 +409,48 @@ func (t *Testflight) distribute(jc *queue.JobCtx, appID string, b *asc.Build) er
 			Hint: "The build was not distributed. Check the export options (testFlightInternalTestingOnly).",
 		}, recordBuild(b))
 	}
+	// done says what reached testers, so the agent can tell the user it is on their phone.
 	var notes []api.Note
-	if app.Testflight.Group != "" {
-		g, err := t.ASC.BetaGroupByName(jc.Ctx, appID, app.Testflight.Group)
+	var done []string
+	if group := app.Testflight.Group; group != "" {
+		g, err := t.ASC.BetaGroupByName(jc.Ctx, appID, group)
 		switch {
 		case err != nil:
-			notes = append(notes, api.Note{Kind: "group", Detail: "could not find group " + app.Testflight.Group + ": " + err.Error()})
+			notes = append(notes, api.Note{Kind: "group", Detail: "could not find group " + group + ": " + err.Error()})
 		case !g.Internal:
-			notes = append(notes, api.Note{Kind: "group", Detail: "group " + app.Testflight.Group + " is not internal; not adding the build"})
+			notes = append(notes, api.Note{Kind: "group", Detail: "group " + group + " is not internal; not adding the build"})
 		case g.AutoDistribution:
-			// The group receives every build; nothing to add.
+			done = append(done, "group "+group+" gets every build automatically")
 		default:
 			if err := t.ASC.AddBuildToGroup(jc.Ctx, g.ID, b.ID); err != nil {
-				notes = append(notes, api.Note{Kind: "group", Detail: "adding to " + app.Testflight.Group + ": " + err.Error()})
+				notes = append(notes, api.Note{Kind: "group", Detail: "adding to " + group + ": " + err.Error()})
+			} else {
+				done = append(done, "added to group "+group)
 			}
 		}
 	}
 	if text := whatToTest(jc.Job); text != "" {
 		if _, err := t.ASC.SetWhatToTest(jc.Ctx, b.ID, text); err != nil {
 			notes = append(notes, api.Note{Kind: "what_to_test", Detail: err.Error()})
+		} else {
+			done = append(done, "What to Test set")
 		}
 	}
 	if app.Testflight.Tester != "" {
-		if inv, err := t.ASC.TesterInviteState(jc.Ctx, appID, app.Testflight.Tester); err == nil && inv.State != asc.InviteAccepted {
+		inv, err := t.ASC.TesterInviteState(jc.Ctx, appID, app.Testflight.Tester)
+		switch {
+		case err != nil:
+		case inv.State == asc.InviteAccepted:
+			done = append(done, app.Testflight.Tester+" has accepted the TestFlight invite")
+		default:
 			notes = append(notes, api.Note{
 				Kind:   api.HumanAcceptTestflightInvite,
 				Detail: fmt.Sprintf("%s has not accepted the TestFlight invite (%s); the build will not show up for them until they do", app.Testflight.Tester, inv.AppleState),
 			})
 		}
+	}
+	if len(done) > 0 {
+		notes = append([]api.Note{{Kind: "distributed", Detail: strings.Join(done, "; ")}}, notes...)
 	}
 	if err := jc.Succeed("ready for internal testers", func(j *store.Job) {
 		recordBuild(b)(j)

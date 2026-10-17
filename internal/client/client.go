@@ -294,6 +294,13 @@ func (c *Client) SourceStats(ctx context.Context, app string) (*api.SourceStats,
 	return out, err
 }
 
+// Apps lists the apps the server is configured for and what it can run for each.
+func (c *Client) Apps(ctx context.Context) ([]api.App, error) {
+	var out []api.App
+	err := c.doJSON(ctx, "GET", "/v1/apps", nil, &out)
+	return out, err
+}
+
 // Raw performs a GET and returns the JSON body (apps, builds, baseline, doctor).
 func (c *Client) Raw(ctx context.Context, path string) (json.RawMessage, error) {
 	var out json.RawMessage

@@ -210,5 +210,8 @@ func oneLine(s string, max int) string {
 // recordSource copies the request's source description into the result.
 func recordSource(j *store.Job) {
 	s := j.Request.Source
-	j.Result.Source = api.SourceInfo{SHA256: s.SHA256, Path: s.Path, Commit: s.Commit, Branch: s.Branch, Dirty: s.Dirty}
+	j.Result.Source = api.SourceInfo{
+		SHA256: s.SHA256, Path: s.Path, Commit: s.Commit, Branch: s.Branch, Dirty: s.Dirty,
+		Files: s.Stats.Files, Bytes: s.Stats.Bytes,
+	}
 }

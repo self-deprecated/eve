@@ -2,6 +2,19 @@
 
 ## Unreleased — M1 (2026-10-16)
 
+### Feedback from converting ScreenGate
+- `submit` refuses a verb the server cannot run for the app with exit 64 **before uploading**
+  (it used to queue the job and fail with `eve.unsupported`). `eve apps` lists each app's `Verbs`
+  (verbs with a pipeline; `exec` also needs `allowExec`); the server refuses the rest with
+  `unsupported_verb`. Usage is `submit <testflight|check|device|exec> [-- command for exec]`.
+- `eve init` writes a starter eve.yml from the `project.yml` or `.xcodeproj` it finds. The skill
+  documents every eve.yml key (`ignore`, `check`, `xcode`, …), says tests run only with
+  `check.test: true`, and lists the verbs that are not available yet.
+- Results: `phase` is omitted once a job succeeds; `source.files` and `source.bytes` show what
+  was uploaded; a `distributed` note confirms the TestFlight group, What to Test and the tester's
+  accepted invite.
+- PLAN: `exec` artifacts may be directories, fetched with `eve artifacts <job> [--out DIR]` (M3).
+
 ### `check` verb (first part of M3)
 - `eve submit check`: a Simulator Debug build, plus the scheme's tests on a fresh `eve-<job>`
   Simulator when eve.yml has `check: {test: true}` (`check.simulator` picks the device type).

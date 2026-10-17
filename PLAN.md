@@ -241,7 +241,7 @@ Processing has a durable deadline (default 4 h, persisted on the job); exceeding
 {
   "id": "j_01JB…", "app": "bodydiff", "verb": "testflight",
   "outcome": "failed", "phase": "delivering", "durationS": 412,
-  "source": {"sha256": "…", "commit": "3f2c1ab", "dirty": true},
+  "source": {"sha256": "…", "commit": "3f2c1ab", "dirty": true, "files": 212, "bytes": 4130000},
   "build": {"version": "1.0", "number": "202610161512", "ascBuildId": null},
   "failure": {
     "class": "signing.cloud_permission",
@@ -258,7 +258,10 @@ Processing has a durable deadline (default 4 h, persisted on the job); exceeding
 }
 ```
 
-Hard cap 4 KB, excerpt ≤ 40 lines, known secret values redacted. When the size guard trips,
+`phase` is where a running job is, or where an unsuccessful one stopped; it is omitted once a job
+succeeds. A successful TestFlight result carries a `distributed` note naming the group, whether
+What to Test was set and whether the tester has accepted their invite. Hard cap 4 KB, excerpt
+≤ 40 lines, known secret values redacted. When the size guard trips,
 `size` carries the full report instead (§6.7.3).
 
 ### 5.4 Idempotency
@@ -387,11 +390,16 @@ crash are deleted before the next run. `check.simulator` in eve.yml picks the de
 
 ### 6.6 `exec`
 
-`eve exec [<app>] -- <command…>` runs a repo command in the job workspace with the child
+`eve submit exec -- <command…>` runs a repo command in the job workspace with the child
 environment, inside the Aqua session, with `$EVE_ARTIFACTS` exported. It retires `gui-run.sh`
 and covers ScreenGate's `screenshots.sh` and Lineage's `check-ios.sh`. Artifacts are listed in the
 result, never inlined. It adds no new trust (§14), so it needs only `allowExec: true` on the app to
 avoid accidents.
+
+Artifacts may be directories: ScreenGate's screenshots are `current/` and `mockups/`. Each
+top-level entry of `$EVE_ARTIFACTS` is one artifact; a directory is served as a tar stream.
+`eve artifacts <job> [--out DIR]` downloads them all (unpacking directories), so retiring
+`screenshots.sh` needs no HTTP calls.
 
 ### 6.7 Size guard
 
@@ -622,10 +630,14 @@ CLIProxyAPI (`https://cliproxyapi.tail6e682f.ts.net/v1`, key from `CLIPROXY_API_
 ```
 eve login <url>                         store server URL; token into ~/.config/eve/token (0600)
 eve doctor [--host]
-eve submit <verb> [<app>] [--wait [--events] [--timeout D]] [--notify-url URL]... [--idempotency-key K]
-           [--build-number N] [--notes TEXT] [--device UDID] [--release] [--path DIR]
-           [--accept-source-size REASON] [--expect-size-change REASON]
-                                        prints job id + key; <app> from eve.yml
+eve init                                write a starter eve.yml for the project here
+eve apps                                configured apps and the verbs each can run
+eve submit <testflight|check|device|exec> [--app A] [--wait [--events] [--timeout D]]
+           [--notify-url URL]... [--idempotency-key K] [--build-number N] [--notes TEXT]
+           [--device UDID] [--release] [--path DIR] [--accept-source-size REASON]
+           [--expect-size-change REASON] [-- CMD... for exec]
+                                        prints job id + key; app from eve.yml; a verb the server
+                                        cannot run for the app exits 64 before uploading
 eve wait <id> [--timeout D] [--events]  exit code per §5.2
 eve size <id>                           size report and full diff against the baseline
 eve confirm <id> --reason TEXT          accept a size-guard pause; delivery continues
@@ -635,7 +647,7 @@ eve status [<id>] [--json]
 eve logs <id> [--phase P] [--errors] [--tail N]
 eve jobs [--app A] [--limit N]
 eve cancel <id>
-eve exec [<app>] -- CMD...
+eve artifacts <id> [--out DIR]          download an exec job's artifacts (M3)
 eve builds <app>                        latest ASC builds and states
 eve token create|list|revoke            (server)
 eve serve                               (server)
@@ -662,7 +674,7 @@ eve version
 | `GET` | `/v1/jobs/{id}/size` | full size report and diff |
 | `POST` | `/v1/jobs/{id}/confirm` | `{reason}`; only in `awaiting_confirmation` |
 | `POST` | `/v1/jobs/{id}/reject` | only in `awaiting_confirmation` |
-| `GET` | `/v1/apps`, `/v1/apps/{app}/builds` | |
+| `GET` | `/v1/apps`, `/v1/apps/{app}/builds` | apps list the verbs each can run (pipeline present; exec also needs `allowExec`) |
 | `GET` | `/v1/apps/{app}/source-stats` | last accepted source: bytes, files, size per top-level dir |
 | `GET` / `PUT` | `/v1/apps/{app}/baseline` | show, or reset from a job |
 | `GET` | `/v1/doctor`, `/v1/version` | |

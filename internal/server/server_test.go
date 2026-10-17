@@ -134,6 +134,8 @@ func TestCreateJobValidation(t *testing.T) {
 		{"unknown app", f.tok, api.JobRequest{App: "nope", Verb: "testflight", Source: api.JobSource{SHA256: f.sha}}, "unknown_app"},
 		{"bad verb", f.tok, api.JobRequest{App: "driver", Verb: "ship", Source: api.JobSource{SHA256: f.sha}}, "bad_verb"},
 		{"exec not allowed", f.tok, api.JobRequest{App: "driver", Verb: "exec", Source: api.JobSource{SHA256: f.sha}}, "exec_not_allowed"},
+		{"verb not implemented", f.tok, api.JobRequest{App: "driver", Verb: "device", Source: api.JobSource{SHA256: f.sha}}, "unsupported_verb"},
+		{"exec allowed, not implemented", f.tok, api.JobRequest{App: "screengate", Verb: "exec", Source: api.JobSource{SHA256: f.sha}}, "unsupported_verb"},
 		{"no source", f.tok, api.JobRequest{App: "driver", Verb: "testflight"}, "no_source"},
 		{"unknown source", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: strings.Repeat("b", 64)}}, "unknown_source"},
 		{"path needs owner", f.tok, api.JobRequest{App: "driver", Verb: "testflight", Source: api.JobSource{Path: "/Users/jmo/Developer/driver"}}, "path_needs_owner"},
@@ -148,6 +150,21 @@ func TestCreateJobValidation(t *testing.T) {
 				t.Fatalf("status %d body %s, want code %s", resp.StatusCode, body, c.code)
 			}
 		})
+	}
+}
+
+func TestAppsListVerbs(t *testing.T) {
+	f := newFixture(t, nil)
+	_, body := f.do(t, "GET", "/v1/apps", f.tok, nil)
+	var apps []api.App
+	if err := json.Unmarshal(body, &apps); err != nil || len(apps) != 2 {
+		t.Fatalf("%v %s", err, body)
+	}
+	// Only testflight has a pipeline here; exec needs one as well as allowExec.
+	for _, a := range apps {
+		if len(a.Verbs) != 1 || a.Verbs[0] != api.VerbTestflight {
+			t.Fatalf("%s verbs %v", a.Name, a.Verbs)
+		}
 	}
 }
 

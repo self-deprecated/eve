@@ -43,18 +43,24 @@ If the waiting command died (harness restart, session ended), the build carried 
 `eve wait <job> --json` picks it up again, and `eve pending` lists jobs from this machine whose
 outcome nobody has seen.
 
-`eve submit check --wait` builds for the Simulator (signed ad hoc, never uploaded); with
-`check: {test: true}` in eve.yml it also runs the scheme's tests on a fresh Simulator. A failing
-test exits 1 with `failure.class: test.failed`; `tests.failures` names the first failing tests
-and their assertions. `eve submit device` (install on the user's iPhone) is not available yet.
+`eve submit check --wait` builds for the Simulator (signed ad hoc, never uploaded). By default it
+**only builds**: tests run only when eve.yml sets `check: {test: true}`, on a fresh Simulator. A
+failing test exits 1 with `failure.class: test.failed`; `tests.failures` names the first failing
+tests and their assertions.
+
+Only `testflight` and `check` are available today; `device` (install on the user's iPhone) and
+`exec` (run a repo script on Quartz) are not. `eve apps --json` lists each app's `Verbs`, and
+`submit` refuses any other verb with exit 64 before uploading anything.
 
 ## Reading the result
 
-The exit code is the outcome; the JSON is the result document. Read only that.
+The exit code is the outcome; the JSON is the result document. Read only that. `phase` is where a
+job is, or where it stopped if it did not succeed (absent once it has); `source.files` and
+`source.bytes` are what was uploaded, so you can see an `ignore` took effect.
 
 | Exit | Outcome | What to do |
 |---|---|---|
-| 0 | `succeeded` | Report the build number in one line. Pass on any `notes` (e.g. `accept_testflight_invite`: the user must accept the TestFlight invite on their phone). |
+| 0 | `succeeded` | Report the build number in one line. The `distributed` note says which group got it, that What to Test was set and that the tester has accepted their invite: only then say it's on their phone. Pass on any other `notes` (e.g. `accept_testflight_invite`: the user must accept the TestFlight invite first). |
 | 1 | `failed` | Use `failure.class`, `summary`, `hint` and `excerpt` to fix it, then resubmit. Only if that is not enough: `eve logs <job> --errors`. |
 | 65 | `rejected` | Apple refused the build (`failure.excerpt` has Apple's reasons). Fix and resubmit. |
 | 69 | `unavailable` | Quartz or Apple unreachable. Try again later. |
@@ -86,23 +92,36 @@ files. This exists because whole repos have been packaged into the app before.
 
 ## eve.yml
 
+`eve init` writes a starter one from the `project.yml` or `.xcodeproj` it finds in the current
+directory or one level down; check `app` against `eve apps`. Every key:
+
 ```yaml
-app: driver                       # the app's name on the server (`eve apps`)
+app: driver                       # required: the app's name on the server (`eve apps`)
 project:
-  dir: ios                        # where the project lives, relative to the repo root
-  xcodegen: project.yml           # or: xcodeproj: Lineage.xcodeproj
-  scheme: Driver
-pre:                              # optional commands run before building
+  dir: ios                        # where the project lives, relative to the repo root (default .)
+  xcodegen: project.yml           # exactly one of xcodegen (path relative to dir)
+  # xcodeproj: Lineage.xcodeproj  #   or xcodeproj
+  scheme: Driver                  # required
+ignore:                           # gitignore-style paths never uploaded, on top of .gitignore
+  - docs/screenshots/             #   and .eveignore: large assets the build doesn't need
+pre:                              # commands run in the workspace before building
   - swift test --package-path DriverCore
-check:                            # optional, for `eve submit check`
-  test: true                      # also run the scheme's tests
-  simulator: iPhone 17 Pro        # default: the newest iPhone Pro
+check:                            # for `eve submit check`
+  test: true                      # also run the scheme's tests (default false: build only)
+  simulator: iPhone 17 Pro        # device type (default: the newest iPhone Pro)
+xcode: "26"                       # fail unless Quartz's selected Xcode is this version (26 matches 26.x)
 ```
 
-Identity (bundle id, team, signing, secrets, TestFlight group) lives on the server, not here.
+`device: {configuration}` and `exec: {artifacts}` are also accepted, for verbs that are not
+available yet. Unknown keys are an error. Identity (bundle id, team, signing, secrets, TestFlight
+group) lives on the server, not here.
+
+Before the first submit, make sure big directories the build doesn't need (screenshots, design
+files, fixtures) are covered by `.gitignore`, `.eveignore` or `ignore`: the size guard only stops
+uploads that look wrong, and every submit uploads everything else.
 
 ## Useful commands
 
-`eve status <job>` · `eve jobs` · `eve pending` · `eve logs <job> --errors` · `eve size <job>` ·
+`eve apps` · `eve init` · `eve status <job>` · `eve jobs` · `eve pending` · `eve logs <job> --errors` · `eve size <job>` ·
 `eve builds <app>` · `eve cancel <job>` (`--force` while uploading) · `eve doctor`
 (`--host` for Quartz's checks).

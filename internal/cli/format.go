@@ -30,6 +30,9 @@ func FormatResult(r api.Result) string {
 		if r.Source.Dirty {
 			src += " (dirty)"
 		}
+		if r.Source.Files > 0 {
+			src += fmt.Sprintf(", %d files, %s", r.Source.Files, mb(r.Source.Bytes))
+		}
 		fmt.Fprintf(&b, "  source   %s\n", src)
 	}
 	if s := r.Size; s != nil {

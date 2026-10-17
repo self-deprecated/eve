@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/self-deprecated/eve/internal/api"
@@ -29,11 +30,13 @@ type submitFlags struct {
 func submitCmd(env *Env) *cobra.Command {
 	var f submitFlags
 	cmd := &cobra.Command{
-		Use:   "submit <testflight|device|check> [-- command for exec]",
+		Use:   "submit <testflight|check|device|exec> [-- command for exec]",
 		Short: "Send the working tree to Quartz and start a job; returns at once (or waits with --wait)",
 		Long: "Uploads the repository (git-tracked and untracked-but-not-ignored files; never build output or\n" +
 			"secrets) after the size guard's source check, then queues the job. With --wait it then follows\n" +
-			"the job until it finishes or needs confirmation; the exit code is the outcome.",
+			"the job until it finishes or needs confirmation; the exit code is the outcome.\n\n" +
+			"Not every verb is available yet: `eve apps` lists what the server can run for each app, and\n" +
+			"submit refuses anything else with exit 64 before uploading.",
 		Args: cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error { return runSubmit(cmd.Context(), env, f, args) },
 	}
@@ -56,7 +59,7 @@ func submitCmd(env *Env) *cobra.Command {
 func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) error {
 	verb := api.Verb(args[0])
 	if !verb.Valid() {
-		return &ExitError{Code: api.ExitUsage, Err: fmt.Errorf("unknown verb %q: want testflight, device, check or exec", args[0])}
+		return &ExitError{Code: api.ExitUsage, Err: fmt.Errorf("unknown verb %q: want testflight, check, device or exec", args[0])}
 	}
 	c, err := env.client()
 	if err != nil {
@@ -78,27 +81,26 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 	}
 	lg := ledger.Default()
 
+	var root string
 	if f.path != "" {
-		abs, err := filepath.Abs(f.path)
-		if err != nil {
-			return err
-		}
-		repo, err := config.LoadRepo(abs)
-		if err != nil {
-			return &ExitError{Code: api.ExitUsage, Err: err}
-		}
-		req.App = pick(f.app, repo.App)
-		req.Source = api.JobSource{Path: abs}
+		root, err = filepath.Abs(f.path)
 	} else {
-		root, err := config.FindRepoRoot(".")
-		if err != nil {
-			return &ExitError{Code: api.ExitUsage, Err: err}
-		}
-		repo, err := config.LoadRepo(root)
-		if err != nil {
-			return &ExitError{Code: api.ExitUsage, Err: err}
-		}
-		req.App = pick(f.app, repo.App)
+		root, err = config.FindRepoRoot(".")
+	}
+	if err != nil {
+		return &ExitError{Code: api.ExitUsage, Err: err}
+	}
+	repo, err := config.LoadRepo(root)
+	if err != nil {
+		return &ExitError{Code: api.ExitUsage, Err: err}
+	}
+	req.App = pick(f.app, repo.App)
+	if err := checkVerb(ctx, c, req.App, verb); err != nil {
+		return err
+	}
+	if f.path != "" {
+		req.Source = api.JobSource{Path: root}
+	} else {
 		src, err := upload(ctx, env, c, root, repo, req.App, f.acceptSource)
 		if err != nil {
 			return err
@@ -132,6 +134,29 @@ func runSubmit(ctx context.Context, env *Env, f submitFlags, args []string) erro
 	}
 	_, _ = fmt.Fprintf(env.Err, "eve: job %s accepted; following it\n", created.ID)
 	return follow(ctx, env, c, created.ID, f.follow)
+}
+
+// checkVerb refuses, before anything is uploaded, a verb the server cannot run for app.
+func checkVerb(ctx context.Context, c *client.Client, app string, verb api.Verb) error {
+	apps, err := c.Apps(ctx)
+	if err != nil {
+		return err
+	}
+	for _, a := range apps {
+		if a.Name != app {
+			continue
+		}
+		if slices.Contains(a.Verbs, verb) {
+			return nil
+		}
+		avail := make([]string, len(a.Verbs))
+		for i, v := range a.Verbs {
+			avail[i] = string(v)
+		}
+		return &ExitError{Code: api.ExitUsage, Err: fmt.Errorf("%s is not available for %s on this server (available: %s); nothing was uploaded",
+			verb, app, strings.Join(avail, ", "))}
+	}
+	return &ExitError{Code: api.ExitUsage, Err: fmt.Errorf("app %q is not configured on the server (see eve apps)", app)}
 }
 
 // upload lists, size-checks, packs and uploads the tree; it returns the job's source.

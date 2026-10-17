@@ -340,6 +340,9 @@ func (s *Store) Transition(ctx context.Context, id string, t Transition) (Job, a
 	j.Result.ID, j.Result.App, j.Result.Verb = j.ID, j.App, j.Verb
 	j.Result.Outcome = j.State
 	j.Result.Phase = j.Phase
+	if j.State == api.StateSucceeded {
+		j.Result.Phase = "" // a finished job has no phase; failures keep the one they stopped in
+	}
 	if !j.StartedAt.IsZero() {
 		end := now
 		if !j.FinishedAt.IsZero() {

@@ -260,6 +260,27 @@ func valid(state string) *asc.Build {
 
 // --- tests ---
 
+// Starts from processing, so it needs no build tools.
+func TestDistributionIsReported(t *testing.T) {
+	h := newHarness(t, SizeVerdict{})
+	j := h.submit(t, api.JobOptions{})
+	if err := h.q.NewJobCtx(context.Background(), j).EnterWith(api.StateProcessing, "uploaded", recordSource); err != nil {
+		t.Fatal(err)
+	}
+	h.asc.builds = []*asc.Build{valid("IN_BETA_TESTING")}
+	got := h.watch(t, j.ID)
+	if got.State != api.StateSucceeded {
+		t.Fatalf("final: %s %+v", got.State, got.Result.Failure)
+	}
+	want := api.Note{Kind: "distributed", Detail: "added to group Driver; What to Test set; me@example.com has accepted the TestFlight invite"}
+	if len(got.Result.Notes) != 1 || got.Result.Notes[0] != want {
+		t.Fatalf("notes: %+v", got.Result.Notes)
+	}
+	if got.Result.Phase != "" || got.Result.Source.Files != 10 || got.Result.Source.Bytes != 1000 {
+		t.Fatalf("phase %q, source %+v", got.Result.Phase, got.Result.Source)
+	}
+}
+
 func TestHappyPathToReadyForTesters(t *testing.T) {
 	h := newHarness(t, SizeVerdict{})
 	h.asc.latest = "202610161458"
@@ -290,8 +311,12 @@ func TestHappyPathToReadyForTesters(t *testing.T) {
 	if len(h.asc.added) != 1 || !strings.Contains(h.asc.whatToTest, "3f2c1ab") {
 		t.Fatalf("distribution: %v %q", h.asc.added, h.asc.whatToTest)
 	}
-	if len(got.Result.Notes) != 1 || got.Result.Notes[0].Kind != api.HumanAcceptTestflightInvite {
-		t.Fatalf("invite note missing: %+v", got.Result.Notes)
+	if n := got.Result.Notes; len(n) != 2 || n[0].Kind != "distributed" || n[0].Detail != "added to group Driver; What to Test set" ||
+		n[1].Kind != api.HumanAcceptTestflightInvite {
+		t.Fatalf("notes: %+v", got.Result.Notes)
+	}
+	if got.Result.Phase != "" || got.Result.Source.Files != 10 || got.Result.Source.Bytes != 1000 {
+		t.Fatalf("phase %q, source %+v", got.Result.Phase, got.Result.Source)
 	}
 	if b, _ := h.st.Baseline(context.Background(), "driver"); b == nil || b.JobID != j.ID {
 		t.Fatal("baseline not updated on success")

@@ -55,7 +55,7 @@ func Root(version string) (*cobra.Command, *Env) {
 	root.AddCommand(
 		versionCmd(env), loginCmd(env), doctorCmd(env), waitCmd(env), statusCmd(env), logsCmd(env),
 		jobsCmd(env), cancelCmd(env), confirmCmd(env), rejectCmd(env), sizeCmd(env), buildsCmd(env),
-		baselineCmd(env), appsCmd(env), submitCmd(env), pendingCmd(env),
+		baselineCmd(env), appsCmd(env), submitCmd(env), pendingCmd(env), initCmd(env),
 	)
 	return root, env
 }
