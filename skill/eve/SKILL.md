@@ -50,11 +50,11 @@ failing test exits 1 with `failure.class: test.failed`; `tests.failures` names t
 tests and their assertions.
 
 `eve submit device --wait` puts a development build on the user's iPhone and launches it. It
-builds first (Debug, or eve.yml's `device.configuration`; `--release` for Release), then checks
-the phone: if it is locked or asleep, the job waits in `waiting_for_device` for up to 10 minutes,
-continues within seconds of the unlock, and otherwise ends `needs_human` (`unlock_phone`, exit 78)
-with the build kept. If you run it in the background, tell the user to unlock their phone when you
-start it. `--device <name or UDID>` picks another paired device. Success has a `launched` note
+builds (Debug, or eve.yml's `device.configuration`; `--release` for Release), then installs and
+launches. Only if the phone refuses because it is locked, or can't be reached (asleep, off
+Wi-Fi), does the job wait in `waiting_for_device`, retrying every 5 s for up to 10 minutes; it
+continues within seconds of the unlock, and otherwise ends `needs_human` (`unlock_phone`,
+exit 78) with the build kept. Pass that on to the user in one line. `--device <name or UDID>` picks another paired device. Success has a `launched` note
 naming the phone.
 
 `eve submit exec --wait -- <command> [args…]` runs a repo command on Quartz in the job's copy of

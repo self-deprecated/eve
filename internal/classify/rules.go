@@ -311,8 +311,9 @@ var rules = []rule{
 	{
 		class: ClassDeviceUnavailable,
 		// Swift's "'UIDevice' is unavailable" diagnostics are why there is no looser pattern.
-		keys: []string{"Unable to find a destination matching", "not a valid destination", "Device State: unavailable", "platform:iOS, id:"},
+		keys: []string{"Unable to find a destination matching", "not a valid destination", "Device State: unavailable", "platform:iOS, id:", "A connection to this device could not be established"},
 		match: []*regexp.Regexp{
+			re(`A connection to this device could not be established`), // devicectl, phone asleep or off Wi-Fi (seen 2026-10-17)
 			re(`Unable to find a destination matching`),
 			re(`not a valid destination`),
 			re(`Device State: unavailable`),

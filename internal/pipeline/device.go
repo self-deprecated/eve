@@ -19,8 +19,7 @@ import (
 )
 
 // Device builds a development-signed app, installs it on the user's iPhone and launches it
-// (PLAN.md §6.4). The build comes first, so any wait for the person happens after the slow part;
-// the phone is checked again before install and before launch, since it can relock meanwhile.
+// (PLAN.md §6.4). The build comes first, so any wait for the person happens after the slow part.
 type Device struct{ *Deps }
 
 // NewDevice returns the device pipeline.
@@ -130,41 +129,11 @@ func (p *Device) build(jc *queue.JobCtx, ws *workspace, kept string) (string, er
 	return app, nil
 }
 
-// installAndLaunch waits for the phone when it is locked or unreachable, then installs and
-// launches. A launch refused because the phone relocked waits again within the same deadline.
+// installAndLaunch installs and launches straight away, like a person at Xcode would. Only when
+// devicectl says the phone is locked or unreachable does the job wait: it enters
+// waiting_for_device once and retries that step every DevicePoll, for at most DeviceWait.
 func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Device, app string) error {
 	var deadline time.Time
-	waited := false
-	// ready blocks until the phone is reachable and unlocked, or the wait runs out. why, when set,
-	// is a reason already known not to go ahead.
-	ready := func(why string) error {
-		for {
-			if why == "" {
-				s := ws.tools.DeviceLockState(jc.Ctx, dev.ID)
-				if s.Ready {
-					return nil
-				}
-				why = s.Detail
-			}
-			if deadline.IsZero() {
-				deadline = p.Now().Add(p.DeviceWait)
-			}
-			if !waited {
-				waited = true
-				if err := jc.Enter(api.StateWaitingForDevice, fmt.Sprintf("waiting for %s: %s; unlock it to continue", dev.Name, why)); err != nil {
-					return err
-				}
-			}
-			if p.Now().After(deadline) {
-				_ = jc.NeedsHuman(api.HumanUnlockPhone, fmt.Sprintf("Unlock %s (%s); the build is ready and eve gave up waiting.", dev.Name, why), "", nil)
-				return errHandled
-			}
-			if err := p.Sleep(jc.Ctx, p.DevicePoll); err != nil {
-				return err
-			}
-			why = ""
-		}
-	}
 	steps := []struct {
 		state api.State
 		msg   string
@@ -176,14 +145,11 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 		}},
 	}
 	for _, s := range steps {
-		why := ""
+		if err := jc.Enter(s.state, s.msg); err != nil {
+			return err
+		}
+		refused := false
 		for {
-			if err := ready(why); err != nil {
-				return err
-			}
-			if err := jc.Enter(s.state, s.msg); err != nil {
-				return err
-			}
 			path := jc.LogPath(string(s.state))
 			runErr := p.writeLog(ws, path, s.run)
 			if runErr == nil {
@@ -192,18 +158,33 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 			if errors.Is(jc.Ctx.Err(), context.Canceled) {
 				return jc.Ctx.Err()
 			}
-			if f, h := p.classifyLog(jc, ws, s.state, path, runErr); h != nil && h.Action == api.HumanUnlockPhone {
-				why = "the phone refused the " + string(s.state)
-				if f != nil {
-					why = strings.TrimSuffix(f.Summary, ".")
-				}
-				if waited {
-					jc.Note(why + "; waiting again")
-				}
-				continue
+			f, h := p.classifyLog(jc, ws, s.state, path, runErr)
+			if h == nil || h.Action != api.HumanUnlockPhone {
+				p.failFromLog(jc, string(s.state), s.state, path, runErr, ws.app)
+				return errHandled
 			}
-			p.failFromLog(jc, string(s.state), s.state, path, runErr, ws.app)
-			return errHandled
+			why := "the phone refused the " + string(s.state)
+			if f != nil {
+				why = strings.TrimSuffix(f.Summary, ".")
+			}
+			switch {
+			case deadline.IsZero():
+				// The first wait: entering the state notifies the human webhook, once per job.
+				deadline = p.Now().Add(p.DeviceWait)
+				if err := jc.Enter(api.StateWaitingForDevice, fmt.Sprintf("waiting for %s: %s; unlock it to continue", dev.Name, why)); err != nil {
+					return err
+				}
+			case !refused:
+				jc.Note(why + "; waiting again")
+			}
+			refused = true
+			if p.Now().After(deadline) {
+				_ = jc.NeedsHuman(api.HumanUnlockPhone, fmt.Sprintf("Unlock %s (%s); the build is ready and eve gave up waiting.", dev.Name, why), "", func(j *store.Job) { j.Result.Failure = f })
+				return errHandled
+			}
+			if err := p.Sleep(jc.Ctx, p.DevicePoll); err != nil {
+				return err
+			}
 		}
 	}
 	detail := dev.Name

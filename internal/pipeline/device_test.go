@@ -34,19 +34,20 @@ const devicesJSON = `{"result":{"devices":[
  {"identifier":"IPAD-1","connectionProperties":{"pairingState":"paired"},
   "hardwareProperties":{"udid":"00008112-IPAD","platform":"iOS","deviceType":"iPad"},"deviceProperties":{"name":"iPad"}}]}}`
 
+// Answers for install and launch: ok, or the failure devicectl prints.
 const (
-	unlocked = `{"result":{"passcodeRequired":false,"unlockedSinceBoot":true}}`
-	locked   = `{"result":{"passcodeRequired":true,"unlockedSinceBoot":true}}`
-	away     = `{"error":{"code":4000,"domain":"com.apple.dt.CoreDeviceError","userInfo":{"NSLocalizedDescription":{"string":"A connection to this device could not be established."}}}}`
+	ok     = ""
+	away   = "ERROR: A connection to this device could not be established. (com.apple.dt.CoreDeviceError error 4000 (0x0FA0))"
+	locked = `ERROR: The request was denied by service delegate (SBMainWorkspace) for reason: Locked ("Unable to launch ai.selfdeprecated.driver because the device was not, or could not be, unlocked").`
 )
 
-// deviceSim answers like xcodebuild and devicectl. lock and launch are successive answers; the
+// deviceSim answers like xcodebuild and devicectl. install and launch are successive answers; the
 // last one repeats.
 type deviceSim struct {
-	mu     sync.Mutex
-	lock   []string
-	launch []string // "" = launched; anything else is the failure log
-	order  []string
+	mu      sync.Mutex
+	install []string
+	launch  []string
+	order   []string
 }
 
 func next(s *[]string) string {
@@ -75,19 +76,15 @@ func (s *deviceSim) handle(c run.Cmd) (string, int, error) {
 		switch strings.Join(a[1:3], " ") {
 		case "list devices":
 			return devicesJSON, 0, nil
-		case "device info":
-			s.order = append(s.order, "lockState")
-			v := next(&s.lock)
-			if v == away {
-				return v, 1, nil
-			}
-			return v, 0, nil
 		case "device install":
 			s.order = append(s.order, "install")
+			if v := next(&s.install); v != ok {
+				return v, 1, nil
+			}
 			return "App installed:\n", 0, nil
 		case "device process":
 			s.order = append(s.order, "launch")
-			if v := next(&s.launch); v != "" {
+			if v := next(&s.launch); v != ok {
 				return v, 1, nil
 			}
 			return "Launched application with ai.selfdeprecated.driver bundle identifier.\n", 0, nil
@@ -100,7 +97,6 @@ type deviceHarness struct {
 	q    *queue.Queue
 	st   *store.Store
 	f    *run.Fake
-	sim  *deviceSim
 	repo string
 	now  time.Time
 }
@@ -113,7 +109,7 @@ func newDeviceHarness(t *testing.T, sim *deviceSim) *deviceHarness {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = st.Close() })
-	h := &deviceHarness{st: st, sim: sim, repo: filepath.Join(dir, "driver"), now: time.Unix(1_800_000_000, 0)}
+	h := &deviceHarness{st: st, repo: filepath.Join(dir, "driver"), now: time.Unix(1_800_000_000, 0)}
 	_ = os.MkdirAll(filepath.Join(h.repo, "ios", "Driver.xcodeproj"), 0o755)
 	_ = os.WriteFile(filepath.Join(h.repo, "eve.yml"), []byte("app: driver\nproject: {dir: ios, xcodeproj: Driver.xcodeproj, scheme: Driver}\n"), 0o644)
 	cfg := &config.Server{DataDir: dir, Apps: map[string]config.App{"driver": {BundleID: "ai.selfdeprecated.driver"}}}
@@ -141,29 +137,33 @@ func (h *deviceHarness) run(t *testing.T, opts api.JobOptions) store.Job {
 	return got
 }
 
-func (h *deviceHarness) states(t *testing.T, id string) []api.State {
+func (h *deviceHarness) waits(t *testing.T, id string) int {
 	t.Helper()
 	evs, err := h.st.Events(context.Background(), id, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
-	var out []api.State
+	n := 0
 	for _, e := range evs {
-		if e.Kind == api.EventTransition {
-			out = append(out, e.State)
+		if e.Kind == api.EventTransition && e.State == api.StateWaitingForDevice {
+			n++
 		}
 	}
-	return out
+	return n
 }
 
 func TestDeviceBuildsInstallsAndLaunchesOnThePairedIPhone(t *testing.T) {
-	h := newDeviceHarness(t, &deviceSim{lock: []string{unlocked}, launch: []string{""}})
+	sim := &deviceSim{install: []string{ok}, launch: []string{ok}}
+	h := newDeviceHarness(t, sim)
 	got := h.run(t, api.JobOptions{})
 	if got.State != api.StateSucceeded {
 		t.Fatalf("%s %+v", got.State, got.Result.Failure)
 	}
 	if n := got.Result.Notes; len(n) != 1 || n[0].Kind != "launched" || n[0].Detail != "Jordan’s iPhone, iOS 27.0.1" {
 		t.Fatalf("notes %+v", n)
+	}
+	if !slices.Equal(sim.order, []string{"build", "install", "launch"}) || h.waits(t, got.ID) != 0 {
+		t.Fatalf("order %v: no checks and no wait when the phone takes it", sim.order)
 	}
 	b, _ := h.f.Find("xcodebuild build")
 	if !slices.Contains(b.Args, "generic/platform=iOS") || !slices.Contains(b.Args, "Debug") || !slices.Contains(b.Args, "-allowProvisioningUpdates") {
@@ -177,61 +177,49 @@ func TestDeviceBuildsInstallsAndLaunchesOnThePairedIPhone(t *testing.T) {
 	if !slices.Contains(l.Args, "--terminate-existing") || l.Args[len(l.Args)-1] != "ai.selfdeprecated.driver" {
 		t.Fatalf("launch %v", l.Args)
 	}
-	if slices.Contains(h.states(t, got.ID), api.StateWaitingForDevice) {
-		t.Fatal("an unlocked phone needs no wait")
-	}
 }
 
-func TestDeviceBuildsFirstThenWaitsOnceForTheLockedPhone(t *testing.T) {
-	sim := &deviceSim{lock: []string{away, locked, locked, unlocked}, launch: []string{""}}
+func TestDeviceWaitsOnlyWhenThePhoneSaysSo(t *testing.T) {
+	sim := &deviceSim{install: []string{away, away, ok}, launch: []string{locked, locked, ok}}
 	h := newDeviceHarness(t, sim)
 	got := h.run(t, api.JobOptions{})
 	if got.State != api.StateSucceeded {
 		t.Fatalf("%s %+v", got.State, got.Result.Failure)
 	}
-	if !slices.Equal(sim.order[:5], []string{"build", "lockState", "lockState", "lockState", "lockState"}) {
-		t.Fatalf("order %v: the build comes before any wait", sim.order)
+	want := []string{"build", "install", "install", "install", "launch", "launch", "launch"}
+	if !slices.Equal(sim.order, want) {
+		t.Fatalf("order %v, want %v: build, then retry each step until the phone takes it", sim.order, want)
 	}
-	waits := 0
-	for _, s := range h.states(t, got.ID) {
-		if s == api.StateWaitingForDevice {
-			waits++
-		}
-	}
-	if waits != 1 {
-		t.Fatalf("entered waiting_for_device %d times, want once (it notifies)", waits)
-	}
-}
-
-func TestDeviceWaitsAgainWhenThePhoneRelocksBeforeLaunch(t *testing.T) {
-	lockedLaunch := `ERROR: The request was denied by service delegate (SBMainWorkspace) for reason: Locked ("Unable to launch ai.selfdeprecated.driver because the device was not, or could not be, unlocked").`
-	sim := &deviceSim{lock: []string{unlocked}, launch: []string{lockedLaunch, ""}}
-	h := newDeviceHarness(t, sim)
-	got := h.run(t, api.JobOptions{})
-	if got.State != api.StateSucceeded {
-		t.Fatalf("%s %+v", got.State, got.Result.Failure)
-	}
-	if strings.Count(strings.Join(sim.order, " "), "launch") != 2 || strings.Count(strings.Join(sim.order, " "), "install") != 1 {
-		t.Fatalf("order %v: relaunch without reinstalling", sim.order)
+	if n := h.waits(t, got.ID); n != 1 {
+		t.Fatalf("entered waiting_for_device %d times, want once (it notifies)", n)
 	}
 }
 
 func TestDeviceGivesUpAfterTenMinutesAndAsksForAnUnlock(t *testing.T) {
-	h := newDeviceHarness(t, &deviceSim{lock: []string{locked}, launch: []string{""}})
+	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{locked}})
 	got := h.run(t, api.JobOptions{})
 	if got.State != api.StateNeedsHuman || got.Result.Human == nil || got.Result.Human.Action != api.HumanUnlockPhone {
 		t.Fatalf("%s %+v", got.State, got.Result.Human)
 	}
-	if !strings.Contains(got.Result.Human.Detail, "Jordan’s iPhone (the phone is locked)") {
+	if !strings.Contains(got.Result.Human.Detail, "Unlock Jordan’s iPhone (The app is installed but couldn't launch because the phone is locked)") {
 		t.Fatalf("detail %q", got.Result.Human.Detail)
 	}
-	if _, err := h.f.Find("devicectl device install"); err == nil {
-		t.Fatal("nothing is installed on a locked phone")
+	if f := got.Result.Failure; f == nil || f.Class != "device.locked" {
+		t.Fatalf("failure %+v", f)
+	}
+}
+
+func TestDeviceOtherFailuresFailAtOnce(t *testing.T) {
+	sim := &deviceSim{install: []string{"ERROR: The application's signature is invalid"}, launch: []string{ok}}
+	h := newDeviceHarness(t, sim)
+	got := h.run(t, api.JobOptions{})
+	if got.State != api.StateFailed || !slices.Equal(sim.order, []string{"build", "install"}) {
+		t.Fatalf("%s order %v", got.State, sim.order)
 	}
 }
 
 func TestDeviceUnknownNameListsThePhysicalDevices(t *testing.T) {
-	h := newDeviceHarness(t, &deviceSim{lock: []string{unlocked}, launch: []string{""}})
+	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{ok}})
 	got := h.run(t, api.JobOptions{Device: "Work Phone"})
 	f := got.Result.Failure
 	if got.State != api.StateFailed || f == nil || f.Class != "device.unknown" || f.Summary != `no paired device matches "Work Phone"; physical devices: Jordan’s iPhone, iPad` {
@@ -243,7 +231,7 @@ func TestDeviceUnknownNameListsThePhysicalDevices(t *testing.T) {
 }
 
 func TestDeviceMatchesByUDIDAndBuildsRelease(t *testing.T) {
-	h := newDeviceHarness(t, &deviceSim{lock: []string{unlocked}, launch: []string{""}})
+	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{ok}})
 	got := h.run(t, api.JobOptions{Device: strings.ToLower(phoneUDID), Release: true})
 	if got.State != api.StateSucceeded {
 		t.Fatalf("%s %+v", got.State, got.Result.Failure)
@@ -254,7 +242,7 @@ func TestDeviceMatchesByUDIDAndBuildsRelease(t *testing.T) {
 }
 
 func TestDeviceResumesAtInstallAfterARestart(t *testing.T) {
-	sim := &deviceSim{lock: []string{unlocked}, launch: []string{""}}
+	sim := &deviceSim{install: []string{ok}, launch: []string{ok}}
 	h := newDeviceHarness(t, sim)
 	j, _, _ := h.st.CreateJob(context.Background(), store.Job{App: "driver", Verb: api.VerbDevice, Request: api.JobRequest{
 		App: "driver", Verb: api.VerbDevice, Source: api.JobSource{Path: h.repo},
@@ -265,7 +253,7 @@ func TestDeviceResumesAtInstallAfterARestart(t *testing.T) {
 	j, _ = h.st.Update(context.Background(), j.ID, func(j *store.Job) { j.ResumeFrom = api.StateWaitingForDevice })
 	h.q.Exec(context.Background(), j)
 	got, _ := h.st.Get(context.Background(), j.ID)
-	if got.State != api.StateSucceeded || sim.order[0] == "build" {
+	if got.State != api.StateSucceeded || !slices.Equal(sim.order, []string{"install", "launch"}) {
 		t.Fatalf("%s order %v: the kept build is installed without rebuilding", got.State, sim.order)
 	}
 }

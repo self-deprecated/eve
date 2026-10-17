@@ -162,55 +162,6 @@ func (t Tools) Devices(ctx context.Context) ([]Device, error) {
 	return ParseDevices(out)
 }
 
-// LockState says whether the phone can take an install and a launch right now: reachable and
-// unlocked. detail explains why not.
-type LockState struct {
-	Ready  bool
-	Detail string
-}
-
-// ParseLockState decodes `devicectl device info lockState --json-output`. A reachable phone
-// without a passcodeRequired field counts as ready: install and launch errors still say if not.
-func ParseLockState(b []byte) LockState {
-	var v struct {
-		Result map[string]any `json:"result"`
-		Error  *struct {
-			UserInfo struct {
-				Description struct {
-					String string `json:"string"`
-				} `json:"NSLocalizedDescription"`
-			} `json:"userInfo"`
-		} `json:"error"`
-	}
-	if err := json.Unmarshal(b, &v); err != nil {
-		return LockState{Detail: "devicectl gave no lock state"}
-	}
-	if v.Error != nil || v.Result == nil {
-		why := "the phone is not reachable"
-		if v.Error != nil && v.Error.UserInfo.Description.String != "" {
-			why += " (" + v.Error.UserInfo.Description.String + ")"
-		}
-		return LockState{Detail: why}
-	}
-	if locked, _ := v.Result["passcodeRequired"].(bool); locked {
-		return LockState{Detail: "the phone is locked"}
-	}
-	return LockState{Ready: true}
-}
-
-// DeviceLockState asks the phone whether it is unlocked. An unreachable phone is not an error,
-// just not ready.
-func (t Tools) DeviceLockState(ctx context.Context, device string) LockState {
-	out, err := t.devicectl(ctx, nil, "device", "info", "lockState", "--device", device, "--timeout", "15", "--json-output", "-")
-	if len(out) > 0 {
-		return ParseLockState(out)
-	}
-	if err != nil {
-		return LockState{Detail: "the phone is not reachable (" + err.Error() + ")"}
-	}
-	return LockState{Detail: "devicectl gave no lock state"}
-}
-
 // Install installs app on device, logging devicectl's output.
 func (t Tools) Install(ctx context.Context, device, app string, log io.Writer) error {
 	_, err := t.devicectl(ctx, log, "device", "install", "app", "--device", device, app)

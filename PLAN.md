@@ -369,15 +369,16 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
    the slow part. A generic destination needs no reachable phone: the development profile already
    lists every registered device. The built app is kept in the job directory, so a restart in
    `installing`/`waiting_for_device`/`launching` resumes at install without rebuilding.
-3. Check reachability and lock state (`devicectl device info lockState`: ready unless it cannot
-   connect or reports `passcodeRequired: true`; still to be confirmed against a live, locked phone).
-   If not ready, enter `waiting_for_device` (which notifies the human webhook, if set) once, and
-   poll every 5 s for up to 10 min from the first wait, then `needs_human: unlock_phone`.
-4. Re-check immediately before install and before launch (the phone can relock during a build);
-   install, then launch with `--terminate-existing`. An install or launch that fails with a class
-   whose human action is `unlock_phone` (e.g. `device.locked`) waits again within the same
-   deadline instead of failing. The device jobs wait on the worker, so another build waits at most
-   those 10 minutes.
+3. Install, then launch with `--terminate-existing`, straight away: no lock-state check first.
+   The old scripts never needed one (install works on a locked phone), and `lockState`'s
+   `passcodeRequired` may only mean the phone has a passcode, which would make every job wait.
+4. Wait only when devicectl itself says so: an install or launch whose failure class asks for
+   `unlock_phone` (`device.locked`: the launch was refused because the phone is locked;
+   `device.unavailable`: "A connection to this device could not be established", the phone is
+   asleep or off Wi-Fi) enters `waiting_for_device` once (which notifies the human webhook, if
+   set) and retries that step every 5 s for up to 10 min from the first wait, then ends
+   `needs_human: unlock_phone`. Any other failure fails at once. Device jobs wait on the worker,
+   so another build waits at most those 10 minutes.
 5. Failure classes: `device.locked` (FBSOpenApplicationErrorDomain 7), `device.unavailable`,
    `device.untrusted_developer`, `device.attestation` ("Unable to Verify App": hint restart the
    phone).

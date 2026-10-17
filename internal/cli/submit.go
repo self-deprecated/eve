@@ -35,8 +35,8 @@ func submitCmd(env *Env) *cobra.Command {
 		Long: "Uploads the repository (git-tracked and untracked-but-not-ignored files; never build output or\n" +
 			"secrets) after the size guard's source check, then queues the job. With --wait it then follows\n" +
 			"the job until it finishes or needs confirmation; the exit code is the outcome.\n\n" +
-			"testflight uploads to TestFlight; device installs and launches on the paired iPhone (built\n" +
-			"first, then it waits up to 10 minutes for the phone to be unlocked); check builds for the\n" +
+			"testflight uploads to TestFlight; device installs and launches on the paired iPhone (if the\n" +
+			"phone is locked or asleep, it retries for up to 10 minutes until it's unlocked); check builds for the\n" +
 			"Simulator (and tests with check.test); exec runs a repo command on Quartz with $EVE_ARTIFACTS\n" +
 			"set (fetch them with `eve artifacts <job>`). `eve apps` lists what the server allows for each\n" +
 			"app (exec needs allowExec); submit refuses anything else with exit 64 before uploading.",

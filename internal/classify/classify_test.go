@@ -144,6 +144,7 @@ func TestDetails(t *testing.T) {
 		{path: "asc.agreement/asc-403-required-agreements.log", human: api.HumanAcceptAgreement},
 		{path: "xcode.account/barbican-failed-to-use-accounts.log", human: api.HumanXcodeSignIn},
 		{path: "device.locked/bodydiff-launch.log", human: api.HumanUnlockPhone},
+		{path: "device.unavailable/devicectl-connection-timeout.log", human: api.HumanUnlockPhone},
 		{path: "upload.export_compliance/asc-missing-compliance.log", human: api.HumanExportCompliance},
 		{path: "upload.export_compliance/itms-90592.log", hint: []string{"ITSEncryptionExportComplianceCode"}},
 		{path: "signing.cloud_permission/screengate-export.log", hint: []string{"Admin"}},
