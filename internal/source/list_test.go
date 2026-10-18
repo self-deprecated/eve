@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"testing"
 )
 
@@ -105,7 +106,7 @@ func TestListWalk(t *testing.T) {
 				t.Errorf("symlink recorded as %+v", f)
 			}
 		case "scripts/deploy.sh":
-			if f.Mode&0o111 == 0 {
+			if f.Mode&0o111 == 0 && runtime.GOOS != "windows" { // no exec bit on disk there
 				t.Errorf("deploy.sh lost its exec bit: %v", f.Mode)
 			}
 		case "ios/project.yml":
@@ -196,5 +197,28 @@ func TestListGit(t *testing.T) {
 func TestGitInfoOutsideRepo(t *testing.T) {
 	if _, _, _, ok := GitInfo(t.TempDir()); ok {
 		t.Error("GitInfo reported a repository in an empty temp dir")
+	}
+}
+
+func TestListGitTakesExecBitsFromTheIndexOnWindows(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("elsewhere the exec bit comes from the file")
+	}
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git not installed")
+	}
+	root := t.TempDir()
+	writeTree(t, root, map[string]string{"scripts/build.sh": "#!/bin/sh\n", "README.md": "hi\n"})
+	gitCmd(t, root, "init", "-q", "-b", "main")
+	gitCmd(t, root, "add", ".")
+	gitCmd(t, root, "update-index", "--chmod=+x", "scripts/build.sh")
+	res, err := List(root, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, f := range res.Files {
+		if exe := f.Mode&0o111 != 0; exe != (f.Rel == "scripts/build.sh") {
+			t.Errorf("%s: mode %v", f.Rel, f.Mode)
+		}
 	}
 }

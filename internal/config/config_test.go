@@ -37,7 +37,7 @@ apps:
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s.Listen != "127.0.0.1:4790" || !strings.HasSuffix(s.ASC.KeyPath, "/k.p8") || strings.HasPrefix(s.ASC.KeyPath, "~") {
+	if s.Listen != "127.0.0.1:4790" || filepath.Base(s.ASC.KeyPath) != "k.p8" || strings.HasPrefix(s.ASC.KeyPath, "~") {
 		t.Fatalf("defaults not applied: %+v", s)
 	}
 	l := s.SizeGuardFor("lineage")

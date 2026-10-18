@@ -29,7 +29,14 @@ jobs:
         run: go vet ./...
 
       - name: Test
-        run: go test -race -shuffle=on ./...
+        shell: bash
+        run: |
+          pkgs=./...
+          if [ "$RUNNER_OS" = Windows ]; then
+            # Windows runs only the client; the build-side packages run on the Mac.
+            pkgs=$(go list ./... | grep -vE '/internal/(store|queue|notify|server|xcode|pipeline|run|launchd)$')
+          fi
+          go test -race -shuffle=on $pkgs
 
       - name: Build and run
         shell: bash

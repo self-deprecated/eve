@@ -35,7 +35,7 @@ func git(dir string, args ...string) (out []byte, ok bool) {
 
 func gitEnv(bin string) []string {
 	env := []string{
-		"PATH=" + filepath.Dir(bin) + ":/usr/bin:/bin",
+		"PATH=" + filepath.Dir(bin) + string(os.PathListSeparator) + "/usr/bin" + string(os.PathListSeparator) + "/bin",
 		"LC_ALL=C",
 		"GIT_OPTIONAL_LOCKS=0",
 		"GIT_TERMINAL_PROMPT=0",
@@ -66,6 +66,24 @@ func gitFiles(dir string) ([]string, bool) {
 		}
 	}
 	return paths, true
+}
+
+// gitExecutables returns the tracked paths below dir whose index mode is 100755. Windows has no
+// exec bit on disk, so this is where a script's mode comes from there.
+func gitExecutables(dir string) map[string]bool {
+	out, ok := git(dir, "ls-files", "-s", "-z")
+	if !ok {
+		return nil
+	}
+	exe := map[string]bool{}
+	for entry := range strings.SplitSeq(string(out), "\x00") {
+		// "100755 <object> <stage>\t<path>"
+		meta, rel, found := strings.Cut(entry, "\t")
+		if found && strings.HasPrefix(meta, "100755 ") {
+			exe[rel] = true
+		}
+	}
+	return exe
 }
 
 // GitInfo returns the provenance of root's work tree: the HEAD commit, the current branch ("" when
