@@ -8,7 +8,7 @@ import (
 	"github.com/self-deprecated/eve/internal/config"
 )
 
-// BuildDeliveries decides who receives event for a job (PLAN.md §8.1a, §8.1b). The requesting
+// BuildDeliveries decides who receives event for a job (docs/design.md §8.1a, §8.1b). The requesting
 // notify URLs get every event. The human hook gets only events a person
 // must act on: needs_human and waiting_for_device. awaiting_confirmation never goes to the
 // human; size confirmations are the agent's call. Exhausted deliveries reach the human through

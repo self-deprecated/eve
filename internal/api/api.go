@@ -1,5 +1,5 @@
 // Package api holds the types shared by the eve client and server: job states, the result
-// document agents read, job requests and events (PLAN.md §5, §11).
+// document agents read, job requests and events (docs/design.md §5, §11).
 package api
 
 import (
@@ -24,7 +24,7 @@ var Verbs = []Verb{VerbTestflight, VerbCheck, VerbDevice, VerbExec}
 // Valid reports whether v is a known verb.
 func (v Verb) Valid() bool { return slices.Contains(Verbs, v) }
 
-// State is a job's phase while it runs, or its outcome once terminal (PLAN.md §5.1).
+// State is a job's phase while it runs, or its outcome once terminal (docs/design.md §5.1).
 type State string
 
 const (
@@ -62,7 +62,7 @@ func (s State) Terminal() bool {
 	return false
 }
 
-// Parked reports whether a job in state s is waiting off the worker (PLAN.md §5.6).
+// Parked reports whether a job in state s is waiting off the worker (docs/design.md §5.6).
 func (s State) Parked() bool {
 	switch s {
 	case StateAwaitingConfirmation, StateProcessing, StateDistributing:
@@ -71,7 +71,7 @@ func (s State) Parked() bool {
 	return false
 }
 
-// Exit codes for `eve wait`, `eve run` and `eve submit --wait` (PLAN.md §5.2).
+// Exit codes for `eve wait`, `eve run` and `eve submit --wait` (docs/design.md §5.2).
 const (
 	ExitOK                   = 0
 	ExitFailed               = 1
@@ -117,7 +117,7 @@ type VersionInfo struct {
 	API     int    `json:"api"`
 }
 
-// Result is the document an agent reads when it is woken (PLAN.md §5.3). Keep it small:
+// Result is the document an agent reads when it is woken (docs/design.md §5.3). Keep it small:
 // everything else stays behind `eve logs`.
 type Result struct {
 	ID        string      `json:"id"`
@@ -136,7 +136,7 @@ type Result struct {
 	Artifacts []string    `json:"artifacts,omitempty"`
 }
 
-// Tests summarizes a check's test run (PLAN.md §6.5): counts and the first failures, never the
+// Tests summarizes a check's test run (docs/design.md §6.5): counts and the first failures, never the
 // full log.
 type Tests struct {
 	Passed           int           `json:"passed"`
@@ -182,7 +182,7 @@ type Failure struct {
 	Log     string   `json:"log,omitempty"`
 }
 
-// Human actions a person must take (PLAN.md §5.1).
+// Human actions a person must take (docs/design.md §5.1).
 const (
 	HumanUnlockPhone            = "unlock_phone"
 	HumanConnectPhone           = "connect_phone" // the build Mac can't reach it: Wi-Fi off, away, or asleep
@@ -207,7 +207,7 @@ type Note struct {
 	Detail string `json:"detail"`
 }
 
-// Size-guard gate values (PLAN.md §6.7).
+// Size-guard gate values (docs/design.md §6.7).
 const (
 	GatePassed               = "passed"
 	GateBaselineCreated      = "baseline_created"
@@ -217,7 +217,7 @@ const (
 	GateReportOnly           = "report_only" // device and check builds never pause
 )
 
-// SizeReport is the size guard's summary in a result (PLAN.md §6.7.3).
+// SizeReport is the size guard's summary in a result (docs/design.md §6.7.3).
 type SizeReport struct {
 	Gate          string      `json:"gate"`
 	AppBytes      int64       `json:"appBytes"`
@@ -243,7 +243,7 @@ type SizeEntry struct {
 	Change string `json:"change"` // "new", "+1.2 MB", "removed"
 }
 
-// SourceStats summarizes an uploaded source tree (PLAN.md §6.7.1).
+// SourceStats summarizes an uploaded source tree (docs/design.md §6.7.1).
 type SourceStats struct {
 	Bytes  int64            `json:"bytes"`
 	Files  int              `json:"files"`
@@ -314,7 +314,7 @@ const (
 	EventMessage    = "message"
 )
 
-// Notification event names (PLAN.md §8).
+// Notification event names (docs/design.md §8).
 const (
 	NotifySucceeded            = "job.succeeded"
 	NotifyFailed               = "job.failed"

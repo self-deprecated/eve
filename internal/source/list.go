@@ -1,4 +1,4 @@
-// Package source handles a job's source tree end to end (PLAN.md §6.1): listing what to upload
+// Package source handles a job's source tree end to end (docs/design.md §6.1): listing what to upload
 // (git or a .gitignore-aware walk, minus .eveignore and the always-excluded list), packing it as a
 // deterministic tar.zst, storing uploads by SHA-256 on the server, extracting them as hostile
 // input, and cloning the result into a job workspace with APFS copy-on-write.
@@ -188,7 +188,7 @@ func statFile(root, rel string) (File, bool, error) {
 	return f, true, nil
 }
 
-// Stats summarizes files for the size guard (PLAN.md §6.7.1). TopDir is keyed by the first path
+// Stats summarizes files for the size guard (docs/design.md §6.7.1). TopDir is keyed by the first path
 // segment, so a top-level directory and a top-level file are both one key.
 func Stats(files []File) api.SourceStats {
 	st := api.SourceStats{TopDir: map[string]int64{}}

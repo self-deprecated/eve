@@ -1,6 +1,6 @@
 // Package asc is eve's App Store Connect API client: ES256 tokens from the standard library,
 // build and upload lookups, the processing and TestFlight verdicts, delivery reconciliation
-// (PLAN.md §5.5) and internal-group distribution (PLAN.md §6.3). It is a port of
+// (docs/design.md §5.5) and internal-group distribution (docs/design.md §6.3). It is a port of
 // bodydiff-testflight's scripts/app-store-connect.mjs.
 package asc
 

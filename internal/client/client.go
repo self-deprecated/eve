@@ -1,4 +1,4 @@
-// Package client talks to an eve server (PLAN.md §11). It is used by the CLI on every machine.
+// Package client talks to an eve server (docs/design.md §11). It is used by the CLI on every machine.
 package client
 
 import (

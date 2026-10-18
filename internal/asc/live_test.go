@@ -11,19 +11,24 @@ import (
 	"github.com/self-deprecated/eve/internal/config"
 )
 
-// Live tests make read-only GET calls to the real App Store Connect API. They run only with
-// EVE_ASC_LIVE=1 and the key in ~/.appstoreconnect; `go test` skips them otherwise.
-// EVE_ASC_LIVE_TESTER names a tester email to check; EVE_ASC_LIVE_DUMP=1 logs raw pages.
+// Live tests make read-only GET calls to the real App Store Connect API with the key named in the
+// build Mac's server.yml (EVE_ASC_LIVE_CONFIG, default ~/.config/eve/server.yml). They run only
+// with EVE_ASC_LIVE=1; `go test` skips them otherwise. EVE_ASC_LIVE_TESTER names a tester email
+// to check; EVE_ASC_LIVE_DUMP=1 logs raw pages.
 func liveClient(t *testing.T) *Client {
 	t.Helper()
 	if os.Getenv("EVE_ASC_LIVE") != "1" {
 		t.Skip("set EVE_ASC_LIVE=1 to call App Store Connect")
 	}
-	c, err := New(config.ASC{
-		KeyID:    "J9584QW2TF",
-		IssuerID: "25a2d76f-91fe-49e0-9551-09af06f209dc",
-		KeyPath:  "~/.appstoreconnect/private_keys/AuthKey_J9584QW2TF.p8",
-	})
+	path := os.Getenv("EVE_ASC_LIVE_CONFIG")
+	if path == "" {
+		path = config.ExpandHome("~/.config/eve/server.yml")
+	}
+	cfg, err := config.LoadServer(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c, err := New(cfg.ASC)
 	if err != nil {
 		t.Fatal(err)
 	}

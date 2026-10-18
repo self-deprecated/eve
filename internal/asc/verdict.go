@@ -38,7 +38,7 @@ type Verdict struct {
 	Summary string
 }
 
-// ProcessingVerdict maps a build's processingState (PLAN.md §6.3 step 5). A nil build is
+// ProcessingVerdict maps a build's processingState (docs/design.md §6.3 step 5). A nil build is
 // still on its way and means Wait.
 func ProcessingVerdict(b *Build) Verdict {
 	if b == nil {
@@ -60,7 +60,7 @@ func ProcessingVerdict(b *Build) Verdict {
 	return Verdict{Kind: Unknown, State: s, Summary: fmt.Sprintf("unexpected processing state %q", s)}
 }
 
-// InternalVerdict maps a build's buildBetaDetail internalBuildState (PLAN.md §6.3 step 6). A
+// InternalVerdict maps a build's buildBetaDetail internalBuildState (docs/design.md §6.3 step 6). A
 // nil detail is not visible yet and means Wait.
 func InternalVerdict(d *BetaDetail) Verdict {
 	if d == nil || d.InternalBuildState == "" {
@@ -97,7 +97,7 @@ func BuildVerdict(b *Build) Verdict {
 }
 
 // CheckAudience refuses a build that arrived store-eligible although the app exports for
-// internal testing only: it must not be distributed quietly (PLAN.md §6.3 step 6). It only
+// internal testing only: it must not be distributed quietly (docs/design.md §6.3 step 6). It only
 // judges VALID builds whose audience Apple reports; the error wraps ErrAudienceMismatch.
 func CheckAudience(b *Build, internalOnly bool) error {
 	if !internalOnly || b == nil || b.ProcessingState != "VALID" {

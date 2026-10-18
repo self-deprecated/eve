@@ -20,7 +20,7 @@ import (
 )
 
 // Device builds a development-signed app, installs it on the user's iPhone and launches it
-// (PLAN.md §6.4). The build comes first, so any wait for the person happens after the slow part.
+// (docs/design.md §6.4). The build comes first, so any wait for the person happens after the slow part.
 type Device struct{ *Deps }
 
 // NewDevice returns the device pipeline.

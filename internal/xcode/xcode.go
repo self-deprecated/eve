@@ -1,5 +1,5 @@
 // Package xcode drives Apple's command-line tools for the pipeline: the child environment,
-// XcodeGen, xcodebuild archive and export, and checks on the archived app (PLAN.md §4.1, §6.2,
+// XcodeGen, xcodebuild archive and export, and checks on the archived app (docs/design.md §4.1, §6.2,
 // §6.3). Every command goes through run.Runner with an explicit environment; no shell that reads
 // startup files is ever involved.
 package xcode
@@ -107,7 +107,7 @@ func CheckVersion(versionOutput, want string) error {
 }
 
 // AssertSystemRsync fails when the first rsync on env's PATH is not /usr/bin/rsync: Xcode's IPA
-// export breaks with Nix's (PLAN.md §4.1). macOS always ships /usr/bin/rsync, so no rsync at all
+// export breaks with Nix's (docs/design.md §4.1). macOS always ships /usr/bin/rsync, so no rsync at all
 // only happens off the Mac, where xcodebuild doesn't run either.
 func AssertSystemRsync(env []string) error {
 	path := ""
@@ -248,7 +248,7 @@ type ArchiveSpec struct {
 	ArchivePath string
 	DerivedData string
 	BuildNumber string
-	XCConfig    string // optional secrets.xcconfig (PLAN.md §6.2)
+	XCConfig    string // optional secrets.xcconfig (docs/design.md §6.2)
 	Settings    map[string]string
 	Auth        *APIKey
 }
@@ -316,7 +316,7 @@ func ExportArgs(archive, options, exportPath string, auth *APIKey) []string {
 }
 
 // Export runs xcodebuild -exportArchive. With destination=upload this signs and uploads in one
-// call, which is why eve treats it as a single "delivering" phase (PLAN.md §5.1).
+// call, which is why eve treats it as a single "delivering" phase (docs/design.md §5.1).
 func (t Tools) Export(ctx context.Context, archive, options, exportPath string, auth *APIKey, log io.Writer) error {
 	if err := AssertSystemRsync(t.Env); err != nil {
 		return err

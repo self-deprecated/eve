@@ -14,7 +14,7 @@ import (
 	"github.com/self-deprecated/eve/internal/run"
 )
 
-// SimSpec describes a Simulator build or test run (PLAN.md §6.5). Both are Debug builds signed
+// SimSpec describes a Simulator build or test run (docs/design.md §6.5). Both are Debug builds signed
 // ad hoc ("Sign to Run Locally"): no team, account or login keychain is involved, but the app
 // keeps its entitlements. Fully unsigned (CODE_SIGNING_ALLOWED=NO) apps lose them, and the
 // Simulator's keychain refuses them.

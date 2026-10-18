@@ -9,15 +9,15 @@ import (
 )
 
 func TestAllowedURL(t *testing.T) {
-	allow := []string{"*.tail6e682f.ts.net", "hooks.example.com", "127.0.0.1:9000", "100.101.102.103"}
+	allow := []string{"*.example.ts.net", "hooks.example.com", "127.0.0.1:9000", "100.101.102.103"}
 	for _, tc := range []struct {
 		url string
 		ok  bool
 	}{
 		{"https://hooks.example.com/eve", true},
 		{"https://HOOKS.example.com/eve", true},
-		{"https://quartz.tail6e682f.ts.net/hook", true},
-		{"http://quartz.tail6e682f.ts.net:8080/hook", true},    // http on the tailnet
+		{"https://quartz.example.ts.net/hook", true},
+		{"http://quartz.example.ts.net:8080/hook", true},       // http on the tailnet
 		{"http://127.0.0.1:9000/hook", true},                   // loopback, port-specific pattern
 		{"http://100.101.102.103/hook", true},                  // tailnet CGNAT address
 		{"http://127.0.0.1:9001/hook", false},                  // port not allowed
@@ -25,7 +25,7 @@ func TestAllowedURL(t *testing.T) {
 		{"https://user:pw@hooks.example.com/eve", false},       // userinfo
 		{"https://evil.example/eve", false},                    // not allow-listed
 		{"https://hooks.example.com.evil.example/", false},     // suffix trick
-		{"https://a.tail6e682f.ts.net.evil.example/", false},   // suffix trick on the glob
+		{"https://a.example.ts.net.evil.example/", false},      // suffix trick on the glob
 		{"https://other.tailffffff.ts.net/", false},            // another tailnet
 		{"ftp://hooks.example.com/", false},                    // scheme
 		{"hooks.example.com/eve", false},                       // no scheme, no host
@@ -33,12 +33,12 @@ func TestAllowedURL(t *testing.T) {
 		{"https://[::1]/x", false},                             // not allow-listed
 		{"http://[fd7a:115c:a1e0::1]/x", false},                // tailnet, but not allow-listed
 		{"https://hooks.example.com:8443/eve?token=abc", true}, // port free when pattern has none
-		{"https://quartz.tail6e682f.ts.net/" + "%zz", false},   // unparsable
+		{"https://quartz.example.ts.net/" + "%zz", false},      // unparsable
 		{"javascript:alert(1)", false},                         // opaque
 		{"https://hooks.example.com@evil.example/", false},     // userinfo trick
 		{"http://localhost:9000/x", false},                     // loopback, not allow-listed
-		{"https://sub.quartz.tail6e682f.ts.net/", true},        // glob spans labels
-		{"http://quartz.tail6e682f.ts.net.:80/", false},        // trailing dot is another name
+		{"https://sub.quartz.example.ts.net/", true},           // glob spans labels
+		{"http://quartz.example.ts.net.:80/", false},           // trailing dot is another name
 		{"http://[::ffff:100.101.102.103]/", false},            // mapped form is not the pattern
 		{"https://100.101.102.103/", true},                     // https to an allowed IP
 		{"https://127.0.0.1/", false},                          // port-less loopback not listed

@@ -130,7 +130,7 @@
         2559B88H6C
     );
 }', alertMessage='(null)', errors='(null)', warnings='(null)', infoMessages='(null)'>
-2026-10-14 15:07:44 +0000  App Store Connect team IDs for account API Key <identifier: J9584QW2TF; issuer: 25a2d76f-91fe-49e0-9551-09af06f209dc> are (
+2026-10-14 15:07:44 +0000  App Store Connect team IDs for account API Key <identifier: KEY1234567; issuer: 00000000-0000-0000-0000-000000000000> are (
     2559B88H6C
 )
 2026-10-14 15:07:45 +0000 [MT] Skipping push notification registration because context lacks a device token or push notifications are disabled.

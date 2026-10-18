@@ -15,7 +15,7 @@ import (
 	"github.com/self-deprecated/eve/internal/api"
 )
 
-// Summarizer describes a failure no rule recognized (PLAN.md §9, "Luna"). It only ever writes
+// Summarizer describes a failure no rule recognized (docs/design.md §9, "Luna"). It only ever writes
 // the summary and hint of an unknown failure: never the class, and never a control decision.
 type Summarizer interface {
 	Summarize(ctx context.Context, excerpt []string, phase api.State) (summary, hint string, confidence float64, err error)

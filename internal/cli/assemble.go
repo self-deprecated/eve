@@ -113,7 +113,7 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 // Close releases the database.
 func (s *System) Close() { _ = s.Store.Close() }
 
-// route decides who hears about a job entering a state (PLAN.md §8).
+// route decides who hears about a job entering a state (docs/design.md §8).
 func (s *System) route(j store.Job, st api.State) []store.NewDelivery {
 	event := api.NotifyEventFor(st)
 	if event == "" {
@@ -127,7 +127,7 @@ func (s *System) route(j store.Job, st api.State) []store.NewDelivery {
 	return out
 }
 
-// EnsureOwnerToken creates the owner token on first start (PLAN.md §4.2).
+// EnsureOwnerToken creates the owner token on first start (docs/design.md §4.2).
 func (s *System) EnsureOwnerToken(ctx context.Context) error {
 	path := filepath.Join(s.Config.DataDir, "token")
 	if b, err := os.ReadFile(path); err == nil {
@@ -276,7 +276,7 @@ type Check struct {
 	Detail string `json:"detail"`
 }
 
-// Doctor runs the host checks of PLAN.md §6.8.
+// Doctor runs the host checks of docs/design.md §6.8.
 func (s *System) Doctor(ctx context.Context) any {
 	var out []Check
 	add := func(name, status, detail string) { out = append(out, Check{name, status, detail}) }

@@ -1,6 +1,6 @@
 // Package ledger remembers, on the machine that ran `eve submit`, which jobs were submitted
 // and whether anyone has seen their outcome. If the process waiting on a job dies (a harness
-// restart, a session that ended), `eve pending` finds the jobs nobody collected (PLAN.md §8).
+// restart, a session that ended), `eve pending` finds the jobs nobody collected (docs/design.md §8).
 //
 // An entry is created before the job is submitted (an intent, identified by its idempotency
 // key), resolved to a job id once the server accepts it, and collected once a terminal outcome

@@ -20,7 +20,7 @@ import (
 
 // Exec runs a repository command in the job's workspace on the build Mac, inside the GUI session and
 // with the child environment, so a script that drives the Simulator needs no SSH or rsync of its
-// own (PLAN.md §6.6). Each top-level entry of $EVE_ARTIFACTS becomes one of the job's artifacts.
+// own (docs/design.md §6.6). Each top-level entry of $EVE_ARTIFACTS becomes one of the job's artifacts.
 type Exec struct{ *Deps }
 
 // NewExec returns the exec pipeline.

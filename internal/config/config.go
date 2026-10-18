@@ -1,4 +1,4 @@
-// Package config loads server.yml, client.yml and a repository's eve.yml (PLAN.md §7).
+// Package config loads server.yml, client.yml and a repository's eve.yml (docs/design.md §7).
 package config
 
 import (
@@ -53,7 +53,7 @@ type App struct {
 
 // Export holds ExportOptions that differ per app.
 type Export struct {
-	InternalOnly  *bool `yaml:"internalOnly"`  // default true for every app (PLAN.md §18.6)
+	InternalOnly  *bool `yaml:"internalOnly"`  // default true for every app (docs/design.md §18.6)
 	UploadSymbols *bool `yaml:"uploadSymbols"` // default true
 }
 
@@ -100,7 +100,7 @@ const (
 	SigningManual       = "manual"
 )
 
-// SizeGuard holds the size-guard thresholds (PLAN.md §6.7). Zero values mean "use the default".
+// SizeGuard holds the size-guard thresholds (docs/design.md §6.7). Zero values mean "use the default".
 type SizeGuard struct {
 	Source         SourceThresholds `yaml:"source"`
 	Bundle         BundleThresholds `yaml:"bundle"`
@@ -270,7 +270,7 @@ func (s *Server) Validate() error {
 		switch a.SigningMode() {
 		case SigningXcodeAccount, SigningAPIKey:
 		case SigningManual:
-			errs = append(errs, fmt.Errorf("apps.%s.signing: manual signing is not implemented yet (PLAN.md M7)", name))
+			errs = append(errs, fmt.Errorf("apps.%s.signing: manual signing is not implemented yet (docs/design.md M7)", name))
 		default:
 			errs = append(errs, fmt.Errorf("apps.%s.signing %q: want xcode-account or api-key", name, a.Signing))
 		}

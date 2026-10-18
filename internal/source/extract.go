@@ -21,7 +21,7 @@ type Limits struct {
 	MaxFileBytes int64 // any single file; default 1 GiB
 }
 
-// DefaultLimits are the caps from PLAN.md §6.1.
+// DefaultLimits are the caps from docs/design.md §6.1.
 var DefaultLimits = Limits{MaxBytes: 2 << 30, MaxEntries: 200_000, MaxFileBytes: 1 << 30}
 
 func (l Limits) withDefaults() Limits {
@@ -71,7 +71,7 @@ func refuse(kind error, p, detail string) error {
 // maxSymlinkHops bounds symlink resolution, as the kernel's ELOOP does.
 const maxSymlinkHops = 40
 
-// Extract unpacks a zstd-compressed tar from r into dest, treating it as hostile (PLAN.md §6.1,
+// Extract unpacks a zstd-compressed tar from r into dest, treating it as hostile (docs/design.md §6.1,
 // §14). dest must be absent or an empty directory. Only regular files, directories and symlinks
 // are accepted; absolute paths, ".." segments, hardlinks, devices and FIFOs are refused, as are
 // symlinks that resolve outside dest and entries beneath a symlink. Files matching SecretPatterns

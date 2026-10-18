@@ -1,6 +1,6 @@
 // Package pipeline implements eve's verbs on top of the queue: preparing a workspace, building
 // with Apple's tools, the size guard, delivery to App Store Connect and the watchers that follow
-// a build through processing (PLAN.md §6).
+// a build through processing (docs/design.md §6).
 package pipeline
 
 import (
@@ -43,7 +43,7 @@ type Sources interface {
 	Clone(src, dst string) error
 }
 
-// SizeGuard measures app bundles and applies the bundle rules (PLAN.md §6.7.2).
+// SizeGuard measures app bundles and applies the bundle rules (docs/design.md §6.7.2).
 type SizeGuard interface {
 	// Measure writes the manifest of appDir to manifestPath.
 	Measure(appDir, manifestPath string) error
@@ -73,7 +73,7 @@ type Deps struct {
 	Sources    Sources
 	Size       SizeGuard
 	Classifier Classifier
-	// RedactLog wraps a log file writer so secrets never reach disk (PLAN.md §6.2).
+	// RedactLog wraps a log file writer so secrets never reach disk (docs/design.md §6.2).
 	RedactLog func(w io.Writer, secrets []string) io.WriteCloser
 	Now       func() time.Time
 	Sleep     func(ctx context.Context, d time.Duration) error
@@ -144,7 +144,7 @@ type workspace struct {
 }
 
 // prepare materializes the source, loads eve.yml, builds the child environment, writes secrets
-// and generates the project (PLAN.md §6.1–§6.2).
+// and generates the project (docs/design.md §6.1–§6.2).
 func (d *Deps) prepare(jc *queue.JobCtx) (*workspace, error) {
 	j := jc.Job
 	app, ok := d.Config.Apps[j.App]

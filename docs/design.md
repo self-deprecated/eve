@@ -1,17 +1,18 @@
-# Eve — Design and Delivery Plan
+# eve: design and delivery plan
 
-**Status:** Draft v4, 2026-10-16; M0 done, M1 implemented. v4 replaces T3/webhook delivery with client-side streaming (§8, §19). v2 was revised after independent reviews by Claude Fable 5.1
-and GPT-6 Astra (both: "revise"; findings and resolutions in §19). v3 adds the size guard (§6.7),
-the name and the operator decisions (§18). Nothing is built yet; milestone 0 is two spikes that can
-still change the design.
+This is the design record eve was built from: the goals, the decisions and the reviews behind
+them. It is written for one setup and names its machines. **Quartz** is the build Mac (a Mac Mini
+running `eve serve`), **Lattice** and **Prism** are workstations that submit builds, and Driver,
+BodyDiff, Lineage, ScreenGate and others are the apps it was first used for. For setting eve up
+yourself, start with the [README](../README.md) and [setup.md](setup.md).
 
-**Name:** Eve, the one who takes the apple.
+**Status (2026-10-18):** M0–M3 are done and in daily use, and M4 and M5 are mostly done (§16).
+The original plan went through four drafts: v2 after reviews by Claude Fable 5.1 and GPT-6 Astra,
+v3 adding the size guard (§6.7) and the operator decisions (§18), and v4 replacing T3/webhook
+delivery with client-side streaming (§8, §19).
 
-**Repository:** `~/Development/projects/eve` · github.com/self-deprecated/eve (private)
-
-**Go module:** `github.com/self-deprecated/eve`
-
-**One binary:** `eve` is the CLI on every machine and, as `eve serve`, the build server on Quartz.
+**Name:** eve, the one who takes the apple. **One binary:** `eve` is the CLI on every machine and,
+as `eve serve`, the build server on the Mac. **Module:** `github.com/self-deprecated/eve`.
 
 ## 1. Purpose
 
@@ -89,10 +90,10 @@ Apple ID web session alive; isolating one app's builds from another's credential
 
 | Fact | Source |
 |---|---|
-| Driver, BodyDiff and Lineage sign with the Apple ID logged in to Xcode (`-allowProvisioningUpdates`). ScreenGate's script defaults to API-key auth, which fails cloud signing because key `J9584QW2TF` is not Admin; its working uploads used `ASC_AUTH=xcode` | `driver/scripts/testflight.sh`, `bodydiff …/scripts/ios.sh`, `lineage/scripts/upload-testflight.sh`, `screen-gate/scripts/testflight.sh`, mined failures |
+| Driver, BodyDiff and Lineage sign with the Apple ID logged in to Xcode (`-allowProvisioningUpdates`). ScreenGate's script defaults to API-key auth, which fails cloud signing because key `KEY1234567` is not Admin; its working uploads used `ASC_AUTH=xcode` | `driver/scripts/testflight.sh`, `bodydiff …/scripts/ios.sh`, `lineage/scripts/upload-testflight.sh`, `screen-gate/scripts/testflight.sh`, mined failures |
 | Export options differ per app: Lineage sets `uploadSymbols=true` and no internal-only flag; BodyDiff sets `testFlightInternalTestingOnly=true` | `lineage/Config/ExportOptions.plist`, `bodydiff …/scripts/ios.sh` |
 | Xcode-account signing has worked from `gui-run.sh`'s one-off launchd job in `gui/<uid>`; Indentured lanes (root security session) can't see the login keychain | `screen-gate/scripts/gui-run.sh`, `bodydiff-testflight/docs/testflight.md` §3 |
-| Issuer ID `25a2d76f-91fe-49e0-9551-09af06f209dc`, team `2559B88H6C` | `bodydiff …/scripts/ios.sh` |
+| Issuer ID `00000000-0000-0000-0000-000000000000`, team `2559B88H6C` | `bodydiff …/scripts/ios.sh` |
 | A manual-signing route (dedicated keychain, App Store profile, API-key upload) and the exit-code contract 0/1/65/69/75/78. The manual route is **designed but unverified** | `bodydiff-testflight/docs/testflight.md`, `scripts/ios-testflight.sh` |
 | ASC state handling already written and tested offline: `processingState` `PROCESSING/FAILED/INVALID/VALID`, `internalBuildState` incl. `MISSING_EXPORT_COMPLIANCE`, `PROCESSING_EXCEPTION`, `IN_EXPORT_COMPLIANCE_REVIEW`, `EXPIRED`; `buildUploads` lookup; "FAILED only when every upload record failed" | `app-store-connect.mjs:150-230` |
 | A duplicate (ITMS-90189 / "already been uploaded") on a retry means an earlier attempt landed | `ios-testflight.sh:496-498` |
@@ -549,9 +550,9 @@ ignore: [docs/screenshots/]
 ```yaml
 team: 2559B88H6C
 asc:
-  keyId: J9584QW2TF
-  issuerId: 25a2d76f-91fe-49e0-9551-09af06f209dc
-  keyPath: ~/.appstoreconnect/private_keys/AuthKey_J9584QW2TF.p8
+  keyId: KEY1234567
+  issuerId: 00000000-0000-0000-0000-000000000000
+  keyPath: ~/.appstoreconnect/private_keys/AuthKey_KEY1234567.p8
 apps:
   bodydiff:
     ascAppId: "…"
@@ -571,7 +572,7 @@ sizeGuard:                    # defaults; any app may override under apps.<app>.
   confirmTimeout: 24h
 device: {default: 00008150-…}
 notify:
-  allowHosts: ["*.tail6e682f.ts.net"]   # --notify-url webhooks must match
+  allowHosts: ["*.example.ts.net"]   # --notify-url webhooks must match
   human: {url: …}             # optional (e.g. a GrokBot webhook)
 luna: {enabled: false}
 ```
@@ -650,7 +651,7 @@ Fixtures: real logs harvested from `~/Developer/*/build/**` and `bodydiff/build/
 
 **Luna (optional, off by default).** For `unknown` only: error lines plus the last 200 lines,
 redacted (home paths, emails, tokens, UDIDs, secret values), sent to `gpt-6-luna` through
-CLIProxyAPI (`https://cliproxyapi.tail6e682f.ts.net/v1`, key from `CLIPROXY_API_KEY`). Returns
+CLIProxyAPI (`https://cliproxyapi.example.ts.net/v1`, key from `CLIPROXY_API_KEY`). Returns
 `{summary, hint, confidence}` with `"by": "model"`. Never used for control decisions or retries.
 
 ## 10. CLI
@@ -732,7 +733,7 @@ internal/launchd/            LaunchAgent plist and bootstrap
 internal/config/             server.yml, client.yml, eve.yml
 internal/run/                Runner interface, real and fake
 skill/eve/SKILL.md           agent skill
-docs/                        commands.md, decisions/, operations.md, new-app.md, troubleshooting.md
+docs/                        design.md, setup.md, configuration.md, new-app.md, troubleshooting.md
 testdata/                    logs/, asc/ (ported recorded JSON), devicectl/
 flake.nix, nix/              package + nix-darwin module
 devenv.nix                   go, gopls, gofumpt, golangci-lint (as goput)
@@ -840,9 +841,9 @@ baselines seeded from each app's current archive); tokens and `login`; LaunchAge
 re-checks, human notification, device classes.
 *Accept:* submitting `device` with the phone locked builds, notifies once, and **resumes install
 within 10 s of unlocking**; relocking during the build is handled.
-*Status (2026-10-17):* live with Driver: build, install and launch in 12 s; an unreachable phone
-waited and gave up with the right message. Not yet seen live: a locked phone ending
-`not_launched`, and the unlock resuming the install.
+*Status (2026-10-18):* live with Driver: build, install and launch in 12 s; an unreachable phone
+waited and gave up with the right message; installs onto a locked phone on Wi-Fi work. Not yet
+seen live: the unlock resuming an install after a phone restart (developer disk image unmounted).
 
 **M3 — Check and exec (1–2 days).** `check` with fresh simulators and test summaries; `exec`
 (retire `gui-run.sh`).

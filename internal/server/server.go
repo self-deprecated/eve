@@ -1,6 +1,6 @@
-// Package server is eve's HTTP API (PLAN.md §11). It listens on loopback only and is published
+// Package server is eve's HTTP API (docs/design.md §11). It listens on loopback only and is published
 // to the tailnet by the svc:eve Tailscale Service. Bearer tokens are the only authorization;
-// Tailscale-User-Login is recorded for audit and never trusted (PLAN.md §4.2, §14).
+// Tailscale-User-Login is recorded for audit and never trusted (docs/design.md §4.2, §14).
 package server
 
 import (
@@ -379,7 +379,7 @@ func (s *Server) getArtifact(w http.ResponseWriter, r *http.Request) {
 	case err == nil && fi.Mode().IsRegular():
 		http.ServeFile(w, r, p)
 	case err == nil && fi.IsDir():
-		// A directory goes out as a tar stream of its regular files (PLAN.md §6.6).
+		// A directory goes out as a tar stream of its regular files (docs/design.md §6.6).
 		w.Header().Set("Content-Type", "application/x-tar")
 		if err := writeTar(w, p); err != nil {
 			s.Log.Warn("artifact tar", "job", j.ID, "artifact", name, "err", err)

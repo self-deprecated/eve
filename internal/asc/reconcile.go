@@ -7,7 +7,7 @@ import (
 )
 
 // ReconcileStatus is what App Store Connect shows for an upload whose outcome eve does not
-// know (PLAN.md §5.5).
+// know (docs/design.md §5.5).
 type ReconcileStatus string
 
 const (

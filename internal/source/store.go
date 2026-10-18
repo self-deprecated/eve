@@ -13,7 +13,7 @@ import (
 )
 
 // Store holds uploaded source archives on the server, addressed by the SHA-256 of their bytes
-// (PLAN.md §4.3: sources/<sha256>.tar.zst).
+// (docs/design.md §4.3: sources/<sha256>.tar.zst).
 type Store struct {
 	Dir string
 }

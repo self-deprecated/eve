@@ -1,6 +1,29 @@
 # Changelog
 
-## Unreleased — M1 (2026-10-16)
+## Unreleased
+
+### Ready for release (2026-10-18)
+- CI on Linux, macOS and Windows (vet, race-enabled tests, gofumpt, golangci-lint per GOOS, the
+  Nix build and a GoReleaser snapshot). A `v*` tag releases archives for darwin, linux and
+  windows, a Homebrew cask (`self-deprecated/tap/eve`) and a Scoop manifest. MIT licence.
+- The client builds and runs on Windows: process groups, file locks and free space sit behind
+  build tags (`internal/flock`), scripts keep their exec bit from git's index, and symlink
+  targets are judged with slashes.
+- Tests run off the Mac (they called `/bin/cp`, `/bin/sleep`, `/usr/bin/perl`). The rsync check
+  refuses only a non-system rsync first on PATH.
+- Classifier: CoreDeviceError 3002 / IXRemoteErrorDomain 6 (the connection dropped mid-install)
+  is `device.unavailable`, so the device verb waits and retries. `upload.invalid_bundle` ends an
+  "Invalid bundle" export at once instead of waiting out reconciliation and uploading again
+  (Chaotic Order lost ~12 minutes to that), with the fix for iPad multitasking orientations.
+- Redaction: the phone's CoreDevice identifier, UDID, serial number and ECID are redacted by
+  value; the 40-hex UDID pattern needs an id label, so git hashes and certificate SHA-1s stay.
+- Nix builds report `0.1.0+<rev>` in `eve version`.
+- Messages, help and the skill say "the build Mac" instead of naming one host. Docs rewritten
+  for anyone running eve: README, [setup](docs/setup.md), [configuration](docs/configuration.md),
+  [adding an app](docs/new-app.md), [troubleshooting](docs/troubleshooting.md); PLAN.md is now
+  [docs/design.md](docs/design.md).
+
+## M1–M5 (2026-10-16 to 2026-10-17)
 
 - `allowExec: true` at the top of server.yml lets every app run `exec`, without setting it per
   app.
@@ -116,10 +139,8 @@
 - `go vet`, golangci-lint (0 issues) and `go test -race ./...` clean; Nix package builds.
 
 ### Follow-ups
-- redact: patterns for devicectl's ECID, serial number and CoreDevice UUID; the 40-hex UDID
-  pattern also hides certificate SHA-1s and git hashes.
 - Quartz has ~23 GB free: watch DerivedData and archive retention.
 
-### Still open for M1
-- First real TestFlight upload through eve (needs the user's go-ahead).
-- `svc:eve` Tailscale Service and the mono-nix module on Quartz (operator steps).
+### Done since
+- First real TestFlight uploads through eve (BodyDiff, ScreenGate, Driver, Chaotic Order).
+- `svc:eve` Tailscale Service and the mono-nix module on Quartz.
