@@ -12,10 +12,10 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
-	"syscall"
 	"time"
 
 	"github.com/self-deprecated/eve/internal/api"
+	"github.com/self-deprecated/eve/internal/flock"
 	"github.com/self-deprecated/eve/internal/run"
 	"github.com/self-deprecated/eve/internal/store"
 )
@@ -354,7 +354,7 @@ func (q *Queue) Recover(ctx context.Context) error {
 		return err
 	}
 	for _, j := range jobs {
-		if j.Pgid > 1 && run.GroupAlive(j.Pgid) && ownedByUs(j.Pgid) {
+		if j.Pgid > 1 && run.GroupAlive(j.Pgid) && run.OwnedByUs(j.Pgid) {
 			q.Log.Warn("killing orphaned process group", "job", j.ID, "pgid", j.Pgid)
 			run.KillGroup(j.Pgid, q.OrphanGrace)
 		}
@@ -383,16 +383,6 @@ func (q *Queue) Recover(ctx context.Context) error {
 		}
 	}
 	return nil
-}
-
-// ownedByUs checks the process group leader still belongs to this user (pgids get reused).
-func ownedByUs(pgid int) bool {
-	var st syscall.Stat_t
-	if err := syscall.Stat(fmt.Sprintf("/proc/%d", pgid), &st); err == nil {
-		return int(st.Uid) == os.Getuid()
-	}
-	// macOS has no /proc: kill(-pgid, 0) only succeeds for groups we may signal, i.e. ours.
-	return syscall.Kill(-pgid, 0) == nil
 }
 
 func (q *Queue) transition(ctx context.Context, id string, t store.Transition) (store.Job, error) {
@@ -425,16 +415,12 @@ func Lock(dataDir string, wait bool) (func(), error) {
 	if err != nil {
 		return nil, err
 	}
-	how := syscall.LOCK_EX
-	if !wait {
-		how |= syscall.LOCK_NB
-	}
-	if err := syscall.Flock(int(f.Fd()), how); err != nil {
+	if err := flock.Lock(f, wait); err != nil {
 		_ = f.Close()
 		return nil, fmt.Errorf("another eve build holds %s: %w", f.Name(), err)
 	}
 	return func() {
-		_ = syscall.Flock(int(f.Fd()), syscall.LOCK_UN)
+		_ = flock.Unlock(f)
 		_ = f.Close()
 	}, nil
 }

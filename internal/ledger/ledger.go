@@ -14,11 +14,11 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"syscall"
 	"time"
 
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/config"
+	"github.com/self-deprecated/eve/internal/flock"
 )
 
 // Entry is one submission.
@@ -170,10 +170,10 @@ func (l Ledger) update(fn func([]Entry) []Entry) error {
 		return err
 	}
 	defer func() { _ = lock.Close() }()
-	if err := syscall.Flock(int(lock.Fd()), syscall.LOCK_EX); err != nil {
+	if err := flock.Lock(lock, true); err != nil {
 		return err
 	}
-	defer func() { _ = syscall.Flock(int(lock.Fd()), syscall.LOCK_UN) }()
+	defer func() { _ = flock.Unlock(lock) }()
 
 	es, err := l.read()
 	if err != nil {

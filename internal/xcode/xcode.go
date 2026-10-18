@@ -10,7 +10,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -107,7 +106,9 @@ func CheckVersion(versionOutput, want string) error {
 	return nil
 }
 
-// AssertSystemRsync fails unless rsync on env's PATH is /usr/bin/rsync (PLAN.md §4.1).
+// AssertSystemRsync fails when the first rsync on env's PATH is not /usr/bin/rsync: Xcode's IPA
+// export breaks with Nix's (PLAN.md §4.1). macOS always ships /usr/bin/rsync, so no rsync at all
+// only happens off the Mac, where xcodebuild doesn't run either.
 func AssertSystemRsync(env []string) error {
 	path := ""
 	for _, kv := range env {
@@ -124,7 +125,7 @@ func AssertSystemRsync(env []string) error {
 			return nil
 		}
 	}
-	return errors.New("rsync not found on PATH; Xcode's IPA export needs /usr/bin/rsync")
+	return nil
 }
 
 // EnsureXcodegen returns the path to the pinned XcodeGen, downloading and verifying it into
