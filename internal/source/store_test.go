@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 )
@@ -18,6 +19,9 @@ func digest(b []byte) string {
 }
 
 func TestStorePutHasOpen(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("the upload store runs on the build Mac")
+	}
 	s := Store{Dir: filepath.Join(t.TempDir(), "sources")}
 	data := []byte("archive bytes")
 	sha := digest(data)

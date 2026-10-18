@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -90,7 +91,7 @@ func TestPackRoundTrip(t *testing.T) {
 	if again, _ := packTree(t, dest); again.SHA256 != info.SHA256 {
 		t.Errorf("round trip changed the digest")
 	}
-	if fi, err := os.Stat(filepath.Join(dest, "scripts/run.sh")); err != nil || fi.Mode().Perm() != 0o755 {
+	if fi, err := os.Stat(filepath.Join(dest, "scripts/run.sh")); runtime.GOOS != "windows" && (err != nil || fi.Mode().Perm() != 0o755) {
 		t.Errorf("run.sh mode: %v %v", fi, err)
 	}
 	if link, err := os.Readlink(filepath.Join(dest, "ios/Shared")); err != nil || link != "Driver" {

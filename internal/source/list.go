@@ -10,6 +10,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 
@@ -81,6 +82,10 @@ func sortFiles(fs []File) {
 // directories (submodules).
 func listGit(root string, paths []string, user *Ignore) (ListResult, error) {
 	var res ListResult
+	var exe map[string]bool
+	if runtime.GOOS == "windows" {
+		exe = gitExecutables(root)
+	}
 	for _, rel := range paths {
 		if user.Ignored(rel, false) {
 			continue
@@ -91,6 +96,9 @@ func listGit(root string, paths []string, user *Ignore) (ListResult, error) {
 		}
 		if !ok {
 			continue
+		}
+		if exe[rel] {
+			f.Mode |= 0o111
 		}
 		if alwaysExclude.Ignored(rel, false) {
 			res.Excluded = append(res.Excluded, f)
@@ -168,9 +176,12 @@ func statFile(root, rel string) (File, bool, error) {
 	case fi.Mode().IsRegular():
 		f.Size = fi.Size()
 	case fi.Mode()&fs.ModeSymlink != 0:
-		if f.Link, err = os.Readlink(path); err != nil {
+		link, err := os.Readlink(path)
+		if err != nil {
 			return File{}, false, fmt.Errorf("readlink %s: %w", rel, err)
 		}
+		// Windows reports targets with backslashes; the archive and the escape check use slashes.
+		f.Link = filepath.ToSlash(link)
 	default:
 		return File{}, false, nil
 	}

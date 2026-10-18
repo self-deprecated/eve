@@ -3,10 +3,14 @@ package source
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
 func TestClone(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("cloning workspaces happens on the build Mac")
+	}
 	tests := []struct {
 		name  string
 		clone func(src, dst string) error
