@@ -10,7 +10,7 @@ import (
 	"github.com/self-deprecated/eve/internal/api"
 )
 
-// Failure classes (PLAN.md §9). The pipeline produces some of them itself rather than from a
+// Failure classes (docs/design.md §9). The pipeline produces some of them itself rather than from a
 // log; ForClass gives their summary and hint.
 const (
 	ClassSigningCloudPermission     = "signing.cloud_permission"

@@ -1,5 +1,5 @@
 // Package classify explains why a job failed: an ordered table of rules seeded from the failures
-// mined from real builds (PLAN.md §9) maps a phase's log to a failure class with a summary, a hint and,
+// mined from real builds (docs/design.md §9) maps a phase's log to a failure class with a summary, a hint and,
 // where a person must act, a needs_human action. Logs no rule explains stay "unknown"; an
 // optional Summarizer can describe those, never decide anything.
 //

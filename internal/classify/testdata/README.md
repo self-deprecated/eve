@@ -18,7 +18,7 @@ Sources, all on Quartz, harvested 2026-10-16:
   session transcripts under `~/.claude/projects/` (the user's scripts print xcodebuild's
   `error:` lines and result line, so these are partial logs)
 - **synthetic**: written for this package from the exact error strings in the session dossier,
-  PLAN.md §9 and Apple's documented messages, because no real log of the failure survived
+  docs/design.md §9 and Apple's documented messages, because no real log of the failure survived
 
 | Class | Fixture | Source |
 |---|---|---|

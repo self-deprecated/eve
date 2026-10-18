@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Retention (PLAN.md §4.3). A finished job's workspace (repository copy, unpacked upload,
+// Retention (docs/design.md §4.3). A finished job's workspace (repository copy, unpacked upload,
 // archive, build products) is only useful while it runs, so it shrinks to what the API still
 // serves; the rest goes later. Unfinished jobs are never touched.
 const (

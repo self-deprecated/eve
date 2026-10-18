@@ -1,16 +1,16 @@
 ---
 name: eve
-description: Build the user's iOS apps on Quartz with eve — ship to TestFlight, install and launch on their iPhone, check that it builds and its tests pass, or run a repo script (screenshots) on Quartz — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "put it on my phone", "upload a build", "check it builds", "update the screenshots", or when you would otherwise run xcodebuild archive/export/test, devicectl, simctl, App Store Connect calls, or ssh/rsync to Quartz yourself.
+description: Build the user's iOS apps on their build Mac with eve — ship to TestFlight, install and launch on their iPhone, check that it builds and its tests pass, or run a repo script (screenshots) on the Mac — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "put it on my phone", "upload a build", "check it builds", "update the screenshots", or when you would otherwise run xcodebuild archive/export/test, devicectl, simctl, App Store Connect calls, or ssh/rsync to the build Mac yourself.
 ---
 
 # Eve
 
-`eve` sends the repo to the user's Mac Mini (Quartz), which archives, signs and uploads it with
+`eve` sends the repo to the user's build Mac (the eve server), which archives, signs and uploads it with
 Apple's tools, follows it through App Store Connect, and reports back. **Waiting is free**: one
 long tool call costs nothing while it blocks, whereas polling turns are expensive. So submit and
 wait in one command; never poll with `sleep`, never run `xcodebuild archive`/`-exportArchive`,
-`xcodebuild test`, `simctl`, `devicectl`, App Store Connect API calls or ssh/rsync to Quartz
-yourself for these tasks, and never read raw xcodebuild logs unless the result's excerpt is not
+`xcodebuild test`, `simctl`, `devicectl`, App Store Connect API calls or ssh/rsync to the build
+Mac yourself for these tasks, and never read raw xcodebuild logs unless the result's excerpt is not
 enough.
 
 ## Ship to TestFlight
@@ -37,7 +37,7 @@ eve submit testflight --wait --json --notes "what changed"
 
 The working tree is uploaded as it is (committed or not); git-ignored files, build output and
 secrets are never sent. Before it submits, the command prints an idempotency key on stderr, then
-the job id once Quartz accepts it. If the command dies before you see a job id, rerun the same
+the job id once the server accepts it. If the command dies before you see a job id, rerun the same
 command with `--idempotency-key <key>`: you get the same job, never a duplicate.
 
 If the waiting command died (harness restart, session ended), the build carried on:
@@ -56,11 +56,11 @@ launches. A locked phone still gets the install: the job succeeds with a `not_la
 locked before Xcode's developer disk image is mounted, which needs one unlock after the phone
 restarts) does the job wait in `waiting_for_device`, retrying every 5 s for up to 10 minutes; it
 continues within seconds, and otherwise ends `needs_human` (exit 78). `connect_phone` means
-Quartz can't reach the phone at all (its Wi-Fi is off, it's away, or asleep); `unlock_phone`
+the build Mac can't reach the phone at all (its Wi-Fi is off, it's away, or asleep); `unlock_phone`
 means it's locked. Pass `human.detail` on to the user in one line; resubmit once it's sorted. `--device <name or UDID>` picks another paired device. Success has a `launched` note
 naming the phone.
 
-`eve submit exec --wait -- <command> [args…]` runs a repo command on Quartz in the job's copy of
+`eve submit exec --wait -- <command> [args…]` runs a repo command on the build Mac in the job's copy of
 the repo, from its root, in the GUI session, so it can drive the Simulator. The app needs
 `allowExec` on the server (per app, or top-level for every app). The command gets
 `$EVE_ARTIFACTS` (a directory: everything at its top level becomes an artifact, directories
@@ -83,10 +83,10 @@ job is, or where it stopped if it did not succeed (absent once it has); `source.
 | 0 | `succeeded` | Report the build number in one line. The `distributed` note says which group got it, that What to Test was set and that the tester has accepted their invite: only then say it's on their phone. Pass on any other `notes` (e.g. `accept_testflight_invite`: the user must accept the TestFlight invite first). For `device`, say it's running on the phone the `launched` note names (or, with a `not_launched` note, that it's installed and they should open it); for `exec`, fetch `artifacts` with `eve artifacts`. |
 | 1 | `failed` | Use `failure.class`, `summary`, `hint` and `excerpt` to fix it, then resubmit. Only if that is not enough: `eve logs <job> --errors`. |
 | 65 | `rejected` | Apple refused the build (`failure.excerpt` has Apple's reasons). Fix and resubmit. |
-| 69 | `unavailable` | Quartz or Apple unreachable, or Quartz's eve server is older than this client ("switch Quartz": tell the user). Try again later. |
+| 69 | `unavailable` | The build Mac or Apple unreachable, or the server is older than this client ("update eve on the build Mac": tell the user). Try again later. |
 | 75 | still running | Your `--timeout` elapsed; the job continues. `eve wait <job>` again. |
 | 76 | `awaiting_confirmation` | The size guard paused before anything reached Apple. See below. |
-| 78 | `needs_human` | Tell the user `human.action` and `human.detail` in one line and stop (unlock the phone, sign in to Xcode on Quartz, accept an agreement, answer export compliance). Once they say it's done, resubmit. |
+| 78 | `needs_human` | Tell the user `human.action` and `human.detail` in one line and stop (unlock the phone, sign in to Xcode on the build Mac, accept an agreement, answer export compliance). Once they say it's done, resubmit. |
 | 130 | `cancelled` | Someone cancelled it, or a size pause was rejected. |
 
 ## The size guard — confirm only what you meant to ship
@@ -129,7 +129,7 @@ pre:                              # commands run in the workspace before buildin
 check:                            # for `eve submit check`
   test: true                      # also run the scheme's tests (default false: build only)
   simulator: iPhone 17 Pro        # device type (default: the newest iPhone Pro)
-xcode: "26"                       # fail unless Quartz's selected Xcode is this version (26 matches 26.x)
+xcode: "26"                       # fail unless the build Mac's selected Xcode is this version (26 matches 26.x)
 ```
 
 `device: {configuration: Release}` sets the configuration `eve submit device` builds (default
@@ -144,4 +144,4 @@ uploads that look wrong, and every submit uploads everything else.
 
 `eve apps` · `eve init` · `eve artifacts <job> --out <dir>` · `eve status <job>` · `eve jobs` · `eve pending` · `eve logs <job> --errors` · `eve size <job>` ·
 `eve builds <app>` · `eve cancel <job>` (`--force` while uploading) · `eve doctor`
-(`--host` for Quartz's checks).
+(`--host` for the build Mac's own checks).

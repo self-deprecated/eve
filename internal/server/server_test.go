@@ -175,7 +175,7 @@ func TestCreateJobIdempotentAndRecordsToken(t *testing.T) {
 	f := newFixture(t, nil)
 	req := api.JobRequest{
 		App: "driver", Verb: "testflight", Source: api.JobSource{SHA256: f.sha}, IdempotencyKey: "k1",
-		NotifyURLs: []string{"https://quartz.tail6e682f.ts.net/hook"},
+		NotifyURLs: []string{"https://quartz.example.ts.net/hook"},
 	}
 	resp, body := f.do(t, "POST", "/v1/jobs", f.tok, req)
 	if resp.StatusCode != 201 {

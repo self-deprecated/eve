@@ -16,7 +16,7 @@ import (
 )
 
 // Check builds the app for the Simulator, signed ad hoc, and runs the scheme's tests on a fresh
-// Simulator when eve.yml asks for them (PLAN.md §6.5). It never touches App Store Connect or
+// Simulator when eve.yml asks for them (docs/design.md §6.5). It never touches App Store Connect or
 // the login keychain.
 type Check struct{ *Deps }
 

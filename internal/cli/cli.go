@@ -1,5 +1,5 @@
-// Package cli implements the eve command line (PLAN.md §10). Output is human-readable by default
-// and JSON with --json; exit codes follow PLAN.md §5.2.
+// Package cli implements the eve command line (docs/design.md §10). Output is human-readable by default
+// and JSON with --json; exit codes follow docs/design.md §5.2.
 package cli
 
 import (

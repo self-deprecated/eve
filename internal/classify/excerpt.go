@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-// Excerpt limits (PLAN.md §5.3: at most 40 lines in a result capped at 4 KB).
+// Excerpt limits (docs/design.md §5.3: at most 40 lines in a result capped at 4 KB).
 const (
 	MaxExcerptLines   = 40
 	MaxExcerptLineLen = 200 // runes, including the "…" of a cut line

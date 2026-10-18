@@ -1,5 +1,5 @@
 // Package run executes external commands for the pipeline. Every command runs in its own process
-// group so cancellation and restart recovery can kill the whole tree (PLAN.md §4.1), with an
+// group so cancellation and restart recovery can kill the whole tree (docs/design.md §4.1), with an
 // explicit environment and never through a shell that reads startup files.
 package run
 

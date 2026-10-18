@@ -1,7 +1,7 @@
 // Package queue runs eve's jobs: one worker at a time under a host-wide lock, parked jobs
 // (processing, distributing) on watchers off the worker, cancellation, size-guard confirmation,
 // and restart recovery that kills orphaned process groups before anything resumes
-// (PLAN.md §4.1, §5.4–§5.6).
+// (docs/design.md §4.1, §5.4–§5.6).
 package queue
 
 import (
@@ -30,7 +30,7 @@ type Pipeline interface {
 	Watch(jc *JobCtx) error
 }
 
-// Router decides who is notified when a job enters a state (PLAN.md §8).
+// Router decides who is notified when a job enters a state (docs/design.md §8).
 type Router func(j store.Job, s api.State) []store.NewDelivery
 
 // Queue owns job execution.
@@ -63,7 +63,7 @@ type running struct {
 	mu      sync.Mutex
 	settled bool
 	// byUser is set by Cancel. A context cancelled without it means the server is shutting
-	// down: the job is left as it is, for restart recovery to resume (PLAN.md §5.5).
+	// down: the job is left as it is, for restart recovery to resume (docs/design.md §5.5).
 	byUser bool
 }
 
@@ -257,7 +257,7 @@ func (q *Queue) watch(ctx context.Context, j store.Job) {
 	}
 }
 
-// expireConfirmations cancels size-guard pauses nobody answered (PLAN.md §6.7.3).
+// expireConfirmations cancels size-guard pauses nobody answered (docs/design.md §6.7.3).
 func (q *Queue) expireConfirmations(ctx context.Context) {
 	jobs, err := q.Store.List(ctx, store.Filter{State: api.StateAwaitingConfirmation, Limit: 100})
 	if err != nil {
@@ -318,7 +318,7 @@ func (q *Queue) Reject(ctx context.Context, id string) (store.Job, error) {
 	})
 }
 
-// Cancel stops a job. A job in delivering is refused unless force is set (PLAN.md §11).
+// Cancel stops a job. A job in delivering is refused unless force is set (docs/design.md §11).
 func (q *Queue) Cancel(ctx context.Context, id string, force bool) (store.Job, error) {
 	j, err := q.Store.Get(ctx, id)
 	if err != nil {
@@ -347,7 +347,7 @@ func (q *Queue) Cancel(ctx context.Context, id string, force bool) (store.Job, e
 }
 
 // Recover resolves jobs left unfinished by a previous run: kill orphaned process groups first,
-// then requeue or resume each job by phase (PLAN.md §5.5).
+// then requeue or resume each job by phase (docs/design.md §5.5).
 func (q *Queue) Recover(ctx context.Context) error {
 	jobs, err := q.Store.Unfinished(ctx)
 	if err != nil {

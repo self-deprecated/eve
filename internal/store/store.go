@@ -1,6 +1,6 @@
 // Package store is eve's SQLite database: jobs, their events, the notification outbox, build
 // numbers, tokens and size-guard bookkeeping. A state transition, its event and its outbox rows
-// commit in one transaction, so a crash can never lose a notification (PLAN.md §5.1).
+// commit in one transaction, so a crash can never lose a notification (docs/design.md §5.1).
 package store
 
 import (
@@ -157,7 +157,7 @@ type Job struct {
 	Result         api.Result
 	BuildVersion   string
 	BuildNumber    string
-	UploadIntent   string    // non-empty once delivery was attempted (PLAN.md §5.5)
+	UploadIntent   string    // non-empty once delivery was attempted (docs/design.md §5.5)
 	ResumeFrom     api.State // where a requeued job continues (restart recovery, size confirmation)
 	Confirmation   string    // the agent's reason when it confirmed a size-guard pause
 	Pgid           int
@@ -188,7 +188,7 @@ func NewKey() string {
 
 // CreateJob inserts a queued job. If the request carries an idempotency key that already exists,
 // the existing job is returned with existing=true. Without a key, a non-terminal job with the
-// same app, verb and source digest is returned instead of starting a duplicate (PLAN.md §5.4).
+// same app, verb and source digest is returned instead of starting a duplicate (docs/design.md §5.4).
 func (s *Store) CreateJob(ctx context.Context, j Job) (Job, bool, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -522,7 +522,7 @@ func (s *Store) OutboxExhausted(ctx context.Context, id int64, lastErr string) e
 
 // AllocateBuildNumber returns the next build number for app: the largest of the UTC minute
 // stamp, the last allocated number + 1 and floor (e.g. App Store Connect's latest + 1). With
-// requested set, it is validated against the same floor and reserved instead (PLAN.md §6.3).
+// requested set, it is validated against the same floor and reserved instead (docs/design.md §6.3).
 func (s *Store) AllocateBuildNumber(ctx context.Context, app, floor, requested string) (string, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {

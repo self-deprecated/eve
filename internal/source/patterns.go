@@ -1,6 +1,6 @@
 package source
 
-// AlwaysExclude lists what is never uploaded, whatever the ignore files say (PLAN.md §6.1):
+// AlwaysExclude lists what is never uploaded, whatever the ignore files say (docs/design.md §6.1):
 // build output, dependency caches, and credential files.
 var AlwaysExclude = []string{
 	".git/",

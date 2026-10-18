@@ -383,7 +383,7 @@ func countArchives(f *run.Fake) int {
 }
 
 func TestSecretInBundleFailsHard(t *testing.T) {
-	h := newHarness(t, SizeVerdict{Secret: true, Trip: true, Report: api.SizeReport{Summary: "x", Reasons: []string{"AuthKey_J9584QW2TF.p8 in bundle"}}})
+	h := newHarness(t, SizeVerdict{Secret: true, Trip: true, Report: api.SizeReport{Summary: "x", Reasons: []string{"AuthKey_KEY1234567.p8 in bundle"}}})
 	j := h.submit(t, api.JobOptions{ExpectSizeChange: "videos"})
 	h.q.Exec(context.Background(), j)
 	got := h.get(t, j.ID)

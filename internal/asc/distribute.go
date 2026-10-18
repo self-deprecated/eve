@@ -94,7 +94,7 @@ func (c *Client) AddBuildToGroup(ctx context.Context, groupID, buildID string) e
 // SetWhatToTest writes a build's What to Test text, truncated to WhatToTestLimit characters,
 // updating the existing localization (en-US, else the first one) instead of creating a second.
 // It returns the locale written. A role refusal wraps ErrWhatToTestRefused so the caller can
-// record a note instead of failing (PLAN.md §6.3 step 6); outages stay ErrUnavailable.
+// record a note instead of failing (docs/design.md §6.3 step 6); outages stay ErrUnavailable.
 func (c *Client) SetWhatToTest(ctx context.Context, buildID, text string) (string, error) {
 	if r := []rune(text); len(r) > WhatToTestLimit {
 		text = string(r[:WhatToTestLimit])
@@ -177,7 +177,7 @@ type TesterInvite struct {
 }
 
 // TesterInviteState reports whether the configured tester has accepted the app's TestFlight
-// invitation, for the accept_testflight_invite note (PLAN.md §6.3 step 6).
+// invitation, for the accept_testflight_invite note (docs/design.md §6.3 step 6).
 func (c *Client) TesterInviteState(ctx context.Context, appID, email string) (TesterInvite, error) {
 	q := url.Values{
 		"filter[email]":       {email},

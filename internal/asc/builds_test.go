@@ -407,7 +407,7 @@ func TestReconcile(t *testing.T) {
 }
 
 // Ports: "finish stops when an upload never shows up" and the outage riding of "finish waits
-// through processing and a full outage"; plus visibility lag (PLAN.md §15).
+// through processing and a full outage"; plus visibility lag (docs/design.md §15).
 func TestReconcileUntil(t *testing.T) {
 	ctx := context.Background()
 	seq := func(items ...any) func() any {

@@ -54,7 +54,7 @@ type BundleVerdict struct {
 	Report api.SizeReport
 }
 
-// CheckBundle applies the bundle rules of PLAN.md §6.7.2 to cur, comparing it with the app's
+// CheckBundle applies the bundle rules of docs/design.md §6.7.2 to cur, comparing it with the app's
 // baseline when there is one. expectChange (--expect-size-change) waives growth and the ceiling,
 // never repository content or secrets. th.AllowPatterns exempts matching paths from repository
 // content, new top-level entries and new large files; allowed bytes still count toward totals.

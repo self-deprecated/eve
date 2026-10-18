@@ -1,5 +1,5 @@
 // Package redact removes secrets and personal identifiers from build logs before they are stored,
-// served or quoted in a result document (PLAN.md §5.3, §6.2 step 4).
+// served or quoted in a result document (docs/design.md §5.3, §6.2 step 4).
 //
 // A Redactor knows the exact secret values of a job (and their base64 and URL-encoded forms) and
 // a fixed set of patterns: the user's home directory, email addresses, Apple device UDIDs,

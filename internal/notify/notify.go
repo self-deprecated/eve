@@ -1,4 +1,4 @@
-// Package notify delivers job notifications from Eve's durable outbox (PLAN.md §8) to generic
+// Package notify delivers job notifications from Eve's durable outbox (docs/design.md §8) to generic
 // webhooks and an optional human webhook. Agents are not notified here: they follow their jobs
 // with `eve wait`, which streams events from the server.
 //

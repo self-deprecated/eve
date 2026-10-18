@@ -9,7 +9,7 @@ import (
 // Sentinel errors. Match them with errors.Is; *APIError carries the details.
 var (
 	// ErrAuth means App Store Connect rejected the token (HTTP 401): wrong key id, issuer or
-	// key file, a revoked key, or a skewed clock (PLAN.md §9 asc.auth).
+	// key file, a revoked key, or a skewed clock (docs/design.md §9 asc.auth).
 	ErrAuth = errors.New("asc: authentication failed")
 	// ErrForbidden means the key may not make the request (HTTP 403). The *APIError's
 	// Agreement flag tells an expired agreement (needs_human accept_agreement) from a role
@@ -24,7 +24,7 @@ var (
 	ErrUnavailable = errors.New("asc: unavailable")
 	// ErrWhatToTestRefused wraps a role refusal from SetWhatToTest. A Developer-role key may
 	// upload and use internal groups but not edit What to Test; callers record a note rather
-	// than failing the job (PLAN.md §6.3 step 6).
+	// than failing the job (docs/design.md §6.3 step 6).
 	ErrWhatToTestRefused = errors.New("asc: what to test refused")
 	// ErrExternalGroup is returned by BetaGroupByName for a group that is not internal: eve
 	// only distributes to internal groups.

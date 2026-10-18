@@ -14,7 +14,7 @@ import (
 	"github.com/self-deprecated/eve/internal/run"
 )
 
-// DeviceSpec describes a development build for a physical iPhone (PLAN.md §6.4). It builds for
+// DeviceSpec describes a development build for a physical iPhone (docs/design.md §6.4). It builds for
 // generic/platform=iOS, so the phone need not be awake, unlocked or even reachable while it
 // builds; the development profile already lists every registered device.
 type DeviceSpec struct {

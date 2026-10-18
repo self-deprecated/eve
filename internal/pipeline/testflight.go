@@ -20,7 +20,7 @@ import (
 )
 
 // Testflight archives, size-checks, uploads and follows a build until internal testers can
-// install it (PLAN.md §6.3).
+// install it (docs/design.md §6.3).
 type Testflight struct{ *Deps }
 
 // NewTestflight returns the testflight pipeline.
@@ -30,7 +30,7 @@ func NewTestflight(d *Deps) *Testflight {
 }
 
 // uploadIntent is persisted before delivery so a crash mid-upload is reconciled, never blindly
-// repeated (PLAN.md §5.5).
+// repeated (docs/design.md §5.5).
 type uploadIntent struct {
 	AppID   string `json:"appId"`
 	Version string `json:"version"`
@@ -253,7 +253,7 @@ func (t *Testflight) deliver(jc *queue.JobCtx, ws *workspace, appID, archive str
 	}
 	log, _ := os.ReadFile(logPath)
 	if t.Classifier != nil && t.Classifier.IsDuplicateUpload(log) {
-		// An earlier attempt already landed (PLAN.md §5.5): follow that build.
+		// An earlier attempt already landed (docs/design.md §5.5): follow that build.
 		return t.parkProcessing(jc, "App Store Connect already has this build; following it")
 	}
 	var ee *xcode.ExitError
@@ -319,7 +319,7 @@ func (t *Testflight) parkProcessing(jc *queue.JobCtx, msg string) error {
 	return jc.Park(api.StateProcessing, t.Now().Add(t.ProcessingDeadline), msg, nil)
 }
 
-// Watch follows a parked build through processing and internal distribution (PLAN.md §6.3
+// Watch follows a parked build through processing and internal distribution (docs/design.md §6.3
 // steps 5–6). It returns when the job ends, or nil on shutdown so a later watcher resumes.
 func (t *Testflight) Watch(jc *queue.JobCtx) error {
 	if t.ASC == nil {

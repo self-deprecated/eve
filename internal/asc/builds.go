@@ -111,7 +111,7 @@ func (c *Client) AppByBundleID(ctx context.Context, bundleID string) (App, error
 }
 
 // LatestBuildNumber returns the highest build number App Store Connect knows for this app,
-// platform and marketing version, for the build-number allocator's floor (PLAN.md §6.3
+// platform and marketing version, for the build-number allocator's floor (docs/design.md §6.3
 // step 1). Build numbers compare numerically ("9" < "10" < "202610161458"); ok is false when
 // the version has no builds.
 // An empty version considers every version of the app.
@@ -125,7 +125,7 @@ func (c *Client) LatestBuildNumber(ctx context.Context, appID, version string) (
 		"limit":                              {"200"},
 	}
 	if version == "" {
-		// Any version: eve's build numbers are monotonic across versions (PLAN.md §6.3).
+		// Any version: eve's build numbers are monotonic across versions (docs/design.md §6.3).
 		q.Del("filter[preReleaseVersion.version]")
 	}
 	var best string

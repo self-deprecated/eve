@@ -1,5 +1,5 @@
 #!/bin/zsh
-# M0 spike 1 (PLAN.md §16): can a LaunchAgent in the GUI session archive and sign an app with
+# M0 spike 1 (docs/design.md §16): can a LaunchAgent in the GUI session archive and sign an app with
 # Eve's child environment and no GUI interaction? Archives a throwaway copy of Driver and exports
 # a signed IPA locally (destination=export). Nothing is uploaded to App Store Connect.
 # Usage: spike/m0-signing/run.sh   → prints the job's output and exits with its status.
@@ -13,7 +13,7 @@ echo "work dir: $work"
 
 /usr/bin/rsync -a --exclude 'ios/build/' --exclude '.tools/' "$src/" "$work/driver/"
 
-# The job script: what Eve's worker would run, with Eve's child environment (PLAN.md §4.1).
+# The job script: what Eve's worker would run, with Eve's child environment (docs/design.md §4.1).
 cat > $work/job.sh <<JOB
 #!/bin/zsh
 set -eu

@@ -13,7 +13,7 @@ import (
 	"github.com/klauspost/compress/zstd"
 )
 
-// Manifest lists every file in an .app bundle with its size (PLAN.md §6.7.2). It is stored per
+// Manifest lists every file in an .app bundle with its size (docs/design.md §6.7.2). It is stored per
 // job as bundle-manifest.json.zst, and the last accepted TestFlight manifest is the app's baseline.
 type Manifest struct {
 	Name    string  `json:"name,omitempty"`  // bundle directory name, e.g. "Driver.app"

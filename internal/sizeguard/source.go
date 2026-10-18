@@ -1,4 +1,4 @@
-// Package sizeguard keeps whole repositories out of uploads and app bundles (PLAN.md §6.7): the
+// Package sizeguard keeps whole repositories out of uploads and app bundles (docs/design.md §6.7): the
 // source check runs on the client before upload, the bundle check on the server after
 // archiving, against the app's baseline manifest. It depends only on api and config, so the
 // client and server share it without pulling in packing or storage.
@@ -33,7 +33,7 @@ type SourceInput struct {
 	Excluded []SourceFile
 }
 
-// neverSource are directory names that are almost never source (PLAN.md §6.7.1). .git is left
+// neverSource are directory names that are almost never source (docs/design.md §6.7.1). .git is left
 // out: it is never listed and always excluded.
 var neverSource = []string{"node_modules", "DerivedData", ".build", "build", "Pods"}
 
@@ -64,7 +64,7 @@ func SourceStatsOf(files []SourceFile) api.SourceStats {
 	return st
 }
 
-// CheckSource applies the source rules of PLAN.md §6.7.1. last is the app's last accepted
+// CheckSource applies the source rules of docs/design.md §6.7.1. last is the app's last accepted
 // source; without one (the first submit) only the ceiling, never-source directories and large
 // files are checked. Zero thresholds take the defaults.
 func CheckSource(in SourceInput, last *api.SourceStats, th config.SourceThresholds) SourceVerdict {
