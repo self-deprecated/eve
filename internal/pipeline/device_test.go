@@ -31,7 +31,7 @@ const devicesJSON = `{"result":{"devices":[
   "state":{"name":"Driver"}}},
  {"identifier":"` + phoneID + `","properties":{"connection":{"pairingState":"paired","state":"disconnected"},
   "hardware":{"udid":"` + phoneUDID + `","ecid":7906512332611612,"serialNumber":"KXQ7Y2H9V4","platform":"iOS","deviceType":"iPhone"},
-  "software":{"osVersionNumber":{"stringValue":"27.0.1"}},"state":{"name":"Jordan’s iPhone"}}},
+  "software":{"osVersionNumber":{"stringValue":"27.0.1"}},"state":{"name":"Sam’s iPhone"}}},
  {"identifier":"IPAD-1","connectionProperties":{"pairingState":"paired"},
   "hardwareProperties":{"udid":"00008112-IPAD","platform":"iOS","deviceType":"iPad"},"deviceProperties":{"name":"iPad"}}]}}`
 
@@ -165,7 +165,7 @@ func TestDeviceBuildsInstallsAndLaunchesOnThePairedIPhone(t *testing.T) {
 	if got.State != api.StateSucceeded {
 		t.Fatalf("%s %+v", got.State, got.Result.Failure)
 	}
-	if n := got.Result.Notes; len(n) != 1 || n[0].Kind != "launched" || n[0].Detail != "Jordan’s iPhone, iOS 27.0.1" {
+	if n := got.Result.Notes; len(n) != 1 || n[0].Kind != "launched" || n[0].Detail != "Sam’s iPhone, iOS 27.0.1" {
 		t.Fatalf("notes %+v", n)
 	}
 	if !slices.Equal(sim.order, []string{"build", "install", "launch"}) || h.waits(t, got.ID) != 0 {
@@ -208,7 +208,7 @@ func TestDeviceLockedPhoneGetsTheInstallWithoutAWait(t *testing.T) {
 	if got.State != api.StateSucceeded || !slices.Equal(sim.order, []string{"build", "install", "launch"}) || h.waits(t, got.ID) != 0 {
 		t.Fatalf("%s order %v: installed, not launched, no wait", got.State, sim.order)
 	}
-	if n := got.Result.Notes; len(n) != 1 || n[0].Kind != "not_launched" || !strings.Contains(n[0].Detail, "Jordan’s iPhone is locked") {
+	if n := got.Result.Notes; len(n) != 1 || n[0].Kind != "not_launched" || !strings.Contains(n[0].Detail, "Sam’s iPhone is locked") {
 		t.Fatalf("notes %+v", n)
 	}
 }
@@ -219,7 +219,7 @@ func TestDeviceSaysWhenQuartzCannotReachThePhone(t *testing.T) {
 	if got.State != api.StateNeedsHuman || got.Result.Human == nil || got.Result.Human.Action != api.HumanConnectPhone {
 		t.Fatalf("%s %+v", got.State, got.Result.Human)
 	}
-	if !strings.Contains(got.Result.Human.Detail, "Jordan’s iPhone: Quartz can't reach the phone: its Wi-Fi is off") ||
+	if !strings.Contains(got.Result.Human.Detail, "Sam’s iPhone: The build Mac can't reach the phone: its Wi-Fi is off") ||
 		!strings.Contains(got.Result.Human.Detail, "gave up after 10m0s") {
 		t.Fatalf("detail %q", got.Result.Human.Detail)
 	}
@@ -253,7 +253,7 @@ func TestDeviceUnknownNameListsThePhysicalDevices(t *testing.T) {
 	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{ok}})
 	got := h.run(t, api.JobOptions{Device: "Work Phone"})
 	f := got.Result.Failure
-	if got.State != api.StateFailed || f == nil || f.Class != "device.unknown" || f.Summary != `no paired device matches "Work Phone"; physical devices: Jordan’s iPhone, iPad` {
+	if got.State != api.StateFailed || f == nil || f.Class != "device.unknown" || f.Summary != `no paired device matches "Work Phone"; physical devices: Sam’s iPhone, iPad` {
 		t.Fatalf("%s %+v", got.State, f)
 	}
 	if _, err := h.f.Find("xcodebuild build"); err == nil {

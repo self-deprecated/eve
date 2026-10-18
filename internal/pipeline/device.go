@@ -68,7 +68,7 @@ func (p *Device) pick(jc *queue.JobCtx, ws *workspace) (xcode.Device, error) {
 		if errors.Is(jc.Ctx.Err(), context.Canceled) {
 			return xcode.Device{}, jc.Ctx.Err()
 		}
-		_ = jc.Fail("device.unavailable", "listing devices: "+err.Error(), "Check CoreDevice on Quartz (`xcrun devicectl list devices`).", nil, api.StateUnavailable)
+		_ = jc.Fail("device.unavailable", "listing devices: "+err.Error(), "Check CoreDevice on the build Mac (`xcrun devicectl list devices`).", nil, api.StateUnavailable)
 		return xcode.Device{}, errHandled
 	}
 	var phones []string
@@ -81,14 +81,14 @@ func (p *Device) pick(jc *queue.JobCtx, ws *workspace) (xcode.Device, error) {
 		}
 		phones = append(phones, d.Name)
 	}
-	summary := "no paired iPhone is known to Quartz"
+	summary := "no paired iPhone is known to the build Mac"
 	if want != "" {
 		summary = fmt.Sprintf("no paired device matches %q", want)
 	}
 	if len(phones) > 0 {
 		summary += "; physical devices: " + strings.Join(phones, ", ")
 	}
-	_ = jc.Fail("device.unknown", summary, "Pair the phone with Quartz in Xcode (Window > Devices and Simulators), or pass --device with its name or UDID.", nil)
+	_ = jc.Fail("device.unknown", summary, "Pair the phone with the build Mac in Xcode (Window > Devices and Simulators), or pass --device with its name or UDID.", nil)
 	return xcode.Device{}, errHandled
 }
 
@@ -183,7 +183,7 @@ func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Dev
 				p.failFrom(jc, string(s.state), s.state, attempt.Bytes(), runErr, ws.app)
 				return errHandled
 			}
-			// why says what's wrong and what to do: "Quartz can't reach the phone: … Turn on its Wi-Fi …".
+			// why says what's wrong and what to do: "The build Mac can't reach the phone: … Turn on its Wi-Fi …".
 			why := "the phone refused the " + string(s.state)
 			if f != nil {
 				why = strings.TrimSpace(f.Summary + " " + f.Hint)

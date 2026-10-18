@@ -24,7 +24,7 @@
 //
 // # Human webhook
 //
-// notify.human.url (for example a GrokBot endpoint) receives the same headers and a body made
+// notify.human.url (for example a chat bot or push service) receives the same headers and a body made
 // for chat bots:
 //
 //	{

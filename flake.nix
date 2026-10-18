@@ -15,7 +15,7 @@
       eve = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
     });
 
-    # home-manager module for the build host (Quartz): services.eve (nix/home-manager-module.nix).
+    # home-manager module for the build Mac: services.eve (nix/home-manager-module.nix).
     homeManagerModules.default = import ./nix/home-manager-module.nix self;
 
     checks = forAll (pkgs: {

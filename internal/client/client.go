@@ -88,11 +88,11 @@ func (e *APIError) Error() string {
 	return fmt.Sprintf("HTTP %d: %s", e.Status, e.Msg)
 }
 
-// ErrUnreachable wraps connection failures with a hint about Quartz's state.
+// ErrUnreachable wraps connection failures with a hint about the build Mac's state.
 type ErrUnreachable struct{ Err error }
 
 func (e *ErrUnreachable) Error() string {
-	return fmt.Sprintf("eve server unreachable (%v): is Quartz on, logged in at the console, and is eve serve running?", e.Err)
+	return fmt.Sprintf("eve server unreachable (%v): is the build Mac on, logged in at the console, and is eve serve running?", e.Err)
 }
 func (e *ErrUnreachable) Unwrap() error { return e.Err }
 
@@ -171,7 +171,7 @@ func (c *Client) CheckServer(ctx context.Context) error {
 		return err
 	}
 	if v.API < api.APILevel {
-		return fmt.Errorf("the eve server at %s is older than this client (API level %d, needs %d): update it (on Quartz, switch to the latest mono-nix)", c.BaseURL, v.API, api.APILevel)
+		return fmt.Errorf("the eve server at %s is older than this client (API level %d, needs %d): update it (on the build Mac)", c.BaseURL, v.API, api.APILevel)
 	}
 	return nil
 }

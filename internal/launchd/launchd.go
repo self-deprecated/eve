@@ -1,6 +1,7 @@
 // Package launchd installs `eve serve` as a LaunchAgent in the user's GUI (Aqua) session, the
-// only place where the login keychain and the Xcode account are usable (PLAN.md §4.1). On Quartz
-// the mono-nix module does this declaratively; `eve agent install` is for other machines.
+// only place where the login keychain and the Xcode account are usable (PLAN.md §4.1). With Nix,
+// the home-manager module (nix/home-manager-module.nix) does this declaratively; `eve agent
+// install` is for Macs without it.
 package launchd
 
 import (

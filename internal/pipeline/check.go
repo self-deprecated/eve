@@ -140,11 +140,11 @@ func (c *Check) simErr(jc *queue.JobCtx, err error) error {
 	if errors.Is(jc.Ctx.Err(), context.Canceled) {
 		return jc.Ctx.Err()
 	}
-	hint := "Check the Simulator runtimes on Quartz (`xcrun simctl list runtimes`); eve.yml's check.simulator names a device type."
+	hint := "Check the Simulator runtimes on the build Mac (`xcrun simctl list runtimes`); eve.yml's check.simulator names a device type."
 	if strings.Contains(err.Error(), "bootstatus") {
-		// Seen when Quartz was out of memory: first-boot data migration never finished.
-		hint = "The Simulator never finished booting. Quartz may be short of memory or CoreSimulator stuck; " +
-			"ask the user to check Quartz, then resubmit."
+		// Seen when the build Mac was out of memory: first-boot data migration never finished.
+		hint = "The Simulator never finished booting. The build Mac may be short of memory or CoreSimulator stuck; " +
+			"ask the user to check the Mac, then resubmit."
 	}
 	_ = jc.Fail("simulator.unavailable", "could not get a fresh Simulator: "+err.Error(), hint, nil)
 	return errHandled

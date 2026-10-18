@@ -118,7 +118,7 @@ var rules = []rule{
 			re(`re-enter your password`),
 		},
 		summary: "Xcode's Apple Account session for this team is missing or expired.",
-		hint:    "Sign in again in Xcode > Settings > Accounts on Quartz, in the logged-in GUI session.",
+		hint:    "Sign in again in Xcode > Settings > Accounts on the build Mac, in the logged-in GUI session.",
 		human:   api.HumanXcodeSignIn,
 	},
 	{
@@ -218,7 +218,7 @@ var rules = []rule{
 		keys:    []string{"Metal Toolchain", "MetalToolchain"},
 		match:   []*regexp.Regexp{re(`missing Metal Toolchain`), re(`cannot execute tool 'metal'`), re(`error:.*-downloadComponent MetalToolchain`)},
 		summary: "The build compiles Metal shaders and this Xcode's Metal Toolchain isn't installed.",
-		hint:    "Run `xcodebuild -downloadComponent MetalToolchain` on Quartz (eve doctor checks it).",
+		hint:    "Run `xcodebuild -downloadComponent MetalToolchain` on the build Mac (eve doctor checks it).",
 	},
 	{
 		class: ClassUploadDuplicate,
@@ -344,8 +344,8 @@ var rules = []rule{
 			re(`A connection to this device could not be established`),
 			re(`not able to fulfill the requested usage assertion requirements`),
 		},
-		summary: "Quartz can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
-		hint:    "Turn on the phone's Wi-Fi on Quartz's network (or plug it into Quartz) and wake it.",
+		summary: "The build Mac can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
+		hint:    "Turn on the phone's Wi-Fi on the build Mac's network (or plug it into the Mac) and wake it.",
 		human:   api.HumanConnectPhone,
 	},
 	{
@@ -355,7 +355,7 @@ var rules = []rule{
 		phases:  devicePhases,
 		keys:    []string{"Connection with the remote side was unexpectedly closed", "IXRemoteErrorDomain error 6"},
 		summary: "The connection to the phone dropped during the install.",
-		hint:    "Keep the phone awake and on Quartz's Wi-Fi, or plug it into Quartz.",
+		hint:    "Keep the phone awake and on the build Mac's Wi-Fi, or plug it into the Mac.",
 		human:   api.HumanConnectPhone,
 	},
 	{
@@ -369,7 +369,7 @@ var rules = []rule{
 			re(`\{ platform:iOS, id:[^,]+, name:(?P<device>[^,]+), error:(?P<why>[^}]+)\}`),
 		},
 		summary: "The phone isn't available as a destination (asleep, locked, or not on the network).",
-		hint:    "Wake and unlock the phone on Quartz's Wi-Fi (`devicectl list devices` should show it available).",
+		hint:    "Wake and unlock the phone on the build Mac's Wi-Fi (`devicectl list devices` should show it available).",
 		human:   api.HumanUnlockPhone,
 	},
 	{
@@ -377,7 +377,7 @@ var rules = []rule{
 		phases:  devicePhases,
 		exit:    []int{70},
 		summary: "xcodebuild exited 70: the destination isn't available.",
-		hint:    "Wake and unlock the phone on Quartz's Wi-Fi (`devicectl list devices` should show it available).",
+		hint:    "Wake and unlock the phone on the build Mac's Wi-Fi (`devicectl list devices` should show it available).",
 		human:   api.HumanUnlockPhone,
 	},
 	{
