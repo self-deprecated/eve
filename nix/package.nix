@@ -1,8 +1,10 @@
 {
   lib,
   buildGoModule,
+  # The flake's revision, so `eve version` tells two builds of one version apart.
+  rev ? "unknown",
 }:
-buildGoModule {
+buildGoModule rec {
   pname = "eve";
   version = "0.1.0";
   src = lib.fileset.toSource {
@@ -13,7 +15,7 @@ buildGoModule {
   vendorHash = "sha256-B5CfrhjjRvwJ+e231kijtIfrUbibZGrokUhC8as3XY0=";
   subPackages = ["cmd/eve"];
   env.CGO_ENABLED = 0;
-  ldflags = ["-s" "-w" "-X main.version=0.1.0"];
+  ldflags = ["-s" "-w" "-X main.version=${version}+${rev}"];
   # The suite builds fake app bundles and spawns process groups; run it in CI/devShell.
   doCheck = false;
   postInstall = ''
