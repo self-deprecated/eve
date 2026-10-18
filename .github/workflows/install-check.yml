@@ -1,0 +1,36 @@
+name: Install check
+
+# Installs the published release the way users do and runs it.
+on:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  homebrew:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: macos-latest
+    steps:
+      - run: brew install --cask self-deprecated/tap/eve
+      - run: eve version
+      - name: Starter eve.yml from an XcodeGen spec
+        run: |
+          mkdir -p "$RUNNER_TEMP/demo" && cd "$RUNNER_TEMP/demo"
+          printf 'name: Demo\ntargets:\n  Demo:\n    type: application\n    platform: iOS\n' > project.yml
+          eve init
+          grep -q 'scheme: Demo' eve.yml
+
+  scoop:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: windows-latest
+    steps:
+      - uses: MinoruSekine/setup-scoop@v5
+      - shell: pwsh
+        run: |
+          scoop bucket add self-deprecated https://github.com/self-deprecated/scoop-bucket
+          scoop install self-deprecated/eve
+          eve version
