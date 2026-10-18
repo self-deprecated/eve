@@ -114,13 +114,13 @@ func (fakeClassifier) Classify(phase api.State, log []byte, exit int, facts map[
 	}
 	if strings.Contains(string(log), "Your session has expired") {
 		return &api.Failure{Class: "xcode.account", Summary: "Xcode account", By: "rules"},
-			&api.Human{Action: api.HumanXcodeSignIn, Detail: "sign in to Xcode on Quartz"}
+			&api.Human{Action: api.HumanXcodeSignIn, Detail: "sign in to Xcode on the build Mac"}
 	}
 	if strings.Contains(string(log), "could not be established") {
 		return &api.Failure{
 			Class: "device.unavailable", By: "rules",
-			Summary: "Quartz can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
-			Hint:    "Turn on the phone's Wi-Fi on Quartz's network (or plug it into Quartz) and wake it.",
+			Summary: "The build Mac can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
+			Hint:    "Turn on the phone's Wi-Fi on the build Mac's network (or plug it into the Mac) and wake it.",
 		}, &api.Human{Action: api.HumanConnectPhone}
 	}
 	if strings.Contains(string(log), "could not be, unlocked") {

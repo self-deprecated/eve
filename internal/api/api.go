@@ -185,7 +185,7 @@ type Failure struct {
 // Human actions a person must take (PLAN.md §5.1).
 const (
 	HumanUnlockPhone            = "unlock_phone"
-	HumanConnectPhone           = "connect_phone" // Quartz can't reach it: Wi-Fi off, away, or asleep
+	HumanConnectPhone           = "connect_phone" // the build Mac can't reach it: Wi-Fi off, away, or asleep
 	HumanXcodeSignIn            = "xcode_sign_in"
 	HumanAcceptAgreement        = "accept_agreement"
 	HumanExportCompliance       = "export_compliance"
@@ -270,7 +270,7 @@ type JobRequest struct {
 // JobSource says where the job's source comes from.
 type JobSource struct {
 	SHA256 string      `json:"sha256,omitempty"`
-	Path   string      `json:"path,omitempty"` // owner token on Quartz only
+	Path   string      `json:"path,omitempty"` // owner token on the build Mac only
 	Stats  SourceStats `json:"stats"`
 	Commit string      `json:"commit,omitempty"`
 	Branch string      `json:"branch,omitempty"`

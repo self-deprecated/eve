@@ -151,7 +151,7 @@ func redactURL(raw string) string {
 // AllowedURL checks a notify URL against notify.allowHosts at submit time. The URL must be https,
 // or http to a loopback or tailnet address (100.64.0.0/10, fd7a:115c:a1e0::/48, *.ts.net), must
 // carry no userinfo, and its host must match one of allowHosts. Patterns are path.Match globs
-// such as "*.tail6e682f.ts.net", compared case-insensitively against the hostname, or against
+// such as "*.example.ts.net", compared case-insensitively against the hostname, or against
 // host:port when the pattern names a port.
 func AllowedURL(rawURL string, allowHosts []string) error {
 	u, err := url.Parse(rawURL)

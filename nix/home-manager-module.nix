@@ -1,4 +1,4 @@
-# services.eve for home-manager on the build host (Quartz): runs `eve serve` as a LaunchAgent in
+# services.eve for home-manager on the build Mac: runs `eve serve` as a LaunchAgent in
 # the user's GUI (Aqua) session — the only place where the login keychain and the Xcode account
 # are usable — writes server.yml from Nix settings, and installs the CLI and the agent skill.
 # Secrets stay files referenced by path (file:...). Publishing 127.0.0.1:<port> as the svc:eve
@@ -39,9 +39,9 @@ in {
       default = {};
       example = lib.literalExpression ''
         {
-          team = "2559B88H6C";
-          asc = { keyId = "J9584QW2TF"; issuerId = "25a2d76f-…"; keyPath = "~/.appstoreconnect/private_keys/AuthKey_J9584QW2TF.p8"; };
-          apps.driver = { bundleId = "ai.selfdeprecated.driver"; testflight.group = "Driver"; };
+          team = "ABCDE12345";
+          asc = { keyId = "KEY1234567"; issuerId = "00000000-0000-0000-0000-000000000000"; keyPath = "~/.appstoreconnect/private_keys/AuthKey_KEY1234567.p8"; };
+          apps.myapp = { bundleId = "com.example.myapp"; testflight.group = "Internal"; };
         }
       '';
       description = "The rest of server.yml: team, asc, apps, sizeGuard, device, notify.";

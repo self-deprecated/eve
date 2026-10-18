@@ -181,7 +181,7 @@ func (s *Server) createJob(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusBadRequest, "unknown_source", "upload the source first (PUT /v1/sources/{sha256})")
 		return
 	case req.Source.Path != "" && !ti.Owner:
-		writeErr(w, http.StatusForbidden, "path_needs_owner", "building a path in place needs the owner token on Quartz")
+		writeErr(w, http.StatusForbidden, "path_needs_owner", "building a path in place needs the owner token on the build Mac")
 		return
 	}
 	if req.Source.Path != "" && !filepath.IsAbs(req.Source.Path) {

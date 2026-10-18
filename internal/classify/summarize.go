@@ -51,7 +51,7 @@ func Refine(ctx context.Context, s Summarizer, f *api.Failure, phase api.State, 
 // CLIProxyAPI in front of gpt-6-luna. Every field is injected; nothing is read from a default
 // configuration, so it is never used unless the server config builds one.
 type Responses struct {
-	BaseURL   string // e.g. "https://cliproxyapi.tail6e682f.ts.net/v1"
+	BaseURL   string // e.g. "https://llm.example.ts.net/v1"
 	Model     string // e.g. "gpt-6-luna"
 	APIKeyEnv string // name of the environment variable holding the key, e.g. "CLIPROXY_API_KEY"
 	Client    *http.Client

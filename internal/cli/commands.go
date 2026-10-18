@@ -50,7 +50,7 @@ func loginCmd(env *Env) *cobra.Command {
 	var token string
 	cmd := &cobra.Command{
 		Use:   "login <server-url>",
-		Short: "Store the server URL and a token (create one on Quartz with `eve token create <name>`)",
+		Short: "Store the server URL and a token (create one on the build Mac with `eve token create <name>`)",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			u, err := url.Parse(args[0])
@@ -113,7 +113,7 @@ func doctorCmd(env *Env) *cobra.Command {
 			}
 			switch {
 			case v.API < api.APILevel:
-				_, _ = fmt.Fprintf(env.Err, "warning: the server is older than this client (API level %d, needs %d); switch Quartz to update it\n", v.API, api.APILevel)
+				_, _ = fmt.Fprintf(env.Err, "warning: the server is older than this client (API level %d, needs %d); update eve on the build Mac\n", v.API, api.APILevel)
 			case v.API > api.APILevel:
 				_, _ = fmt.Fprintf(env.Err, "warning: this client is older than the server (API level %d, server %d); update it (sd fast-lane update)\n", api.APILevel, v.API)
 			}

@@ -31,13 +31,13 @@ func submitCmd(env *Env) *cobra.Command {
 	var f submitFlags
 	cmd := &cobra.Command{
 		Use:   "submit <testflight|check|device|exec> [-- command for exec]",
-		Short: "Send the working tree to Quartz and start a job; returns at once (or waits with --wait)",
+		Short: "Send the working tree to the build Mac and start a job; returns at once (or waits with --wait)",
 		Long: "Uploads the repository (git-tracked and untracked-but-not-ignored files; never build output or\n" +
 			"secrets) after the size guard's source check, then queues the job. With --wait it then follows\n" +
 			"the job until it finishes or needs confirmation; the exit code is the outcome.\n\n" +
 			"testflight uploads to TestFlight; device installs and launches on the paired iPhone (if the\n" +
 			"phone is locked or asleep, it retries for up to 10 minutes until it's unlocked); check builds for the\n" +
-			"Simulator (and tests with check.test); exec runs a repo command on Quartz with $EVE_ARTIFACTS\n" +
+			"Simulator (and tests with check.test); exec runs a repo command on the build Mac with $EVE_ARTIFACTS\n" +
 			"set (fetch them with `eve artifacts <job>`). `eve apps` lists what the server allows for each\n" +
 			"app (exec needs allowExec); submit refuses anything else with exit 64 before uploading.",
 		Args: cobra.MinimumNArgs(1),
@@ -53,7 +53,7 @@ func submitCmd(env *Env) *cobra.Command {
 	fl.BoolVar(&f.release, "release", false, "Release configuration for `device`")
 	fl.StringVar(&f.acceptSource, "accept-source-size", "", "upload despite the source check, with a reason")
 	fl.StringVar(&f.expectSize, "expect-size-change", "", "pre-approve app bundle growth for this job, with a reason")
-	fl.StringVar(&f.path, "path", "", "build this checkout in place on Quartz instead of uploading (owner token only)")
+	fl.StringVar(&f.path, "path", "", "build this checkout in place on the build Mac instead of uploading (owner token only)")
 	fl.BoolVar(&f.wait, "wait", false, "then follow the job like `eve wait`; the exit code is the outcome")
 	f.follow.register(cmd)
 	return cmd

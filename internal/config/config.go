@@ -75,7 +75,7 @@ type Notify struct {
 	Secrets    []HookToken `yaml:"secrets"`
 }
 
-// HumanHook is the optional webhook for things only a person can do (e.g. a GrokBot URL).
+// HumanHook is the optional webhook for things only a person can do (e.g. a chat bot or push service).
 type HumanHook struct {
 	URL    string `yaml:"url"`
 	Secret string `yaml:"secret"` // "file:<path>"; HMAC-SHA256 when set

@@ -47,7 +47,7 @@ func Root(version string) (*cobra.Command, *Env) {
 	env := &Env{Version: version, Out: os.Stdout, Err: os.Stderr, NewClient: client.FromConfig}
 	root := &cobra.Command{
 		Use:           "eve",
-		Short:         "Fire-and-forget iOS builds on Quartz: TestFlight, device installs and checks",
+		Short:         "Fire-and-forget iOS builds on your own Mac: TestFlight, device installs and checks",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 	}
