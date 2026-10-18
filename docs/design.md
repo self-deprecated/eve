@@ -871,6 +871,50 @@ parallel simulator checks with resource locks; ASC webhooks via Funnel; per-app 
 
 Estimated v1 (M0–M5): ~2 weeks of agent-assisted work.
 
+**Next candidates (researched 2026-10-18, not built).** Each closes a loop an agent can't close
+today.
+
+- *Bundle checks before export.* The archived app's Info.plist can be checked in seconds, where
+  Apple's verdict comes after a full export. The check would run right after the build-number
+  check in `Testflight.archive`, as a new `bundle.invalid` class that fails before the size guard;
+  for `device` and `check` it would only add a note. The first slice covers five things:
+  - iPad multitasking orientations: all four, or iPhone-only (`UIRequiresFullScreen` is
+    deprecated in iOS 26);
+  - `CFBundleIconName` and the icon sets;
+  - `ITSAppUsesNonExemptEncryption` with its compliance code;
+  - the `CFBundleShortVersionString` format across all bundles;
+  - a launch screen key.
+
+  A second slice maps imported symbols to purpose strings (ITMS-90683), which is the most frequent
+  real rejection. A check on the client against `project.yml` isn't worth it, because XcodeGen
+  defaults and xcconfigs decide the real values.
+- *Tester feedback (`eve feedback`).* App Store Connect has exposed TestFlight screenshot and
+  crash feedback since 2025:
+  - Endpoints: `/v1/apps/{id}/betaFeedback{Screenshot,Crash}Submissions`, and the crash log via
+    `/v1/betaFeedbackCrashSubmissions/{id}/crashLog`.
+  - The App Manager key reads them, and Apple returns crash logs symbolicated when dSYMs were
+    uploaded (probed on Quartz).
+  - Proposed: a pull command keyed by build and eve job, with a local "seen" ledger like `eve
+    pending`; files cached on the build Mac by submission id, since screenshot URLs expire; and
+    `eve feedback get <id> --out DIR`.
+  - Later, `--wait` would have the server poll. Apple's webhooks need a public URL, so they are
+    out (§14).
+  - Tester emails stay out of the result, and comments are marked as tester-written data.
+- *Proof that the app runs (`device --watch 20s`, `check.launch`).* Xcode 27's devicectl covers
+  this without root:
+  - `process launch --console` with `DEVICECTL_CHILD_OS_ACTIVITY_DT_MODE=enable` gives the app's
+    log;
+  - `process awaitTermination` tells whether it's still running;
+  - `info files` and `copy from --domain-type systemCrashLogs` fetch `.ips` crash reports, also
+    while the phone is locked;
+  - `capture screenshot` works when the phone is unlocked.
+
+  The job would end with a `running` note, or `app.crashed` carrying the exception and the last
+  console lines, and the screenshot and crash report as artifacts. Console lines go to a phase log
+  for `eve logs --follow`, never into events. devicectl forwards catchable signals to the app, so
+  it has to be stopped with SIGKILL. The Simulator equivalents are `simctl launch --console-pty`,
+  a filtered `simctl spawn log stream` and `simctl io screenshot`.
+
 ## 17. Risks
 
 | Risk | Mitigation |
