@@ -80,7 +80,7 @@ func (e Exec) Run(ctx context.Context, c Cmd) (Result, error) {
 	cmd.Stdin = c.Stdin
 	cmd.Stdout = c.Stdout
 	cmd.Stderr = c.Stderr
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	newGroup(cmd)
 	cmd.WaitDelay = e.OutputDelay
 	if cmd.WaitDelay == 0 {
 		cmd.WaitDelay = 10 * time.Second
@@ -107,15 +107,15 @@ func (e Exec) Run(ctx context.Context, c Cmd) (Result, error) {
 	select {
 	case waitErr = <-done:
 	case <-ctx.Done():
-		_ = syscall.Kill(-pgid, syscall.SIGINT)
+		interruptGroup(pgid)
 		select {
 		case waitErr = <-done:
 		case <-time.After(grace):
-			_ = syscall.Kill(-pgid, syscall.SIGKILL)
+			killGroup(pgid)
 			waitErr = <-done
 		}
 		// The leader is gone; make sure nothing else in its group survives.
-		_ = syscall.Kill(-pgid, syscall.SIGKILL)
+		killGroup(pgid)
 		res := Result{ExitCode: exitCode(waitErr), Pgid: pgid, Duration: time.Since(start)}
 		if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 			return res, ErrTimeout
@@ -136,7 +136,7 @@ func KillGroup(pgid int, grace time.Duration) {
 	if pgid <= 1 {
 		return
 	}
-	_ = syscall.Kill(-pgid, syscall.SIGINT)
+	interruptGroup(pgid)
 	deadline := time.Now().Add(grace)
 	for time.Now().Before(deadline) {
 		if !GroupAlive(pgid) {
@@ -144,7 +144,7 @@ func KillGroup(pgid int, grace time.Duration) {
 		}
 		time.Sleep(200 * time.Millisecond)
 	}
-	_ = syscall.Kill(-pgid, syscall.SIGKILL)
+	killGroup(pgid)
 }
 
 // GroupAlive reports whether any process in the group still exists.
@@ -152,9 +152,12 @@ func GroupAlive(pgid int) bool {
 	if pgid <= 1 {
 		return false
 	}
-	err := syscall.Kill(-pgid, 0)
-	return err == nil || errors.Is(err, syscall.EPERM)
+	return groupAlive(pgid)
 }
+
+// OwnedByUs reports whether the process group's leader still belongs to this user (pgids get
+// reused).
+func OwnedByUs(pgid int) bool { return ownedByUs(pgid) }
 
 func exitCode(err error) int {
 	if err == nil {

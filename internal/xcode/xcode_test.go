@@ -27,9 +27,6 @@ func TestChildEnvIsAllowlisted(t *testing.T) {
 }
 
 func TestAssertSystemRsync(t *testing.T) {
-	if _, err := os.Stat("/usr/bin/rsync"); err != nil {
-		t.Skip("no /usr/bin/rsync on this host")
-	}
 	if err := AssertSystemRsync([]string{"PATH=" + SystemPath}); err != nil {
 		t.Fatal(err)
 	}

@@ -86,7 +86,7 @@ type fakeSources struct{}
 
 func (fakeSources) Extract(sha, dest string) error { return errors.New("no uploads in this test") }
 func (fakeSources) Clone(src, dst string) error {
-	return exec.Command("/bin/cp", "-R", src, dst).Run()
+	return exec.Command("cp", "-R", src, dst).Run()
 }
 
 type fakeSize struct{ verdict SizeVerdict }
