@@ -2,6 +2,7 @@ package pipeline
 
 import (
 	"context"
+	"io"
 	"os"
 	"path/filepath"
 	"slices"
@@ -29,7 +30,7 @@ const devicesJSON = `{"result":{"devices":[
   "hardware":{"udid":"A468A9B3-5983-44BA-9879-6EE373222224","platform":"iOS","deviceType":"iPhone","reality":"simulated"},
   "state":{"name":"Driver"}}},
  {"identifier":"` + phoneID + `","properties":{"connection":{"pairingState":"paired","state":"disconnected"},
-  "hardware":{"udid":"` + phoneUDID + `","platform":"iOS","deviceType":"iPhone"},
+  "hardware":{"udid":"` + phoneUDID + `","ecid":7906512332611612,"serialNumber":"KXQ7Y2H9V4","platform":"iOS","deviceType":"iPhone"},
   "software":{"osVersionNumber":{"stringValue":"27.0.1"}},"state":{"name":"Jordan’s iPhone"}}},
  {"identifier":"IPAD-1","connectionProperties":{"pairingState":"paired"},
   "hardwareProperties":{"udid":"00008112-IPAD","platform":"iOS","deviceType":"iPad"},"deviceProperties":{"name":"iPad"}}]}}`
@@ -94,11 +95,12 @@ func (s *deviceSim) handle(c run.Cmd) (string, int, error) {
 }
 
 type deviceHarness struct {
-	q    *queue.Queue
-	st   *store.Store
-	f    *run.Fake
-	repo string
-	now  time.Time
+	q       *queue.Queue
+	secrets []string // every secret a log writer was given
+	st      *store.Store
+	f       *run.Fake
+	repo    string
+	now     time.Time
 }
 
 func newDeviceHarness(t *testing.T, sim *deviceSim) *deviceHarness {
@@ -119,6 +121,10 @@ func newDeviceHarness(t *testing.T, sim *deviceSim) *deviceHarness {
 		Now: func() time.Time { return h.now },
 		// Each poll moves the clock on, so the ten-minute wait runs out in 120 polls.
 		Sleep: func(ctx context.Context, dur time.Duration) error { h.now = h.now.Add(dur); return ctx.Err() },
+		RedactLog: func(w io.Writer, secrets []string) io.WriteCloser {
+			h.secrets = append(h.secrets, secrets...)
+			return nopCloser{w}
+		},
 	}
 	h.q = queue.New(st, dir, map[api.Verb]queue.Pipeline{api.VerbDevice: NewDevice(d)}, nil, nil)
 	return h
@@ -280,5 +286,18 @@ func TestDeviceResumesAtInstallAfterARestart(t *testing.T) {
 	got, _ := h.st.Get(context.Background(), j.ID)
 	if got.State != api.StateSucceeded || !slices.Equal(sim.order, []string{"install", "launch"}) {
 		t.Fatalf("%s order %v: the kept build is installed without rebuilding", got.State, sim.order)
+	}
+}
+
+func TestPhoneIdentifiersAreRedactedFromInstallLogs(t *testing.T) {
+	h := newDeviceHarness(t, &deviceSim{install: []string{ok}, launch: []string{ok}})
+	if got := h.run(t, api.JobOptions{}); got.State != api.StateSucceeded {
+		t.Fatalf("state %s", got.State)
+	}
+	// 7906512332611612 is 0x1C16EE5AFF601C.
+	for _, id := range []string{phoneID, phoneUDID, "KXQ7Y2H9V4", "7906512332611612", "1C16EE5AFF601C", "001C16EE5AFF601C"} {
+		if !slices.Contains(h.secrets, id) {
+			t.Errorf("%s is not redacted from the install and launch logs", id)
+		}
 	}
 }

@@ -136,6 +136,8 @@ func (p *Device) build(jc *queue.JobCtx, ws *workspace, kept string) (string, er
 // mounted) or can't be reached for the launch does the job wait: it enters waiting_for_device
 // once and retries that step every DevicePoll, for at most DeviceWait.
 func (p *Device) installAndLaunch(jc *queue.JobCtx, ws *workspace, dev xcode.Device, app string) error {
+	// The phone's identifiers are personal; keep them out of the install and launch logs.
+	ws.secrets = append(ws.secrets, dev.Identifiers()...)
 	var deadline time.Time
 	steps := []struct {
 		state api.State

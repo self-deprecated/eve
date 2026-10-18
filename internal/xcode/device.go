@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/self-deprecated/eve/internal/run"
@@ -66,12 +68,24 @@ func (t Tools) BuiltApp(ctx context.Context, s DeviceSpec, bundleID string) (str
 type Device struct {
 	ID       string // CoreDevice identifier
 	UDID     string
+	ECID     string // decimal
+	Serial   string
 	Name     string
 	OS       string // e.g. "27.0.1"
 	Platform string // iOS, …
 	Type     string // iPhone, iPad, …
 	Physical bool
 	Paired   bool
+}
+
+// Identifiers are the values that identify this physical device in logs: the CoreDevice
+// identifier, UDID, serial number and ECID (decimal and hex, as devicectl and xcodebuild print it).
+func (d Device) Identifiers() []string {
+	ids := []string{d.ID, d.UDID, strings.ToLower(d.UDID), d.Serial, d.ECID}
+	if n, err := strconv.ParseUint(d.ECID, 10, 64); err == nil {
+		ids = append(ids, fmt.Sprintf("%X", n), fmt.Sprintf("%x", n), fmt.Sprintf("%016X", n), fmt.Sprintf("%016x", n))
+	}
+	return slices.DeleteFunc(ids, func(s string) bool { return s == "" })
 }
 
 // Matches reports whether want names d by identifier, UDID or name.
@@ -91,10 +105,12 @@ func ParseDevices(b []byte) ([]Device, error) {
 						PairingState string `json:"pairingState"`
 					} `json:"connection"`
 					Hardware struct {
-						UDID       string `json:"udid"`
-						Platform   string `json:"platform"`
-						DeviceType string `json:"deviceType"`
-						Reality    string `json:"reality"`
+						UDID       string      `json:"udid"`
+						ECID       json.Number `json:"ecid"`
+						Serial     string      `json:"serialNumber"`
+						Platform   string      `json:"platform"`
+						DeviceType string      `json:"deviceType"`
+						Reality    string      `json:"reality"`
 					} `json:"hardware"`
 					Software struct {
 						OSVersionNumber struct {
@@ -109,10 +125,12 @@ func ParseDevices(b []byte) ([]Device, error) {
 					PairingState string `json:"pairingState"`
 				} `json:"connectionProperties"`
 				Hardware struct {
-					UDID       string `json:"udid"`
-					Platform   string `json:"platform"`
-					DeviceType string `json:"deviceType"`
-					Reality    string `json:"reality"`
+					UDID       string      `json:"udid"`
+					ECID       json.Number `json:"ecid"`
+					Serial     string      `json:"serialNumber"`
+					Platform   string      `json:"platform"`
+					DeviceType string      `json:"deviceType"`
+					Reality    string      `json:"reality"`
 				} `json:"hardwareProperties"`
 				DeviceProps struct {
 					Name      string `json:"name"`
@@ -127,12 +145,14 @@ func ParseDevices(b []byte) ([]Device, error) {
 	out := make([]Device, 0, len(v.Result.Devices))
 	for _, x := range v.Result.Devices {
 		d := Device{
-			ID: x.Identifier, UDID: x.Hardware.UDID, Name: x.DeviceProps.Name, OS: x.DeviceProps.OSVersion,
+			ID: x.Identifier, UDID: x.Hardware.UDID, ECID: x.Hardware.ECID.String(), Serial: x.Hardware.Serial,
+			Name: x.DeviceProps.Name, OS: x.DeviceProps.OSVersion,
 			Platform: x.Hardware.Platform, Type: x.Hardware.DeviceType,
 			Physical: x.Hardware.Reality != "simulated", Paired: x.Connection.PairingState == "paired",
 		}
 		if p := x.Properties; p != nil {
 			d.UDID, d.Name, d.OS = first(p.Hardware.UDID, d.UDID), first(p.State.Name, d.Name), first(p.Software.OSVersionNumber.StringValue, d.OS)
+			d.ECID, d.Serial = first(p.Hardware.ECID.String(), d.ECID), first(p.Hardware.Serial, d.Serial)
 			d.Platform, d.Type = first(p.Hardware.Platform, d.Platform), first(p.Hardware.DeviceType, d.Type)
 			if p.Hardware.Reality != "" {
 				d.Physical = p.Hardware.Reality != "simulated"
