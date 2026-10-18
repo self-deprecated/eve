@@ -2,3 +2,5 @@
 /eve
 /.toolchain-paths
 .DS_Store
+/dist/
+/completions/

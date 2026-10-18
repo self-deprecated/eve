@@ -1,0 +1,100 @@
+version: 2
+
+project_name: eve
+
+before:
+  hooks:
+    - go mod tidy
+    - sh -c 'mkdir -p completions && for shell in bash zsh fish powershell; do go run ./cmd/eve completion "$shell" > "completions/eve.$shell"; done'
+
+builds:
+  - id: eve
+    main: ./cmd/eve
+    binary: eve
+    env:
+      - CGO_ENABLED=0
+    # The server (`eve serve`) runs only on macOS; Linux and Windows get the client.
+    goos: [darwin, linux, windows]
+    goarch: [amd64, arm64]
+    flags: [-trimpath]
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+# Signs and notarizes the macOS binaries with the Developer ID Application certificate once its
+# secrets are set; until then they ship unsigned.
+notarize:
+  macos:
+    - enabled: '{{ isEnvSet "MACOS_SIGN_P12" }}'
+      ids: [eve]
+      sign:
+        certificate: "{{ .Env.MACOS_SIGN_P12 }}"
+        password: "{{ .Env.MACOS_SIGN_PASSWORD }}"
+      notarize:
+        issuer_id: "{{ .Env.MACOS_NOTARY_ISSUER_ID }}"
+        key_id: "{{ .Env.MACOS_NOTARY_KEY_ID }}"
+        key: "{{ .Env.MACOS_NOTARY_KEY }}"
+        wait: true
+        timeout: 20m
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      - LICENSE
+      - completions/*
+      - skill/eve/SKILL.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+
+release:
+  github:
+    owner: self-deprecated
+    name: eve
+  prerelease: auto
+
+homebrew_casks:
+  - name: eve
+    repository:
+      owner: self-deprecated
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    directory: Casks
+    homepage: https://github.com/self-deprecated/eve
+    description: Fire-and-forget iOS builds, TestFlight uploads and device installs on your own Mac
+    binaries: [eve]
+    completions:
+      bash: completions/eve.bash
+      zsh: completions/eve.zsh
+      fish: completions/eve.fish
+    hooks:
+      post:
+        # Unsigned binaries need the quarantine flag dropped for macOS to run them. Remove this
+        # hook after the first notarized release.
+        install: |
+          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/eve"]
+          end
+
+scoops:
+  - name: eve
+    repository:
+      owner: self-deprecated
+      name: scoop-bucket
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/self-deprecated/eve
+    description: Client for eve, fire-and-forget iOS builds on your own Mac
+    license: MIT
