@@ -62,9 +62,9 @@ naming the phone.
 
 `eve submit exec --wait -- <command> [args…]` runs a repo command on Quartz in the job's copy of
 the repo, from its root, in the GUI session, so it can drive the Simulator. The app needs
-`allowExec` on the server. The command gets `$EVE_ARTIFACTS` (a directory: everything at its top
-level becomes an artifact, directories included), `$EVE_PROJECT_DIR` (the Xcode project's
-directory, after XcodeGen) and `$EVE_JOB`. It may run for up to an hour. Then
+`allowExec` on the server (per app, or top-level for every app). The command gets
+`$EVE_ARTIFACTS` (a directory: everything at its top level becomes an artifact, directories
+included), `$EVE_PROJECT_DIR` (the Xcode project's directory, after XcodeGen) and `$EVE_JOB`. It may run for up to an hour. Then
 `eve artifacts <job> --out <dir>` downloads them; a directory artifact replaces `<dir>/<name>`
 entirely, so `--out docs/screenshots` refreshes `docs/screenshots/current/`. A failing command
 exits 1 with `failure.class: exec.failed` and the log's last lines; artifacts it wrote are kept.

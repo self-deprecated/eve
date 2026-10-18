@@ -144,3 +144,22 @@ func TestEveServerOverridesWithoutClientFile(t *testing.T) {
 		t.Fatalf("%+v %v", c, err)
 	}
 }
+
+func TestServerAllowExecAppliesToEveryApp(t *testing.T) {
+	p := writeFile(t, t.TempDir(), "server.yml", `
+team: T
+allowExec: true
+apps:
+  lineage: {bundleId: ai.selfdeprecated.lineage}
+  driver: {bundleId: ai.selfdeprecated.driver, allowExec: true}
+`)
+	s, err := LoadServer(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for name, a := range s.Apps {
+		if !a.AllowExec {
+			t.Fatalf("%s: allowExec not applied", name)
+		}
+	}
+}

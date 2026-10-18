@@ -22,14 +22,14 @@ myapp = {
   bundleId = "ai.selfdeprecated.myapp";
   testflight.group = "Internal";          # the internal group that gets every build
   # testflight.tester = "me@example.com"; # eve reports whether they've accepted the invite
-  # allowExec = true;                     # for `eve submit exec` (scripts on Quartz)
   # secrets.MY_SETTING = "file:~/.config/myapp/secret";  # build setting, via a 0600 xcconfig
   # device = "Jordan’s iPhone";           # default phone for `eve submit device`
 };
 ```
 
 Every app is internal-only on TestFlight unless `export.internalOnly = false`. Size-guard
-thresholds can be raised per app under `sizeGuard` (PLAN.md §6.7). Check it took: `eve apps`
+thresholds can be raised per app under `sizeGuard` (PLAN.md §6.7). `eve submit exec` (scripts on
+Quartz) is allowed for every app by the top-level `allowExec = true`. Check it took: `eve apps`
 lists the app and the verbs it allows.
 
 ## 3. The repository

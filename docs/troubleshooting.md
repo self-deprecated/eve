@@ -11,7 +11,7 @@ version) and `eve doctor --host` (Quartz's own checks).
 |---|---|---|
 | `submit` exits 69: "the eve server … is older than this client (API level N, needs M)" | Lattice's fast lane updated the client before Quartz switched | Switch Quartz to the latest mono-nix. Nothing was uploaded |
 | `eve doctor` warns "this client is older than the server" | The client lags | `sd fast-lane update` (from a mono-nix checkout) |
-| `submit` exits 64: "X is not available for app on this server (available: …)" | The verb isn't allowed for the app (`exec` needs `allowExec`) | Add it in the server config, or use a listed verb. `eve apps` shows each app's verbs |
+| `submit` exits 64: "X is not available for app on this server (available: …)" | The verb isn't allowed for the app (`exec` needs `allowExec`, per app or top-level for all) | Add it in the server config, or use a listed verb. `eve apps` shows each app's verbs |
 | `submit` exits 64: "app … is not configured on the server" | `eve.yml`'s `app:` isn't a server app | Compare with `eve apps`; see [new-app.md](new-app.md) |
 | `submit` exits 76 before uploading | The source check found something that looks wrong (`build/`, `node_modules/`, huge files) | Ignore it (`.gitignore`, `.eveignore`, `ignore:`), or `--accept-source-size "<why>"` |
 | An agent describes verbs or flags that don't exist | Its skill is stale | The skill follows the fast lane: `sd fast-lane update` |

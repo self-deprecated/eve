@@ -2,6 +2,9 @@
 
 ## Unreleased — M1 (2026-10-16)
 
+- `allowExec: true` at the top of server.yml lets every app run `exec`, without setting it per
+  app.
+
 ### M5 start: retention, version skew, "no phone connected"
 - Retention: a day after a job ends its directory keeps only `logs/`, `artifacts/` and the bundle
   manifest; after 30 days it goes, except a baseline's manifest. Uploads unused for 7 days go

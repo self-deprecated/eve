@@ -24,6 +24,7 @@ type Server struct {
 	Team      string         `yaml:"team"`
 	ASC       ASC            `yaml:"asc"`
 	Apps      map[string]App `yaml:"apps"`
+	AllowExec bool           `yaml:"allowExec"` // every app may exec, as if each set allowExec
 	SizeGuard SizeGuard      `yaml:"sizeGuard"`
 	Device    DeviceDefaults `yaml:"device"`
 	Notify    Notify         `yaml:"notify"`
@@ -232,6 +233,12 @@ func (s *Server) applyDefaults() {
 	}
 	s.DataDir = ExpandHome(s.DataDir)
 	s.ASC.KeyPath = ExpandHome(s.ASC.KeyPath)
+	if s.AllowExec {
+		for name, a := range s.Apps {
+			a.AllowExec = true
+			s.Apps[name] = a
+		}
+	}
 	if s.Xcode.XcodegenVersion == "" {
 		s.Xcode.XcodegenVersion = "2.46.0"
 		s.Xcode.XcodegenSHA256 = "4d9e34b62172d645eed6457cac13fc222569974098ef4ee9c3368bedf0196806"

@@ -31,6 +31,7 @@ Without Nix: `eve agent install --config ~/.config/eve/server.yml`.
 
 ```yaml
 team: 2559B88H6C
+allowExec: true                    # every app may run `eve submit exec`; or set it per app
 asc:
   keyId: J9584QW2TF
   issuerId: 25a2d76f-91fe-49e0-9551-09af06f209dc
@@ -45,7 +46,6 @@ apps:
   screengate:
     bundleId: ai.selfdeprecated.screengate
     testflight: {group: Internal}
-    allowExec: true                # screenshots.sh via `eve submit exec` (M3)
   bodydiff:
     bundleId: ai.selfdeprecated.bodydiff
     testflight: {group: Internal}
