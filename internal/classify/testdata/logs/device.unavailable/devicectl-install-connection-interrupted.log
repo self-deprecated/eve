@@ -1,0 +1,9 @@
+ERROR: Failed to install the app on the device. (com.apple.dt.CoreDeviceError error 3002 (0xBBA))
+       NSURL = file://~/.local/share/eve/jobs/j_mvczzu8721b23c1381/device/Driver.app/
+       ----------------------------------------
+           Connection with the remote side was unexpectedly closed : <dictionary: 0x1f1a320c8> { count = 1, transaction: 0, voucher = 0x0, contents =
+       	"XPCErrorDescription" => <string: 0x1f1a32230> { string cache = 0x0, length = 22, contents = "Connection interrupted" }
+       } (IXRemoteErrorDomain error 6 (0x06))
+           SourceFileLine = 300
+           NSLocalizedFailureReason = Unhandled error domain IXRemoteErrorDomain, code 6
+           FunctionName = _IXHandleConnectionForInstallMessagesFromRemoteService_block_invoke

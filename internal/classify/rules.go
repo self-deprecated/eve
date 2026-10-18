@@ -27,6 +27,7 @@ const (
 	ClassUploadMissingIcon          = "upload.missing_icon"
 	ClassUploadPurposeString        = "upload.purpose_string"
 	ClassUploadExportCompliance     = "upload.export_compliance"
+	ClassUploadInvalidBundle        = "upload.invalid_bundle"
 	ClassASCAgreement               = "asc.agreement"
 	ClassASCAuth                    = "asc.auth"
 	ClassASCAppRecord               = "asc.app_record"
@@ -286,6 +287,20 @@ var rules = []rule{
 		hint:    "Set ITSAppUsesNonExemptEncryption to NO, or YES with a valid ITSEncryptionExportComplianceCode.",
 	},
 	{
+		class:   ClassUploadInvalidBundle,
+		keys:    []string{"Invalid bundle."},
+		match:   []*regexp.Regexp{re(`(error: exportArchive |^)Invalid bundle\. `)},
+		summary: "Apple rejected the bundle as invalid.",
+		hint:    "Fix the Info.plist or bundle problem Apple names in the excerpt, then resubmit.",
+		detail: func(_ map[string]string, in Input) (string, string) {
+			if !strings.Contains(string(in.Log), "to support iPad multitasking") {
+				return "", ""
+			}
+			return "Apple rejected the bundle: an app that runs on iPad must list all four UISupportedInterfaceOrientations for multitasking.",
+				"Add UIInterfaceOrientationPortraitUpsideDown so UISupportedInterfaceOrientations (or its ~ipad variant) has all four orientations, or make the app iPhone-only (TARGETED_DEVICE_FAMILY = 1)."
+		},
+	},
+	{
 		class: ClassDeviceLocked,
 		keys: []string{
 			"FBSOpenApplicationErrorDomain error 7", "BSErrorCodeDescription = Locked", "could not be, unlocked", "for reason: Locked",
@@ -331,6 +346,16 @@ var rules = []rule{
 		},
 		summary: "Quartz can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
 		hint:    "Turn on the phone's Wi-Fi on Quartz's network (or plug it into Quartz) and wake it.",
+		human:   api.HumanConnectPhone,
+	},
+	{
+		// The connection dropped mid-install (CoreDeviceError 3002, IXRemoteErrorDomain 6; seen
+		// 2026-10-16). Transient: the device verb waits and tries again.
+		class:   ClassDeviceUnavailable,
+		phases:  devicePhases,
+		keys:    []string{"Connection with the remote side was unexpectedly closed", "IXRemoteErrorDomain error 6"},
+		summary: "The connection to the phone dropped during the install.",
+		hint:    "Keep the phone awake and on Quartz's Wi-Fi, or plug it into Quartz.",
 		human:   api.HumanConnectPhone,
 	},
 	{
