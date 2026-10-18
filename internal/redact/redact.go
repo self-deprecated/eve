@@ -318,15 +318,17 @@ func isHex(c byte) bool {
 }
 
 // idAt reports the length of a device identifier starting at word boundary i: the 25-character
-// form "00008150-0011AABB22CC33DD" or a 40-hex-digit UDID. Git object names and other SHA-1s
-// share the second form and are redacted too; that is the price of never leaking a device.
+// form "00008150-0011AABB22CC33DD", or a 40-hex-digit UDID (devices before 2018) that the line
+// labels as an id ("UDID …", "id:…", "identifier = …"). Unlabelled 40-hex runs are git object
+// names and certificate SHA-1s, and stay readable. The pipeline also redacts the exact
+// identifiers of the phone it installs on.
 func idAt(s []byte, i int) int {
 	j := i
 	for j < len(s) && isHex(s[j]) {
 		j++
 	}
 	run := j - i
-	if run == 40 && (j == len(s) || !isWord(s[j])) {
+	if run == 40 && (j == len(s) || !isWord(s[j])) && labelledID(s[:i]) {
 		return 40
 	}
 	if run == 8 && bytes.HasPrefix(s[i:], []byte("0000")) && j < len(s) && s[j] == '-' {
@@ -339,6 +341,19 @@ func idAt(s []byte, i int) int {
 		}
 	}
 	return 0
+}
+
+// labelledID reports whether before ends with an id label: "UDID", "id:", "deviceId=",
+// "Identifier = ", ignoring case, spaces and one ':' or '='.
+func labelledID(before []byte) bool {
+	b := bytes.TrimRight(before, " \t")
+	b = bytes.TrimRight(bytes.TrimSuffix(bytes.TrimSuffix(b, []byte(":")), []byte("=")), " \t")
+	k := len(b)
+	for k > 0 && (isWord(b[k-1]) || b[k-1] == '-') {
+		k--
+	}
+	word := strings.ToLower(string(b[k:]))
+	return strings.HasSuffix(word, "id") || strings.HasSuffix(word, "identifier")
 }
 
 // redactIDs replaces device identifiers. It is a single scan without regular expressions,
