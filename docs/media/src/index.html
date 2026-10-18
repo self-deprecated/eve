@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --bg: #0b0b0d; --fg: #f5f5f7; --dim: #8e8e93; --line: #2c2c2e;
+    --red: #ff453a; --green: #30d158; --amber: #ffd60a; --blue: #64d2ff;
+    --sans: "TeX Gyre Heros", "Liberation Sans", sans-serif;
+    --mono: "JetBrainsMono NFM", "JetBrains Mono", "DejaVu Sans Mono", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--fg); font-family: var(--sans); }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .caption { font-size: 64px; font-weight: 700; letter-spacing: -1.5px; text-align: center; }
+  .caption .accent { color: var(--red); }
+  .mono { font-family: var(--mono); }
+
+  /* hook */
+  #hook .transcript { position: absolute; left: 160px; top: 0; width: 1100px; height: 1080px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(transparent 0, #000 25%, #000 75%, transparent 100%); }
+  #hook .lines { font-family: var(--mono); font-size: 30px; line-height: 50px; color: var(--dim); white-space: pre; }
+  #hook .lines .tool { color: var(--fg); }
+  #hook .lines .tool b { color: var(--blue); font-weight: 600; }
+  #hook .lines .warn { color: #ff9f0a; }
+  #hook .shade { position: absolute; left: 0; right: 0; bottom: 0; height: 380px; background: linear-gradient(transparent, var(--bg) 45%); }
+  #hook .headline { position: absolute; left: 160px; bottom: 120px; font-size: 76px; font-weight: 700; letter-spacing: -2px;
+  }
+  .counter { position: absolute; right: 160px; top: 150px; text-align: right; }
+  .counter .n { font-family: var(--sans); font-size: 200px; font-weight: 700; line-height: 1; color: var(--red); }
+  .counter .label { font-size: 34px; color: var(--dim); margin-top: 12px; }
+
+  /* reveal */
+  #reveal .word { font-size: 300px; font-weight: 700; letter-spacing: -12px; line-height: 1; }
+  #reveal .word .dot { color: var(--red); }
+  #reveal .sub { font-size: 60px; color: var(--dim); margin-top: 30px; letter-spacing: -1px; }
+
+  /* terminal */
+  .term { width: 1480px; background: #1c1c1e; border: 1px solid var(--line); border-radius: 22px; overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+  .term .bar { height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 22px; background: #2a2a2d; }
+  .term .bar i { width: 18px; height: 18px; border-radius: 50%; display: block; }
+  .term .body { padding: 36px 44px; font-family: var(--mono); font-size: 32px; line-height: 54px; white-space: pre; min-height: 330px; }
+  .term .prompt { color: var(--green); }
+  .term .cursor { display: inline-block; width: 18px; height: 38px; background: var(--fg); vertical-align: -6px; }
+  .term .phase { color: var(--dim); }
+  .term .phase b { color: var(--fg); font-weight: 500; }
+  .term .ok { color: var(--green); font-weight: 700; }
+  #ship .caption, #fail .caption, #human .caption { margin-bottom: 60px; }
+  #ship .counter { top: 70px; right: 80px; }
+  #ship .counter .n { font-size: 110px; color: var(--green); }
+  #ship .counter .label { font-size: 28px; }
+
+  /* failure card */
+  .card { width: 1480px; background: #1c1c1e; border: 1px solid var(--line); border-radius: 22px; padding: 44px 56px;
+    font-family: var(--mono); font-size: 32px; line-height: 56px; white-space: pre; }
+  .card .head { font-family: var(--sans); font-size: 40px; font-weight: 700; margin-bottom: 18px; }
+  .card .key { color: var(--blue); }
+  .card .str { color: var(--fg); }
+  .card .pun { color: var(--dim); }
+  .card .row { opacity: 0; }
+
+  /* human */
+  #human .pair { display: flex; align-items: center; gap: 110px; }
+  .phone { width: 300px; height: 600px; border: 10px solid #3a3a3c; border-radius: 56px; position: relative; background: #111113;
+    display: flex; align-items: center; justify-content: center; }
+  .phone .notch { position: absolute; top: 20px; left: 50%; width: 110px; height: 32px; margin-left: -55px; background: #000; border-radius: 16px; }
+  .lock { position: relative; width: 120px; height: 150px; }
+  .lock .shackle { position: absolute; left: 20px; top: 0; width: 80px; height: 90px; border: 14px solid var(--amber); border-bottom: none; border-radius: 40px 40px 0 0; }
+  .lock .bodyl { position: absolute; left: 0; bottom: 0; width: 120px; height: 90px; background: var(--amber); border-radius: 16px; }
+  #human .card { width: 980px; }
+
+  /* outro */
+  #outro .word { font-size: 220px; font-weight: 700; letter-spacing: -9px; line-height: 1; }
+  #outro .word .dot { color: var(--red); }
+  #outro .sub { font-size: 54px; color: var(--dim); margin-top: 20px; }
+  #outro .pill { margin-top: 70px; font-family: var(--mono); font-size: 40px; padding: 26px 46px; border: 1px solid var(--line);
+    border-radius: 18px; background: #1c1c1e; }
+  #outro .pill .prompt { color: var(--green); }
+  #outro .url { margin-top: 36px; font-size: 38px; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<section class="scene" id="hook">
+  <div class="transcript"><div class="lines" id="hookLines"></div></div>
+  <div class="counter"><div class="n" id="hookN">0</div><div class="label">turns spent polling</div></div>
+  <div class="shade"></div>
+  <div class="headline">Your agent is babysitting a build.</div>
+</section>
+
+<section class="scene center" id="reveal">
+  <div class="word">eve<span class="dot">.</span></div>
+  <div class="sub">iOS builds for coding agents</div>
+</section>
+
+<section class="scene center" id="ship">
+  <div class="counter"><div class="n">0</div><div class="label">turns spent polling</div></div>
+  <div class="caption">One command. <span class="accent">Waiting costs no tokens.</span></div>
+  <div class="term">
+    <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+    <div class="body" id="shipBody"></div>
+  </div>
+</section>
+
+<section class="scene center" id="fail">
+  <div class="caption">Failures come with <span class="accent">the fix.</span></div>
+  <div class="card" id="failCard"></div>
+</section>
+
+<section class="scene center" id="human">
+  <div class="caption">And it knows when to <span class="accent">ask you.</span></div>
+  <div class="pair">
+    <div class="phone"><div class="notch"></div><div class="lock" id="lock"><div class="shackle"></div><div class="bodyl"></div></div></div>
+    <div class="card" id="humanCard"></div>
+  </div>
+</section>
+
+<section class="scene center" id="outro">
+  <div class="word">eve<span class="dot">.</span></div>
+  <div class="sub">iOS builds for coding agents, on your own Mac</div>
+  <div class="pill"><span class="prompt">$</span> brew install --cask self-deprecated/tap/eve</div>
+  <div class="url">github.com/self-deprecated/eve</div>
+</section>
+
+<script>
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+// Scene windows [in, out]; each fades through the background, never crossfading.
+const S = {
+  hook:   [0.0, 4.3],
+  reveal: [4.6, 7.4],
+  ship:   [7.7, 12.9],
+  fail:   [13.2, 16.6],
+  human:  [16.9, 19.9],
+  outro:  [20.2, 23.0],
+};
+const FADE = 0.3;
+
+function scene(id, t) {
+  const [a, b] = S[id], el = document.getElementById(id);
+  const o = id === "outro" ? ease((t - a) / FADE) : Math.min(ease((t - a) / FADE), ease((b - t) / FADE));
+  el.style.opacity = t < a || t > b ? 0 : o;
+  el.style.transform = `translateY(${(1 - ease((t - a) / 0.5)) * 30}px)`;
+  return t - a;
+}
+
+// Hook: the polling loop an agent writes when it ships by hand.
+const loop = [
+  ['tool', 'Bash', 'sleep 60 && node /tmp/asc.mjs builds --latest'],
+  ['out', '  ⎿  processingState: PROCESSING'],
+  ['tool', 'Bash', 'sleep 60 && node /tmp/asc.mjs builds --latest'],
+  ['out', '  ⎿  processingState: PROCESSING'],
+  ['tool', 'Bash', 'xcrun devicectl device install app …'],
+  ['warn', '  ⎿  error: the device is locked'],
+  ['tool', 'Bash', 'sleep 10 && xcrun devicectl device install app …'],
+  ['warn', '  ⎿  error: the device is locked'],
+  ['tool', 'Read', 'build/xcodebuild.log (14,212 lines)'],
+  ['tool', 'Bash', 'xcodebuild -exportArchive -exportOptionsPlist …'],
+  ['warn', '  ⎿  error: No signing certificate "iOS Distribution" found'],
+];
+const hookLines = [];
+for (let i = 0; i < 4; i++) hookLines.push(...loop);
+document.getElementById("hookLines").innerHTML = hookLines.map(([k, n, a]) =>
+  k === 'tool' ? `<div class="tool">⏺ <b>${n}</b>(${esc(a)})</div>` : `<div class="${k}">${esc(n)}</div>`).join("");
+
+function hook(t) {
+  const lt = scene("hook", t);
+  document.getElementById("hookLines").style.transform = `translateY(${200 - lt * 260}px)`;
+  document.getElementById("hookN").textContent = Math.max(0, Math.floor(lt * 5.2));
+  document.querySelector("#hook .headline").style.opacity = ease((lt - 0.4) / 0.4);
+}
+
+function reveal(t) {
+  const lt = scene("reveal", t);
+  const w = document.querySelector("#reveal .word");
+  w.style.transform = `scale(${0.85 + 0.15 * ease(lt / 0.6)})`;
+  document.querySelector("#reveal .sub").style.opacity = ease((lt - 0.6) / 0.4);
+}
+
+// Real eve output (README), job id shortened.
+const cmd = "eve submit testflight --wait --events";
+const phases = [
+  ["archiving", "archiving build 202610161909"],
+  ["delivering", "signing and uploading build 202610161909"],
+  ["processing", "waiting for App Store Connect to process it"],
+];
+function ship(t) {
+  const lt = scene("ship", t);
+  const typed = cmd.slice(0, Math.floor(clamp((lt - 0.6) / 1.1) * cmd.length));
+  let html = `<span class="prompt">$</span> ${typed}`;
+  const done = lt > 1.75;
+  if (!done) html += Math.floor(lt * 2.5) % 2 === 0 || typed.length < cmd.length ? `<span class="cursor"></span>` : "";
+  html += "\n";
+  phases.forEach(([p, msg], i) => {
+    if (lt > 2.0 + i * 0.7) html += `<span class="phase">eve j_mvbcdz62 <b>${p}</b>: ${msg}</span>\n`;
+  });
+  if (lt > 4.2) html += `<span class="phase">eve j_mvbcdz62 result </span><span class="ok">SUCCEEDED</span>\n`;
+  document.getElementById("shipBody").innerHTML = html;
+}
+
+// A real classifier rule (upload.purpose_string), as the result document shows it.
+const failRows = [
+  ['pun', '"failure": {'],
+  ['kv', 'class', 'upload.purpose_string'],
+  ['kv', 'summary', 'Apple rejected the upload: Info.plist\n     lacks NSCameraUsageDescription.'],
+  ['kv', 'hint', 'Add NSCameraUsageDescription with a\n     user-facing purpose string to Info.plist.'],
+  ['pun', '}'],
+];
+function rows(list) {
+  return list.map(([k, a, b]) => k === 'pun'
+    ? `<div class="row"><span class="pun">${a}</span></div>`
+    : `<div class="row">  <span class="key">"${a}"</span><span class="pun">: </span><span class="str">"${b}"</span></div>`).join("");
+}
+document.getElementById("failCard").innerHTML =
+  `<div class="head" style="color:var(--red)">exit 65 · rejected</div>` + rows(failRows);
+document.getElementById("humanCard").innerHTML =
+  `<div class="head" style="color:var(--amber)">exit 78 · needs_human</div>` + rows([
+    ['pun', '"human": {'],
+    ['kv', 'action', 'unlock_phone'],
+    ['kv', 'detail', 'The phone is locked and Xcode\'s\n     developer disk image isn\'t mounted on\n     it, which needs one unlock.'],
+    ['pun', '}'],
+  ]);
+
+function revealRows(sel, lt, start, step) {
+  document.querySelectorAll(sel + " .row").forEach((r, i) => {
+    const x = ease((lt - start - i * step) / 0.3);
+    r.style.opacity = x;
+    r.style.transform = `translateX(${(1 - x) * -20}px)`;
+  });
+}
+function fail(t) { revealRows("#failCard", scene("fail", t), 0.4, 0.25); }
+function human(t) {
+  const lt = scene("human", t);
+  revealRows("#humanCard", lt, 0.5, 0.25);
+  document.getElementById("lock").style.transform = `scale(${1 + 0.06 * Math.sin(lt * 6)})`;
+}
+function outro(t) {
+  const lt = scene("outro", t);
+  document.querySelector("#outro .pill").style.opacity = ease((lt - 0.5) / 0.4);
+  document.querySelector("#outro .url").style.opacity = ease((lt - 0.9) / 0.4);
+}
+
+window.DURATION = 23.0;
+window.render = t => { hook(t); reveal(t); ship(t); fail(t); human(t); outro(t); };
+window.ready = document.fonts.ready.then(() => true);
+render(0);
+</script>
+</body>
+</html>
