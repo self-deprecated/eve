@@ -33,12 +33,17 @@ func (m *Manager) now() time.Time {
 	return time.Now()
 }
 
-func (m *Manager) lock() (func(), error) {
+func (m *Manager) lock(ctx context.Context, wait bool) (func(), error) {
 	f, err := os.OpenFile(filepath.Join(m.DataDir, "simulators.lock"), os.O_CREATE|os.O_RDWR, 0o600)
 	if err != nil {
 		return nil, err
 	}
-	if err := flock.Lock(f, false); err != nil {
+	if wait {
+		err = flock.LockContext(ctx, f)
+	} else {
+		err = flock.Lock(f, false)
+	}
+	if err != nil {
 		_ = f.Close()
 		return nil, fmt.Errorf("simulator lifecycle busy: %w", err)
 	}
@@ -54,7 +59,7 @@ func (m *Manager) Renew(ctx context.Context, id string, duration time.Duration) 
 	if duration > m.Settings.LeaseLimit() {
 		return time.Time{}, fmt.Errorf("requested lease %s exceeds simulators.maxLeaseDuration (%s)", duration, m.Settings.LeaseLimit())
 	}
-	unlock, err := m.lock()
+	unlock, err := m.lock(ctx, false)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -69,7 +74,7 @@ func (m *Manager) Renew(ctx context.Context, id string, duration time.Duration) 
 // ReleaseLease ends borrowing early. It never boots, shuts down or adopts a device, or
 // overrides a running Eve job. Cleanup resumes under the usual idle and ownership checks.
 func (m *Manager) ReleaseLease(ctx context.Context, id string) error {
-	unlock, err := m.lock()
+	unlock, err := m.lock(ctx, false)
 	if err != nil {
 		return err
 	}
@@ -82,7 +87,7 @@ func (m *Manager) ReleaseLease(ctx context.Context, id string) error {
 func (m *Manager) Release(ctx context.Context, tools xcode.Tools, id string) error {
 	ctx, cancel := context.WithTimeout(context.WithoutCancel(ctx), m.Settings.ShutdownWithin())
 	defer cancel()
-	unlock, err := m.lock()
+	unlock, err := m.lock(ctx, true)
 	if err != nil {
 		return err
 	}
@@ -110,7 +115,7 @@ func (m *Manager) Sweep(ctx context.Context, tools xcode.Tools) error {
 	if idle <= 0 {
 		return nil
 	}
-	unlock, err := m.lock()
+	unlock, err := m.lock(ctx, false)
 	if err != nil {
 		return err
 	}
@@ -133,7 +138,9 @@ func (m *Manager) Sweep(ctx context.Context, tools xcode.Tools) error {
 				errs = append(errs, err)
 				continue
 			}
-			if j.Pgid > 1 || (!j.State.Terminal() && j.State != api.StateQueued) {
+			// Terminal jobs may retain a stale pgid after cancellation/interruption. Execution
+			// has stopped under the host lock, so that bookkeeping must not pin their lease.
+			if !j.State.Terminal() && (j.Pgid > 1 || j.State != api.StateQueued) {
 				continue
 			}
 			// Start a fresh grace period on recovery; timestamps/CPU never expire live leases.

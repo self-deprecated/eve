@@ -23,7 +23,8 @@ failure may leave a stopped, unregistered device for manual review; Eve never bo
 Completion, compile/test failure, partial boot failure, cancellation and graceful server stop
 all attempt **shutdown**, preserving installed apps, data and the device definition. Shutdown
 uses a cancellation-independent deadline (default 30 seconds; the command runner can then take
-up to 20 seconds to kill its process group). Cleanup runs before the check publishes its
+up to 20 seconds to kill its process group). Teardown waits for brief borrow-lock contention
+within that same deadline. Cleanup runs before the check publishes its
 result. Both LaunchAgent definitions allow 240 seconds for graceful exit, including the
 maximum configured cleanup deadline and build/HTTP drain. A cleanup failure adds a
 `simulator_cleanup` result note and leaves the released lease
@@ -32,10 +33,12 @@ last error and JSON includes the release and last-attempt times.
 
 The worker checks pending cleanup at most once a minute while it can acquire the same host
 lock used by `eve run`. After the idle timeout, it retries only explicitly released leases.
-Startup recovery takes that lock too, stops Eve's recorded orphaned process groups and
+Startup recovery waits for that lock without restarting the server or interrupting `eve run`;
+the wait ends promptly on server shutdown. Recovery stops Eve's recorded orphaned process groups and
 requeues/finishes interrupted jobs before cleanup can release their abandoned leases. Those
 leases get a **new full idle period**, starting at recovery, rather than an age calculated from
-before the crash. Unrecovered/running jobs retain their leases. `eve run` attempts pending
+before the crash. Terminal jobs' stale process-group bookkeeping does not pin their leases;
+unrecovered/running jobs retain theirs. `eve run` attempts pending
 cleanup once before its job but has no background timer after exit; ongoing retries require
 `eve serve`. A busy worker can delay cleanup beyond the timeout.
 

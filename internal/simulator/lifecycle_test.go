@@ -129,8 +129,8 @@ func TestQuietActiveLeaseNeverExpires(t *testing.T) {
 	}
 }
 
-func TestRecoveryRequiresClearedJobAndStartsFreshIdlePeriod(t *testing.T) {
-	for _, phase := range []api.State{api.StateQueued, api.StateSucceeded} {
+func TestRecoveryReleasesTerminalJobsDespiteStaleProcessGroupAndStartsFreshIdlePeriod(t *testing.T) {
+	for _, phase := range []api.State{api.StateQueued, api.StateSucceeded, api.StateCancelled, api.StateInterrupted} {
 		t.Run(string(phase), func(t *testing.T) {
 			r := newRig(t)
 			ctx := context.Background()
@@ -139,13 +139,15 @@ func TestRecoveryRequiresClearedJobAndStartsFreshIdlePeriod(t *testing.T) {
 			}
 			r.now = r.now.Add(48 * time.Hour)
 			r.sweep(t)
-			if !r.record(t).ReleasedAt.IsZero() {
-				t.Fatal("unrecovered process group lost its lease")
+			if !phase.Terminal() {
+				if !r.record(t).ReleasedAt.IsZero() {
+					t.Fatal("unrecovered queued job lost its lease")
+				}
+				if _, err := r.m.Store.Update(ctx, r.job.ID, func(j *store.Job) { j.Pgid = 0 }); err != nil {
+					t.Fatal(err)
+				}
+				r.sweep(t)
 			}
-			if _, err := r.m.Store.Update(ctx, r.job.ID, func(j *store.Job) { j.Pgid = 0 }); err != nil {
-				t.Fatal(err)
-			}
-			r.sweep(t)
 			if !r.record(t).ReleasedAt.Equal(r.now) || len(r.shutdowns) != 0 {
 				t.Fatal("recovery must grant a new idle period")
 			}
@@ -471,5 +473,60 @@ func TestCleanupDeadlineAndLeaseSerialization(t *testing.T) {
 	}
 	if _, err := r.m.Renew(context.Background(), ownedID, time.Minute); err != nil {
 		t.Fatal("cleanup lock leaked", err)
+	}
+}
+
+func TestJobTeardownWaitsForBriefBorrowLockContention(t *testing.T) {
+	r := newRig(t)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel() // Job cancellation must not prevent bounded teardown, including lock acquisition.
+	unlock, err := r.m.lock(context.Background(), false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if unlock != nil {
+			unlock()
+		}
+	})
+	done := make(chan error, 1)
+	go func() { done <- r.m.Release(ctx, r.tools, ownedID) }()
+	select {
+	case err := <-done:
+		t.Fatal("teardown did not wait for the borrower", err)
+	case <-time.After(50 * time.Millisecond):
+	}
+	if !r.record(t).ReleasedAt.IsZero() || len(r.fake.Commands()) != 0 {
+		t.Fatal("teardown acted before acquiring the lifecycle lock")
+	}
+	unlock()
+	unlock = nil
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-time.After(2 * time.Second):
+		t.Fatal("teardown did not resume after borrowing released the lock")
+	}
+	if !r.record(t).Settled || !slices.Equal(r.shutdowns, []string{ownedID}) {
+		t.Fatal("brief lock contention deferred cleanup")
+	}
+}
+
+func TestJobTeardownLockWaitHonoursShutdownDeadline(t *testing.T) {
+	r := newRig(t)
+	r.m.Settings.ShutdownTimeout = config.Duration(20 * time.Millisecond)
+	unlock, err := r.m.lock(context.Background(), false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer unlock()
+	started := time.Now()
+	if err := r.m.Release(context.Background(), r.tools, ownedID); !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatal(err)
+	}
+	if time.Since(started) > time.Second || !r.record(t).ReleasedAt.IsZero() || len(r.fake.Commands()) != 0 {
+		t.Fatal("lock wait exceeded the teardown deadline or acted without the lock")
 	}
 }

@@ -361,17 +361,67 @@ func TestRecoveryAndMaintenanceRespectLiveRunLock(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer unlock()
+	t.Cleanup(func() {
+		if unlock != nil {
+			unlock()
+		}
+	})
 	maintained := false
 	q.Maintain = func(context.Context) { maintained = true }
-	if err := q.Recover(context.Background()); err == nil {
-		t.Fatal("recovery must not interfere with eve run")
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	done := make(chan error, 1)
+	go func() { done <- q.Recover(ctx) }()
+	select {
+	case err := <-done:
+		t.Fatal("recovery must wait for eve run", err)
+	case <-time.After(50 * time.Millisecond):
 	}
 	if err := q.runNext(context.Background()); err != nil {
 		t.Fatal(err)
 	}
 	if maintained || get(t, st, j.ID).State != api.StateArchiving {
 		t.Fatal("maintenance/recovery ran while host was busy")
+	}
+	unlock()
+	unlock = nil
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-ctx.Done():
+		t.Fatal("recovery did not resume after eve run finished")
+	}
+	if get(t, st, j.ID).State != api.StateQueued {
+		t.Fatal("interrupted job was not recovered")
+	}
+}
+
+func TestRunWaitingForLiveRunLockStopsCleanlyOnCancellation(t *testing.T) {
+	q, _ := setup(t, nil)
+	unlock, err := Lock(q.DataDir, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer unlock()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	done := make(chan error, 1)
+	go func() { done <- q.Run(ctx) }()
+	select {
+	case err := <-done:
+		t.Fatal("server worker exited while eve run held the lock", err)
+	case <-time.After(50 * time.Millisecond):
+	}
+	cancel()
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatal("shutdown during recovery wait should succeed", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("recovery lock wait ignored cancellation")
 	}
 }
 

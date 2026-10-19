@@ -103,6 +103,9 @@ func (q *Queue) Kick() {
 // Run recovers unfinished jobs, then runs the worker until ctx ends.
 func (q *Queue) Run(ctx context.Context) error {
 	if err := q.Recover(ctx); err != nil {
+		if ctx.Err() != nil {
+			return nil
+		}
 		return fmt.Errorf("recovery: %w", err)
 	}
 	tick := time.NewTicker(5 * time.Second)
@@ -354,8 +357,8 @@ func (q *Queue) Cancel(ctx context.Context, id string, force bool) (store.Job, e
 // Recover resolves jobs left unfinished by a previous run: kill orphaned process groups first,
 // then requeue or resume each job by phase (docs/design.md §5.5).
 func (q *Queue) Recover(ctx context.Context) error {
-	// Recovery must not kill a live `eve run` job that holds the same host lock.
-	unlock, err := Lock(q.DataDir, false)
+	// Wait for a live `eve run` without killing it or making the server restart repeatedly.
+	unlock, err := LockContext(ctx, q.DataDir)
 	if err != nil {
 		return err
 	}
@@ -419,6 +422,15 @@ func (q *Queue) finish(ctx context.Context, id string, to api.State, msg string,
 // Lock takes the host-wide build lock shared by the server's worker and `eve run`. With wait
 // false it fails immediately when the lock is held.
 func Lock(dataDir string, wait bool) (func(), error) {
+	return lock(dataDir, func(f *os.File) error { return flock.Lock(f, wait) })
+}
+
+// LockContext waits for the host lock until ctx ends.
+func LockContext(ctx context.Context, dataDir string) (func(), error) {
+	return lock(dataDir, func(f *os.File) error { return flock.LockContext(ctx, f) })
+}
+
+func lock(dataDir string, acquire func(*os.File) error) (func(), error) {
 	if err := os.MkdirAll(dataDir, 0o700); err != nil {
 		return nil, err
 	}
@@ -426,7 +438,7 @@ func Lock(dataDir string, wait bool) (func(), error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := flock.Lock(f, wait); err != nil {
+	if err := acquire(f); err != nil {
 		_ = f.Close()
 		return nil, fmt.Errorf("another eve build holds %s: %w", f.Name(), err)
 	}
