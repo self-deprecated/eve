@@ -163,3 +163,68 @@ apps:
 		}
 	}
 }
+
+func TestSimulatorLifecycleConfiguration(t *testing.T) {
+	for _, tc := range []struct {
+		body           string
+		idle, shutdown time.Duration
+		invalid        bool
+	}{
+		{"", 15 * time.Minute, 30 * time.Second, false},
+		{"simulators: {idleTimeout: 0s, shutdownTimeout: 5s}\n", 0, 5 * time.Second, false},
+		{"simulators: {idleTimeout: 45m, protectedDevices: [2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856]}\n", 45 * time.Minute, 30 * time.Second, false},
+		{"simulators: {idleTimeout: -1m}\n", 0, 0, true},
+		{"simulators: {shutdownTimeout: -1s}\n", 0, 0, true},
+		{"simulators: {shutdownTimeout: 1ms}\n", 0, 0, true},
+		{"simulators: {shutdownTimeout: 3m}\n", 0, 0, true},
+		{"simulators: {protectedDevices: [booted]}\n", 0, 0, true},
+		{"simulators: {idleTimeout: yesterday}\n", 0, 0, true},
+	} {
+		t.Run(tc.body, func(t *testing.T) {
+			p := writeFile(t, t.TempDir(), "server.yml", "team: T\napps: {}\n"+tc.body)
+			s, err := LoadServer(p)
+			if tc.invalid {
+				if err == nil {
+					t.Fatal("invalid config accepted")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if s.Simulators.IdleAfter() != tc.idle || s.Simulators.ShutdownWithin() != tc.shutdown {
+				t.Fatal(s.Simulators)
+			}
+		})
+	}
+}
+
+func TestSimulatorBorrowLeaseLimit(t *testing.T) {
+	for _, tc := range []struct {
+		setting string
+		want    time.Duration
+		invalid bool
+	}{
+		{"", time.Hour, false},
+		{"maxLeaseDuration: 0s", time.Hour, false},
+		{"maxLeaseDuration: 2h", 2 * time.Hour, false},
+		{"maxLeaseDuration: 1s", time.Second, false},
+		{"maxLeaseDuration: -1m", 0, true},
+		{"maxLeaseDuration: 1ms", 0, true},
+		{"maxLeaseDuration: forever", 0, true},
+	} {
+		t.Run(tc.setting, func(t *testing.T) {
+			p := writeFile(t, t.TempDir(), "server.yml", "team: T\napps: {}\nsimulators: {"+tc.setting+"}\n")
+			s, err := LoadServer(p)
+			if tc.invalid {
+				if err == nil {
+					t.Fatal("invalid cap accepted")
+				}
+				return
+			}
+			if err != nil || s.Simulators.LeaseLimit() != tc.want {
+				t.Fatal(s, err)
+			}
+		})
+	}
+}

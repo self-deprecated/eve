@@ -46,6 +46,12 @@ apps:
 # device:
 #   default: "Sam’s iPhone"        # default phone for every app
 
+# simulators:                      # only exact devices created and tracked by Eve
+#   idleTimeout: 15m               # pending/recovered cleanup; 0s disables automatic retries
+#   shutdownTimeout: 30s           # bounded teardown; 1s–2m
+#   maxLeaseDuration: 1h           # maximum per agent borrow acquisition/renewal
+#   protectedDevices: []           # operator-only indefinite exclusions (UDIDs)
+
 # sizeGuard:                       # defaults shown
 #   source:                        # the uploaded tree, checked on the client before upload
 #     growth: 50%                  # vs the last accepted upload…
@@ -95,6 +101,7 @@ Notes:
   deliveries that exhausted their retries. Size confirmations never go there.
 
 `eve apps` shows what the running server loaded, including the verbs each app may run.
+See [Simulator operations](operations.md) for borrowing, expiry, cleanup and the shared-host boundary.
 
 ## eve.yml
 

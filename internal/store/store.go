@@ -118,6 +118,17 @@ var migrations = []string{
 	`CREATE TABLE baselines (app TEXT PRIMARY KEY, job_id TEXT NOT NULL, build_number TEXT NOT NULL, path TEXT NOT NULL, updated_at INTEGER NOT NULL)`,
 	`ALTER TABLE jobs ADD COLUMN resume_from TEXT NOT NULL DEFAULT ''`,
 	`ALTER TABLE jobs ADD COLUMN confirmation TEXT NOT NULL DEFAULT ''`,
+	`CREATE TABLE simulators (
+		udid TEXT PRIMARY KEY,
+		name TEXT NOT NULL,
+		job_id TEXT NOT NULL REFERENCES jobs(id),
+		released_at INTEGER NOT NULL DEFAULT 0,
+		settled INTEGER NOT NULL DEFAULT 0,
+		protected INTEGER NOT NULL DEFAULT 0,
+		last_attempt_at INTEGER NOT NULL DEFAULT 0,
+		last_error TEXT NOT NULL DEFAULT ''
+	)`,
+	`ALTER TABLE simulators ADD COLUMN lease_until INTEGER NOT NULL DEFAULT 0`,
 }
 
 func (s *Store) migrate(ctx context.Context) error {

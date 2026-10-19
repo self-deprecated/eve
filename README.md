@@ -104,6 +104,7 @@ include it, and the Nix module installs it. After that, "ship it to TestFlight" 
 
 - [Commands and exit codes](docs/commands.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Simulator lifecycle and borrowing](docs/operations.md)
 - [Design](docs/design.md): the decisions and review history
 
 Development: `nix develop`, then `go test -race ./...`. Pushing a `v*` tag that matches

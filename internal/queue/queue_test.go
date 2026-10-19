@@ -350,3 +350,45 @@ func TestCancelPausedJob(t *testing.T) {
 		t.Fatal(s)
 	}
 }
+
+func TestRecoveryAndMaintenanceRespectLiveRunLock(t *testing.T) {
+	q, st := setup(t, fakePipeline{run: func(jc *JobCtx) error { return jc.Succeed("ok", nil) }})
+	j := submit(t, st)
+	if _, _, err := st.Transition(context.Background(), j.ID, store.Transition{To: api.StateArchiving}); err != nil {
+		t.Fatal(err)
+	}
+	unlock, err := Lock(q.DataDir, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer unlock()
+	maintained := false
+	q.Maintain = func(context.Context) { maintained = true }
+	if err := q.Recover(context.Background()); err == nil {
+		t.Fatal("recovery must not interfere with eve run")
+	}
+	if err := q.runNext(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	if maintained || get(t, st, j.ID).State != api.StateArchiving {
+		t.Fatal("maintenance/recovery ran while host was busy")
+	}
+}
+
+func TestMaintenanceRunsUnderHostLockWithoutQueuedJobs(t *testing.T) {
+	q, _ := setup(t, nil)
+	called := false
+	q.Maintain = func(context.Context) {
+		called = true
+		if unlock, err := Lock(q.DataDir, false); err == nil {
+			unlock()
+			t.Fatal("maintenance did not hold the host lock")
+		}
+	}
+	if err := q.runNext(context.Background()); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal(err)
+	}
+	if !called {
+		t.Fatal("idle server did not run maintenance")
+	}
+}

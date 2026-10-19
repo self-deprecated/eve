@@ -19,16 +19,46 @@ import (
 // Server is ~/.config/eve/server.yml. Identity, signing, export options and secrets live here,
 // so an uploaded tree cannot redirect a build to another app.
 type Server struct {
-	Listen    string         `yaml:"listen"`  // default 127.0.0.1:4790
-	DataDir   string         `yaml:"dataDir"` // default ~/.local/share/eve
-	Team      string         `yaml:"team"`
-	ASC       ASC            `yaml:"asc"`
-	Apps      map[string]App `yaml:"apps"`
-	AllowExec bool           `yaml:"allowExec"` // every app may exec, as if each set allowExec
-	SizeGuard SizeGuard      `yaml:"sizeGuard"`
-	Device    DeviceDefaults `yaml:"device"`
-	Notify    Notify         `yaml:"notify"`
-	Xcode     XcodeSettings  `yaml:"xcode"`
+	Listen     string            `yaml:"listen"`  // default 127.0.0.1:4790
+	DataDir    string            `yaml:"dataDir"` // default ~/.local/share/eve
+	Team       string            `yaml:"team"`
+	ASC        ASC               `yaml:"asc"`
+	Apps       map[string]App    `yaml:"apps"`
+	AllowExec  bool              `yaml:"allowExec"` // every app may exec, as if each set allowExec
+	SizeGuard  SizeGuard         `yaml:"sizeGuard"`
+	Device     DeviceDefaults    `yaml:"device"`
+	Notify     Notify            `yaml:"notify"`
+	Xcode      XcodeSettings     `yaml:"xcode"`
+	Simulators SimulatorSettings `yaml:"simulators"`
+}
+
+// SimulatorSettings applies only to devices created and recorded by this Eve installation.
+type SimulatorSettings struct {
+	IdleTimeout      *Duration `yaml:"idleTimeout"`      // nil: 15m; zero: disable automatic retry/recovery
+	ShutdownTimeout  Duration  `yaml:"shutdownTimeout"`  // zero: 30s
+	MaxLeaseDuration Duration  `yaml:"maxLeaseDuration"` // zero: 1h, per acquisition/renewal
+	ProtectedDevices []string  `yaml:"protectedDevices"`
+}
+
+func (s SimulatorSettings) IdleAfter() time.Duration {
+	if s.IdleTimeout == nil {
+		return 15 * time.Minute
+	}
+	return time.Duration(*s.IdleTimeout)
+}
+
+func (s SimulatorSettings) ShutdownWithin() time.Duration {
+	if s.ShutdownTimeout == 0 {
+		return 30 * time.Second
+	}
+	return time.Duration(s.ShutdownTimeout)
+}
+
+func (s SimulatorSettings) LeaseLimit() time.Duration {
+	if s.MaxLeaseDuration == 0 {
+		return time.Hour
+	}
+	return time.Duration(s.MaxLeaseDuration)
 }
 
 // ASC is the App Store Connect API key.
@@ -211,6 +241,8 @@ func (a App) SigningMode() string {
 
 var appName = regexp.MustCompile(`^[a-z][a-z0-9-]{0,40}$`)
 
+var simulatorID = regexp.MustCompile(`^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$`)
+
 // LoadServer reads and validates server.yml.
 func LoadServer(path string) (*Server, error) {
 	var s Server
@@ -248,6 +280,20 @@ func (s *Server) applyDefaults() {
 // Validate checks the configuration for mistakes that would only surface mid-build.
 func (s *Server) Validate() error {
 	var errs []error
+	if s.Simulators.IdleAfter() < 0 {
+		errs = append(errs, errors.New("simulators.idleTimeout must be non-negative (0s disables automatic cleanup)"))
+	}
+	if d := s.Simulators.ShutdownWithin(); d < time.Second || d > 2*time.Minute {
+		errs = append(errs, errors.New("simulators.shutdownTimeout must be between 1s and 2m"))
+	}
+	if s.Simulators.LeaseLimit() < time.Second {
+		errs = append(errs, errors.New("simulators.maxLeaseDuration must be at least 1s (omitted or 0s uses 1h)"))
+	}
+	for _, id := range s.Simulators.ProtectedDevices {
+		if !simulatorID.MatchString(id) {
+			errs = append(errs, fmt.Errorf("simulators.protectedDevices: invalid UDID %q", id))
+		}
+	}
 	if s.Team == "" {
 		errs = append(errs, errors.New("team is required"))
 	}

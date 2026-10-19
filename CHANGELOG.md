@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Simulator lifecycle
+- Track exact UDID ownership before boot and hold a non-expiring job lease. Shut down on
+  completion, boot/test failure, cancellation and graceful stop, preserving installed apps/data.
+- Retry released/crash-recovered leases after a configurable idle period (default 15m). Borrow
+  devices with `eve simulator renew <udid> --for 30m` and end early with `release`; renewals
+  set a deadline from now, capped by server `maxLeaseDuration` (default 1h). Never adopt
+  untracked devices by name or reclaim a device again after successful cleanup.
+- Remove prefix-based orphan deletion. Recovery and cleanup respect the `eve run` host lock.
+  Shared T3/Indentured/human device idle policy needs separate mono-nix coordination; see operations.
+
 ### Ready for release (2026-10-18)
 - CI on Linux, macOS and Windows (vet, race-enabled tests, gofumpt, golangci-lint per GOOS, the
   Nix build and a GoReleaser snapshot). A `v*` tag releases archives for darwin, linux and
@@ -91,7 +101,7 @@
 - `eve submit check`: a Simulator Debug build, plus the scheme's tests on a fresh `eve-<job>`
   Simulator when eve.yml has `check: {test: true}` (`check.simulator` picks the device type).
   The result's `tests` has counts and the first failures; a failing test is `test.failed` with
-  the test name and assertion. Orphaned Simulators are deleted before each run.
+  the test name and assertion. Simulator lifecycle behavior is described above.
 - Simulator builds are signed ad hoc, not `CODE_SIGNING_ALLOWED=NO`: unsigned apps lose their
   entitlements and the Simulator keychain refuses them (Driver's `keychainRoundTrip`).
 - Tests run with `-collect-test-diagnostics never`: a failing test made xcodebuild sysdiagnose

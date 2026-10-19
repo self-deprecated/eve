@@ -44,7 +44,7 @@ in {
           apps.myapp = { bundleId = "com.example.myapp"; testflight.group = "Internal"; };
         }
       '';
-      description = "The rest of server.yml: team, asc, apps, sizeGuard, device, notify.";
+      description = "The rest of server.yml: team, asc, apps, sizeGuard, device, simulators, notify.";
     };
     claudeSkill = lib.mkOption {
       type = lib.types.bool;
@@ -90,6 +90,9 @@ in {
           RunAtLoad = true;
           KeepAlive = true;
           ThrottleInterval = 10;
+          # Server drain (up to 180s with the maximum simulator deadline) plus HTTP shutdown.
+          # Keep in sync with internal/launchd's non-Nix installer.
+          ExitTimeOut = 240;
           # Eve builds each child's environment itself; the agent gets Apple's tools only.
           EnvironmentVariables = {
             PATH = "/usr/bin:/bin:/usr/sbin:/sbin";

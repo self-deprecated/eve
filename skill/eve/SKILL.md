@@ -47,7 +47,16 @@ outcome nobody has seen.
 `eve submit check --wait` builds for the Simulator (signed ad hoc, never uploaded). By default it
 **only builds**: tests run only when eve.yml sets `check: {test: true}`, on a fresh Simulator. A
 failing test exits 1 with `failure.class: test.failed`; `tests.failures` names the first failing
-tests and their assertions.
+tests and their assertions. Eve leases each fresh device through the test, then shuts it down on
+success, failure or cancellation, preserving its apps/data. A `simulator_cleanup` result note
+means teardown was deferred; inspect `eve simulator list` on the build Mac. Do not use a pending
+Eve-owned device through T3 Device, agent-device, Indentured or Simulator.app until
+`eve simulator renew <udid> --for 30m --json` succeeds; wait for its Eve job to finish. Use the
+returned `leaseUntil` deadline: renew before expiry while still using it, and stop using it if
+renewal fails or the lease expires. Every request is capped by the server's `maxLeaseDuration`
+(default 1h), and a renewal sets a fresh deadline from now. Run `eve simulator release <udid>`
+when finished to end the borrow lease early. Deadlines persist across restarts. Existing shared
+devices are not managed by Eve; see docs/operations.md for the host integration boundary.
 
 `eve submit device --wait` puts a development build on the user's iPhone and launches it. It
 builds (Debug, or eve.yml's `device.configuration`; `--release` for Release), then installs and
@@ -68,6 +77,8 @@ included), `$EVE_PROJECT_DIR` (the Xcode project's directory, after XcodeGen) an
 `eve artifacts <job> --out <dir>` downloads them; a directory artifact replaces `<dir>/<name>`
 entirely, so `--out docs/screenshots` refreshes `docs/screenshots/current/`. A failing command
 exits 1 with `failure.class: exec.failed` and the log's last lines; artifacts it wrote are kept.
+Simulator devices created by that command remain its script's responsibility: use explicit
+shutdown on completion/failure; Eve does not infer ownership from names or job completion.
 
 `eve apps --json` lists the `Verbs` each app allows, and `submit` refuses any other verb with
 exit 64 before uploading anything.

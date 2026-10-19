@@ -22,9 +22,11 @@ import (
 	"github.com/self-deprecated/eve/internal/redact"
 	"github.com/self-deprecated/eve/internal/run"
 	"github.com/self-deprecated/eve/internal/server"
+	"github.com/self-deprecated/eve/internal/simulator"
 	"github.com/self-deprecated/eve/internal/sizeguard"
 	"github.com/self-deprecated/eve/internal/source"
 	"github.com/self-deprecated/eve/internal/store"
+	"github.com/self-deprecated/eve/internal/xcode"
 )
 
 // System is a fully wired eve server.
@@ -79,6 +81,20 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 	}
 	q := queue.New(st, cfg.DataDir, pipelines, sys.route, log)
 	sys.Queue = q
+	lifecycle := &simulator.Manager{Store: st, DataDir: cfg.DataDir, Settings: cfg.Simulators}
+	var lastSweep time.Time
+	q.Maintain = func(ctx context.Context) {
+		if cfg.Simulators.IdleAfter() <= 0 || time.Since(lastSweep) < time.Minute {
+			return
+		}
+		lastSweep = time.Now()
+		sweep, cancel := context.WithTimeout(ctx, time.Minute)
+		defer cancel()
+		tools := xcode.Tools{Runner: deps.Runner, Env: xcode.ChildEnv(xcode.EnvSpec{Home: home, User: os.Getenv("USER")})}
+		if err := lifecycle.Sweep(sweep, tools); err != nil {
+			log.Warn("Simulator cleanup deferred", "err", err)
+		}
+	}
 
 	sys.Deliverer = &notify.Deliverer{
 		Outbox: outboxAdapter{st}, Secrets: notify.ConfigSecrets{Notify: cfg.Notify}, AllowHosts: cfg.Notify.AllowHosts,

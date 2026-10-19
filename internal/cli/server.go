@@ -29,7 +29,7 @@ func AddServerCommands(root *cobra.Command, env *Env) {
 	var cfgPath string
 	root.PersistentFlags().StringVar(&cfgPath, "config", DefaultServerConfig(), "server.yml (server commands)")
 	load := func() (*config.Server, error) { return config.LoadServer(cfgPath) }
-	root.AddCommand(serveCmd(env, load), runCmd(env, load), tokenCmd(env, load), agentCmd(env, &cfgPath))
+	root.AddCommand(serveCmd(env, load), runCmd(env, load), tokenCmd(env, load), agentCmd(env, &cfgPath), simulatorCmd(env, load))
 }
 
 func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
@@ -85,7 +85,7 @@ func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 			// the job itself stays where it was for restart recovery.
 			select {
 			case <-queueDone:
-			case <-time.After(25 * time.Second):
+			case <-time.After(60*time.Second + cfg.Simulators.ShutdownWithin()):
 				log.Warn("worker did not stop in time; restart recovery will kill any leftover build")
 			}
 			return err
@@ -143,6 +143,9 @@ func runCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 				return &ExitError{Code: api.ExitUnavailable, Err: err}
 			}
 			defer unlock()
+			if sys.Queue.Maintain != nil {
+				sys.Queue.Maintain(cmd.Context())
+			}
 			j, _, err := sys.Store.CreateJob(cmd.Context(), store.Job{
 				App: pick(f.app, repo.App), Verb: verb, TokenName: "eve-run",
 				Request: api.JobRequest{

@@ -20,13 +20,20 @@ const simUDID = "0825B3D6-A17B-49A1-AC3C-0DADB895B9F8"
 
 // simctlSim answers like simctl, xcodebuild test and xcresulttool.
 type simctlSim struct {
-	mu       sync.Mutex
-	summary  string // xcresulttool's JSON; "" = the test run wrote no result bundle
-	testExit int
-	testLog  string
-	orphans  []string
-	created  []string
-	deleted  []string
+	mu              sync.Mutex
+	summary         string // xcresulttool's JSON; "" = the test run wrote no result bundle
+	testExit        int
+	testLog         string
+	orphans         []string
+	created         []string
+	shutdown        []string
+	name            string
+	state           string
+	bootFailure     string
+	shutdownFailure bool
+	onBoot          func()
+	onCreate        func()
+	onTest          func()
 }
 
 const runtimesJSON = `{"runtimes":[
@@ -56,15 +63,39 @@ func (s *simctlSim) handle(c run.Cmd) (string, int, error) {
 			for _, o := range s.orphans {
 				ds = append(ds, `{"udid":"`+o+`","name":"eve-j_old"}`)
 			}
-			return `{"devices":{"iOS-26-5":[{"udid":"KEEP","name":"My iPhone"}` + strings.Repeat(",", min(len(ds), 1)) + strings.Join(ds, ",") + `]}}`, 0, nil
+			if s.name != "" {
+				ds = append(ds, `{"udid":"`+simUDID+`","name":"`+s.name+`","state":"`+s.state+`"}`)
+			}
+			return `{"devices":{"iOS-26-5":[{"udid":"KEEP","name":"My iPhone","state":"Booted"}` + strings.Repeat(",", min(len(ds), 1)) + strings.Join(ds, ",") + `]}}`, 0, nil
 		case "create":
 			s.created = append(s.created, a[2]+" "+a[3]+" "+a[4])
+			s.name, s.state = a[2], "Shutdown"
+			if s.onCreate != nil {
+				s.onCreate()
+			}
 			return simUDID + "\n", 0, nil
-		case "delete":
-			s.deleted = append(s.deleted, a[2])
+		case "boot", "bootstatus":
+			if s.onBoot != nil {
+				s.onBoot()
+			}
+			s.state = "Booted"
+			if s.bootFailure == a[1] {
+				return "boot failed", 1, nil
+			}
+		case "shutdown":
+			s.shutdown = append(s.shutdown, a[2])
+			if s.shutdownFailure {
+				return "CoreSimulator busy", 1, nil
+			}
+			s.state = "Shutdown"
+		case "delete", "erase":
+			panic("must never erase/delete Simulator data")
 		}
 		return "", 0, nil
 	case c.Name == "/usr/bin/xcodebuild" && a[0] == "test":
+		if s.onTest != nil {
+			s.onTest()
+		}
 		if s.summary != "" {
 			for i, x := range a {
 				if x == "-resultBundlePath" {
@@ -141,8 +172,8 @@ func TestCheckRunsTestsOnAFreshSimulator(t *testing.T) {
 	if len(sim.created) != 1 || !strings.HasPrefix(sim.created[0], "eve-"+j.ID+" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5") {
 		t.Fatalf("created: %v", sim.created)
 	}
-	if !slices.Equal(sim.deleted, []string{"ORPHAN-1", simUDID}) {
-		t.Fatalf("orphans and the job's Simulator must be deleted, and nothing else: %v", sim.deleted)
+	if !slices.Equal(sim.shutdown, []string{simUDID}) {
+		t.Fatalf("only the registered job Simulator may shut down: %v", sim.shutdown)
 	}
 	c, _ := f.Find("xcodebuild test")
 	if !slices.Contains(c.Args, "platform=iOS Simulator,id="+simUDID) || !slices.Contains(c.Args, "CODE_SIGN_IDENTITY=-") ||
@@ -171,8 +202,8 @@ func TestCheckReportsTheFirstFailingTests(t *testing.T) {
 	if got.Result.Tests == nil || got.Result.Tests.Failed != 2 || got.Result.Tests.Simulator != "iPhone 11, iOS 26.5" {
 		t.Fatalf("tests: %+v", got.Result.Tests)
 	}
-	if !slices.Contains(sim.deleted, simUDID) {
-		t.Fatal("the Simulator must be deleted after a failed run")
+	if !slices.Contains(sim.shutdown, simUDID) {
+		t.Fatal("the Simulator must shut down after a failed run")
 	}
 }
 
@@ -184,8 +215,8 @@ func TestCheckTestsThatNeverRanAreClassifiedFromTheLog(t *testing.T) {
 	if got.State != api.StateFailed || got.Result.Failure == nil || got.Result.Failure.Class != "unknown" || got.Result.Tests != nil {
 		t.Fatalf("%s %+v", got.State, got.Result)
 	}
-	if !strings.Contains(got.Result.Failure.Log, "--phase test") || !slices.Contains(sim.deleted, simUDID) {
-		t.Fatalf("%+v %v", got.Result.Failure, sim.deleted)
+	if !strings.Contains(got.Result.Failure.Log, "--phase test") || !slices.Contains(sim.shutdown, simUDID) {
+		t.Fatalf("%+v %v", got.Result.Failure, sim.shutdown)
 	}
 }
 
@@ -195,5 +226,97 @@ func TestCheckUnknownSimulatorIsReported(t *testing.T) {
 	got, _ := st.Get(context.Background(), j.ID)
 	if f := got.Result.Failure; f == nil || f.Class != "simulator.unavailable" || !strings.Contains(f.Summary, `"iPhone 99"`) {
 		t.Fatalf("%+v", got.Result.Failure)
+	}
+}
+
+func TestCheckRegistersLeaseBeforeBootAndDuringQuietTests(t *testing.T) {
+	sim := &simctlSim{summary: `{"result":"Passed","totalTestCount":1,"passedTests":1}`}
+	q, st, _, j := newCheckHarness(t, lineageYML+"check: {test: true}\n", sim)
+	assertLeased := func() {
+		ds, err := st.Simulators(context.Background())
+		if err != nil || len(ds) != 1 || ds[0].UDID != simUDID || ds[0].JobID != j.ID || !ds[0].ReleasedAt.IsZero() {
+			t.Fatalf("missing lease before/during use: %+v %v", ds, err)
+		}
+	}
+	sim.onBoot, sim.onTest = assertLeased, assertLeased
+	q.Exec(context.Background(), j)
+	ds, _ := st.Simulators(context.Background())
+	if len(ds) != 1 || !ds[0].Settled {
+		t.Fatalf("cleanup not settled: %+v", ds)
+	}
+	got, _ := st.Get(context.Background(), j.ID)
+	if got.Pgid != 0 {
+		t.Fatal("cleanup overwrote terminal process group", got.Pgid)
+	}
+}
+
+func TestCheckCleansUpAfterPartialBootFailure(t *testing.T) {
+	for _, phase := range []string{"boot", "bootstatus"} {
+		t.Run(phase, func(t *testing.T) {
+			sim := &simctlSim{bootFailure: phase}
+			q, st, _, j := newCheckHarness(t, lineageYML+"check: {test: true}\n", sim)
+			q.Exec(context.Background(), j)
+			got, _ := st.Get(context.Background(), j.ID)
+			if got.State != api.StateFailed || got.Result.Failure.Class != "simulator.unavailable" || !slices.Equal(sim.shutdown, []string{simUDID}) {
+				t.Fatalf("%+v shutdown=%v", got.Result, sim.shutdown)
+			}
+		})
+	}
+}
+
+func TestCheckCleansUpWhenCancelledOrServerStops(t *testing.T) {
+	for _, byUser := range []bool{false, true} {
+		t.Run(map[bool]string{true: "user cancel", false: "server stop"}[byUser], func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+			sim := &simctlSim{}
+			q, st, _, j := newCheckHarness(t, lineageYML+"check: {test: true}\n", sim)
+			sim.onTest = func() {
+				if byUser {
+					if _, err := q.Cancel(ctx, j.ID, false); err != nil {
+						t.Fatal(err)
+					}
+				} else {
+					cancel()
+				}
+			}
+			q.Exec(ctx, j)
+			got, _ := st.Get(context.Background(), j.ID)
+			if !slices.Equal(sim.shutdown, []string{simUDID}) {
+				t.Fatal("cancelled context prevented teardown", sim.shutdown)
+			}
+			if byUser && got.State != api.StateCancelled {
+				t.Fatal(got.State)
+			}
+			if !byUser && got.State.Terminal() {
+				t.Fatal("server stop must leave job for recovery", got.State)
+			}
+		})
+	}
+}
+
+func TestCheckCleanupFailureIsReportedWithoutChangingTestOutcome(t *testing.T) {
+	sim := &simctlSim{shutdownFailure: true, summary: `{"result":"Passed","totalTestCount":1,"passedTests":1}`}
+	q, st, _, j := newCheckHarness(t, lineageYML+"check: {test: true}\n", sim)
+	q.Exec(context.Background(), j)
+	got, _ := st.Get(context.Background(), j.ID)
+	ds, _ := st.Simulators(context.Background())
+	if got.State != api.StateSucceeded || len(got.Result.Notes) != 1 || got.Result.Notes[0].Kind != "simulator_cleanup" || len(ds) != 1 || ds[0].Settled || ds[0].ReleasedAt.IsZero() {
+		t.Fatalf("result=%+v registry=%+v", got.Result, ds)
+	}
+}
+
+func TestCheckNeverBootsWhenOwnershipCannotBeRecorded(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	sim := &simctlSim{onCreate: cancel}
+	q, st, f, j := newCheckHarness(t, lineageYML+"check: {test: true}\n", sim)
+	q.Exec(ctx, j)
+	if _, err := f.Find("simctl boot"); err == nil {
+		t.Fatal("device booted without durable ownership")
+	}
+	ds, err := st.Simulators(context.Background())
+	if err != nil || len(ds) != 0 || sim.state != "Shutdown" || len(sim.shutdown) != 0 {
+		t.Fatalf("unregistered device must stay stopped: %+v %s %v", ds, sim.state, err)
 	}
 }

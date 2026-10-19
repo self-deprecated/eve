@@ -43,6 +43,8 @@ func Plist(s Spec) []byte {
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
   <key>ThrottleInterval</key><integer>10</integer>
+  <!-- Build cancellation, bounded Simulator teardown and HTTP drain; also in the Nix module. -->
+  <key>ExitTimeOut</key><integer>240</integer>
   <key>EnvironmentVariables</key><dict>
     <key>PATH</key><string>/usr/bin:/bin:/usr/sbin:/sbin</string>
     <key>LANG</key><string>en_US.UTF-8</string>

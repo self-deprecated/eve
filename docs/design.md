@@ -398,14 +398,20 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
 
 Simulator build signed ad hoc (`CODE_SIGN_IDENTITY=-`, manual style, no team;
 `generic/platform=iOS Simulator`), plus the
-scheme's tests if `check.test: true`, on a **fresh** simulator per run (created and deleted, as
-`check-ios.sh` does). The result carries test counts and the first failing test's name and
-assertion, never the accessibility dump. Not `CODE_SIGNING_ALLOWED=NO`: unsigned apps lose
+scheme's tests if `check.test: true`, on a **fresh** simulator per run (created, leased and
+shut down afterward, preserving apps and data). The result carries test counts and the first
+failing test's name and assertion, never the accessibility dump. Not `CODE_SIGNING_ALLOWED=NO`: unsigned apps lose
 their entitlements, so the Simulator keychain refuses them (Driver's `keychainRoundTrip` failed).
 Ad-hoc signing needs no account or keychain. Tests run with `-collect-test-diagnostics never`:
 otherwise any failing test makes xcodebuild sysdiagnose the Simulator for up to ten minutes
-(seen on Driver: 0.3 s of tests, 11 minutes of job). Simulators are named `eve-<job>`; any left by a
-crash are deleted before the next run. `check.simulator` in eve.yml picks the device type.
+(seen on Driver: 0.3 s of tests, 11 minutes of job). Simulators are named `eve-<job>`; exact UDID
+ownership is persisted before boot. Completion and failure release the lease and attempt bounded
+shutdown; the worker retries pending cleanup after a configurable idle period, with crash leases
+released only after job recovery. Names alone never establish ownership. Timed borrow leases
+(`renew --for`, capped by the server) support another workflow or a human; settled records never
+trigger another shutdown after an external boot.
+See [operations](operations.md) for configuration and the separate mono-nix shared-host boundary.
+`check.simulator` in eve.yml picks the device type.
 
 ### 6.6 `exec`
 

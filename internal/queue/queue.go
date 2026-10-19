@@ -45,6 +45,8 @@ type Queue struct {
 	AfterCommit func()
 	// OrphanGrace is how long orphaned process groups get after SIGINT on recovery.
 	OrphanGrace time.Duration
+	// Maintain runs under the host lock, after recovery and before the next job.
+	Maintain func(context.Context)
 
 	kick     chan struct{}
 	mu       sync.Mutex
@@ -123,16 +125,19 @@ func (q *Queue) Run(ctx context.Context) error {
 
 // runNext runs the next queued job to completion, holding the host lock.
 func (q *Queue) runNext(ctx context.Context) error {
-	j, err := q.Store.NextQueued(ctx)
-	if err != nil {
-		return err
-	}
 	unlock, err := Lock(q.DataDir, false)
 	if err != nil {
 		q.Log.Info("worker waiting for host lock", "err", err)
 		return nil
 	}
 	defer unlock()
+	if q.Maintain != nil {
+		q.Maintain(ctx)
+	}
+	j, err := q.Store.NextQueued(ctx)
+	if err != nil {
+		return err
+	}
 	q.Exec(ctx, j)
 	q.Kick() // look for the next job straight away
 	return nil
@@ -349,6 +354,12 @@ func (q *Queue) Cancel(ctx context.Context, id string, force bool) (store.Job, e
 // Recover resolves jobs left unfinished by a previous run: kill orphaned process groups first,
 // then requeue or resume each job by phase (docs/design.md §5.5).
 func (q *Queue) Recover(ctx context.Context) error {
+	// Recovery must not kill a live `eve run` job that holds the same host lock.
+	unlock, err := Lock(q.DataDir, false)
+	if err != nil {
+		return err
+	}
+	defer unlock()
 	jobs, err := q.Store.Unfinished(ctx)
 	if err != nil {
 		return err

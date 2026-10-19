@@ -11,6 +11,7 @@
 | `eve builds <app>` · `eve apps` | Latest builds in App Store Connect; configured apps and their verbs |
 | `eve init` · `eve doctor [--host]` · `eve login` | Starter `eve.yml`; check the connection or the build Mac; store a server and token |
 | `eve serve` · `eve agent install` · `eve token create` · `eve run <verb>` | Server side: run, install as a LaunchAgent, issue tokens, build in-process without the server |
+| `eve simulator list` · `eve simulator renew <udid> --for 30m` · `eve simulator release <udid>` | Build host only: inspect tracked devices, acquire/renew timed borrowing, or release it early ([lifecycle](operations.md)) |
 
 Every command takes `--json`.
 

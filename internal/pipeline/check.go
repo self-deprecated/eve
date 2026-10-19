@@ -11,6 +11,7 @@ import (
 
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/queue"
+	"github.com/self-deprecated/eve/internal/simulator"
 	"github.com/self-deprecated/eve/internal/store"
 	"github.com/self-deprecated/eve/internal/xcode"
 )
@@ -63,9 +64,6 @@ func (c *Check) test(jc *queue.JobCtx, ws *workspace, spec xcode.SimSpec) error 
 	if err := jc.Enter(api.StateTesting, "creating a fresh Simulator"); err != nil {
 		return err
 	}
-	if n, _ := ws.tools.DeleteOrphans(jc.Ctx, xcode.SimulatorPrefix); n > 0 {
-		jc.Note(fmt.Sprintf("deleted %d Simulator(s) left behind by an interrupted check", n))
-	}
 	runtimes, err := ws.tools.Runtimes(jc.Ctx)
 	if err != nil {
 		return c.simErr(jc, err)
@@ -74,11 +72,34 @@ func (c *Check) test(jc *queue.JobCtx, ws *workspace, spec xcode.SimSpec) error 
 	if err != nil {
 		return c.simErr(jc, err)
 	}
-	id, err := ws.tools.CreateSimulator(jc.Ctx, xcode.SimulatorPrefix+jc.Job.ID, deviceType, runtime)
-	if id != "" {
-		defer func() { _ = ws.tools.DeleteSimulator(jc.Ctx, id) }()
-	}
+	name := xcode.SimulatorPrefix + jc.Job.ID
+	id, err := ws.tools.CreateSimulator(jc.Ctx, name, deviceType, runtime)
 	if err != nil {
+		return c.simErr(jc, err)
+	}
+	// Register before boot: a crash or failed database write must never leave an untracked
+	// booted device. A create/register gap leaves only a stopped device for manual review.
+	if err := c.Store.RegisterSimulator(jc.Ctx, id, name, jc.Job.ID); err != nil {
+		return err
+	}
+	lifecycle := simulator.Manager{Store: c.Store, DataDir: c.Config.DataDir, Settings: c.Config.Simulators, Now: c.Now}
+	cleaned := false
+	cleanup := func() {
+		if cleaned {
+			return
+		}
+		cleaned = true
+		if err := lifecycle.Release(jc.Ctx, ws.tools, id); err != nil {
+			detail := "Simulator " + id + " cleanup deferred: " + err.Error() + "; see eve simulator list"
+			jc.Note(detail)
+			_ = jc.Update(func(j *store.Job) {
+				j.Result.Notes = append(j.Result.Notes, api.Note{Kind: "simulator_cleanup", Detail: detail})
+			})
+		}
+	}
+	defer cleanup()
+	if err := ws.tools.BootSimulator(jc.Ctx, id); err != nil {
+		cleanup()
 		return c.simErr(jc, err)
 	}
 	sim := simLabel(deviceType, runtime)
@@ -89,6 +110,7 @@ func (c *Check) test(jc *queue.JobCtx, ws *workspace, spec xcode.SimSpec) error 
 	_ = os.RemoveAll(spec.ResultBundle)
 	logPath := jc.LogPath("test")
 	testErr := c.writeLog(ws, logPath, func(log io.Writer) error { return ws.tools.Test(jc.Ctx, spec, log) })
+	cleanup() // before publishing the result, including a cleanup note if shutdown failed
 	if errors.Is(jc.Ctx.Err(), context.Canceled) {
 		return jc.Ctx.Err()
 	}

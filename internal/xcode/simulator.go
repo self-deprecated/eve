@@ -74,8 +74,7 @@ func (t Tools) Test(ctx context.Context, s SimSpec, log io.Writer) error {
 	return t.must(ctx, run.Cmd{Name: "/usr/bin/xcodebuild", Args: TestArgs(s), Dir: s.Dir, Env: t.Env, Stdout: log, Stderr: log}, "xcodebuild test")
 }
 
-// SimulatorPrefix names every Simulator eve creates. The worker runs one job at a time, so any
-// Simulator with this prefix that exists when a test run starts was orphaned by a crash.
+// SimulatorPrefix is a display label, never evidence of ownership.
 const SimulatorPrefix = "eve-"
 
 // SimDeviceType is a Simulator device type.
@@ -203,7 +202,7 @@ func (t Tools) Runtimes(ctx context.Context) ([]SimRuntime, error) {
 	return v.Runtimes, nil
 }
 
-// CreateSimulator creates and boots a fresh Simulator named name and returns its UDID.
+// CreateSimulator creates a stopped device. Persist ownership before booting it.
 func (t Tools) CreateSimulator(ctx context.Context, name, deviceType, runtime string) (string, error) {
 	var out bytes.Buffer
 	if err := t.simctl(ctx, &out, "create", name, deviceType, runtime); err != nil {
@@ -213,56 +212,57 @@ func (t Tools) CreateSimulator(ctx context.Context, name, deviceType, runtime st
 	if !udid.MatchString(id) {
 		return "", fmt.Errorf("simctl create returned %q, not a Simulator identifier", id)
 	}
+	return strings.ToUpper(id), nil
+}
+
+func (t Tools) BootSimulator(ctx context.Context, id string) error {
 	boot, cancel := context.WithTimeout(ctx, 4*time.Minute)
 	defer cancel()
 	if err := t.simctl(boot, nil, "boot", id); err != nil {
-		return id, err
+		return err
 	}
 	if err := t.simctl(boot, nil, "bootstatus", id, "-b"); err != nil {
-		return id, err
+		return err
 	}
-	return id, nil
+	return nil
 }
 
 var udid = regexp.MustCompile(`^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$`)
 
-// DeleteSimulator shuts down and deletes a Simulator. It ignores ctx's cancellation so a
-// cancelled job still cleans up.
-// A Simulator stuck booting can take minutes to shut down, so the delete gets its own deadline.
-func (t Tools) DeleteSimulator(ctx context.Context, id string) error {
-	base := context.WithoutCancel(ctx)
-	shut, cancel := context.WithTimeout(base, 3*time.Minute)
-	_ = t.simctl(shut, nil, "shutdown", id)
-	cancel()
-	del, cancel := context.WithTimeout(base, time.Minute)
-	defer cancel()
-	return t.simctl(del, nil, "delete", id)
+// ShutdownSimulator preserves the device's installed apps and data.
+func (t Tools) ShutdownSimulator(ctx context.Context, id string) error {
+	if !udid.MatchString(id) {
+		return fmt.Errorf("invalid Simulator UDID %q", id)
+	}
+	return t.simctl(ctx, nil, "shutdown", id)
 }
 
-// DeleteOrphans deletes every Simulator whose name starts with prefix and returns how many.
-func (t Tools) DeleteOrphans(ctx context.Context, prefix string) (int, error) {
+type SimDevice struct {
+	UDID  string `json:"udid"`
+	Name  string `json:"name"`
+	State string `json:"state"`
+}
+
+// Simulators is an inventory, not an ownership or activity heuristic.
+func (t Tools) Simulators(ctx context.Context) ([]SimDevice, error) {
 	var out bytes.Buffer
 	if err := t.simctl(ctx, &out, "list", "-j", "devices"); err != nil {
-		return 0, err
+		return nil, err
 	}
 	var v struct {
-		Devices map[string][]struct {
-			UDID string `json:"udid"`
-			Name string `json:"name"`
-		} `json:"devices"`
+		Devices map[string][]SimDevice `json:"devices"`
 	}
 	if err := json.Unmarshal(out.Bytes(), &v); err != nil {
-		return 0, fmt.Errorf("simctl list devices: %w", err)
+		return nil, fmt.Errorf("simctl list devices: %w", err)
 	}
-	n := 0
+	if v.Devices == nil {
+		return nil, fmt.Errorf("simctl list devices: missing devices inventory")
+	}
+	var devices []SimDevice
 	for _, ds := range v.Devices {
-		for _, d := range ds {
-			if strings.HasPrefix(d.Name, prefix) && t.DeleteSimulator(ctx, d.UDID) == nil {
-				n++
-			}
-		}
+		devices = append(devices, ds...)
 	}
-	return n, nil
+	return devices, nil
 }
 
 // TestSummary is the part of `xcresulttool get test-results summary` eve reports.
