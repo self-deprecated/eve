@@ -70,4 +70,52 @@ Once these pass, the repository's own upload and device scripts can go. eve repl
 SSH. A script that has to run on the Mac becomes `eve submit exec -- <script>`, with its output in
 `$EVE_ARTIFACTS`.
 
+## Expo (React Native) apps
+
+eve builds an Expo app from the Xcode workspace `expo prebuild` generates, with the same pipeline
+as a native app: build numbers, signing, the size guard, TestFlight and the phone. EAS isn't
+involved. Each build generates `ios/` afresh, so it stays git-ignored and is never uploaded.
+
+**The build Mac** needs Node and CocoaPods. Add their directories to `path` in `server.yml`. With
+Nix, for example, use `path = [ "${pkgs.nodejs_24}/bin" "${pkgs.cocoapods}/bin" ];` in
+`services.eve.settings`. Every job's commands and Xcode's script phases (Metro, Hermes) find them
+after Apple's tools.
+
+**eve.yml** goes at the root of the JavaScript workspace, next to the lockfile, because `pre:`
+installs from there. For a pnpm monorepo with the app in `apps/mobile`:
+
+```yaml
+app: myapp
+project:
+  dir: apps/mobile/ios
+  xcworkspace: MyApp.xcworkspace   # prebuild names it after the app's name, without spaces
+  scheme: MyApp
+pre:
+  - corepack pnpm install --frozen-lockfile
+  # --no-install: prebuild exits 0 even when its own pod install fails.
+  - cd apps/mobile && corepack pnpm exec expo prebuild --platform ios --clean --no-install
+  - cd apps/mobile/ios && pod install
+```
+
+**app.json** needs two things eve relies on:
+
+- `"ios": {"appleTeamId": "ABCDE12345"}`, because automatic signing needs the team in the project.
+- `"ios": {"buildNumber": "$(CURRENT_PROJECT_VERSION)"}`, so the archive carries the build number
+  eve allocates. A literal number fails with `build.number_mismatch`.
+
+Also:
+
+- **`EXPO_PUBLIC_*` values.** A Release build bundles the JavaScript inside Xcode, and eve never
+  uploads `.env` files. Set the values as the app's `secrets` in `server.yml`. They become build
+  settings, which Xcode's script phases see as environment variables. A Debug dev-client build
+  loads its JavaScript from Metro instead, so it doesn't need them.
+- **Device builds.** Debug, the default, is a dev client that needs a running
+  `expo start --dev-client`. Set `device: {configuration: Release}` (or pass `--release`) for an
+  app that runs on its own.
+- **Podfile fixes** that dependencies need belong in a config plugin, so prebuild applies them
+  every time. For example, Xcode 27 refuses pods that target iOS older than 15, and Google Sign-In
+  needs static frameworks.
+- The first build is slow: it installs pods and compiles React Native. Later ones reuse eve's
+  DerivedData, and the pnpm store and CocoaPods caches in the home directory.
+
 When something fails, see [troubleshooting.md](troubleshooting.md).

@@ -49,6 +49,9 @@ eve j_mvbcdz6285e96fe933 result SUCCEEDED {"id":"j_mvbcdz6285e96fe933",…}
 | `check` | Build for the Simulator and optionally run the tests; a failing test is named with its assertion |
 | `exec` | Run a script from your repo on the Mac, such as screenshot generation, and download what it wrote |
 
+It builds Xcode projects, XcodeGen specs and workspaces. Expo (React Native) apps build from the
+workspace `expo prebuild` generates, without EAS ([adding an app](docs/new-app.md#expo-react-native-apps)).
+
 ## Set up
 
 You need an always-on Mac with Xcode, signed in to your Apple ID in Xcode and logged in at the

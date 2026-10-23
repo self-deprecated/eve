@@ -20,7 +20,7 @@ import (
 // Simulator's keychain refuses them.
 type SimSpec struct {
 	Dir          string // the project's directory
-	Project      string // .xcodeproj, relative to Dir
+	Project      string // .xcodeproj or .xcworkspace, relative to Dir
 	Scheme       string
 	DerivedData  string
 	XCConfig     string
@@ -31,7 +31,7 @@ type SimSpec struct {
 // SimBuildArgs returns xcodebuild's arguments for a Simulator build.
 func SimBuildArgs(s SimSpec) []string {
 	args := []string{
-		"build", "-project", s.Project, "-scheme", s.Scheme, "-configuration", "Debug",
+		"build", projectFlag(s.Project), s.Project, "-scheme", s.Scheme, "-configuration", "Debug",
 		"-destination", "generic/platform=iOS Simulator",
 	}
 	return append(args, s.common()...)
@@ -40,7 +40,7 @@ func SimBuildArgs(s SimSpec) []string {
 // TestArgs returns xcodebuild's arguments for running the scheme's tests on one Simulator.
 func TestArgs(s SimSpec) []string {
 	args := []string{
-		"test", "-project", s.Project, "-scheme", s.Scheme, "-configuration", "Debug",
+		"test", projectFlag(s.Project), s.Project, "-scheme", s.Scheme, "-configuration", "Debug",
 		"-destination", "platform=iOS Simulator,id=" + s.SimulatorID, "-destination-timeout", "120",
 		"-resultBundlePath", s.ResultBundle, "-parallel-testing-enabled", "NO",
 		// On any failure xcodebuild otherwise sysdiagnoses the Simulator for up to ten minutes;

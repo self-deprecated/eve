@@ -138,13 +138,13 @@ type workspace struct {
 	tools      xcode.Tools
 	env        []string
 	projectDir string
-	project    string // .xcodeproj relative to projectDir
+	project    string // .xcodeproj or .xcworkspace, relative to projectDir
 	secrets    []string
 	xcconfig   string
 }
 
-// prepare materializes the source, loads eve.yml, builds the child environment, writes secrets
-// and generates the project (docs/design.md §6.1–§6.2).
+// prepare materializes the source, loads eve.yml, builds the child environment, writes secrets,
+// generates the project and runs pre (docs/design.md §6.1–§6.2).
 func (d *Deps) prepare(jc *queue.JobCtx) (*workspace, error) {
 	j := jc.Job
 	app, ok := d.Config.Apps[j.App]
@@ -182,7 +182,7 @@ func (d *Deps) prepare(jc *queue.JobCtx) (*workspace, error) {
 	if u != nil {
 		name = u.Username
 	}
-	ws.env = xcode.ChildEnv(xcode.EnvSpec{Home: home, User: name, TmpDir: tmp, DeveloperDir: devDir})
+	ws.env = xcode.ChildEnv(xcode.EnvSpec{Home: home, User: name, TmpDir: tmp, DeveloperDir: devDir, ExtraPath: d.Config.Path})
 	ws.tools = xcode.Tools{Runner: d.Runner, Env: ws.env, OnStart: jc.OnStart}
 	if repo.Xcode != "" {
 		v, err := ws.tools.Version(jc.Ctx)
@@ -221,12 +221,6 @@ func (d *Deps) prepare(jc *queue.JobCtx) (*workspace, error) {
 			return nil, err
 		}
 	}
-	proj, err := findProject(ws.projectDir, repo)
-	if err != nil {
-		return nil, d.configErr(jc, err.Error())
-	}
-	ws.project = proj
-
 	for i, cmd := range repo.Pre {
 		phase := fmt.Sprintf("pre-%d", i+1)
 		if err := d.logged(ws, phase, api.StatePreparing, func(log io.Writer) error {
@@ -246,6 +240,12 @@ func (d *Deps) prepare(jc *queue.JobCtx) (*workspace, error) {
 			return nil, err
 		}
 	}
+	// After pre, which may be what generates it (expo prebuild, pod install).
+	proj, err := findProject(ws.projectDir, repo)
+	if err != nil {
+		return nil, d.configErr(jc, err.Error())
+	}
+	ws.project = proj
 	return ws, nil
 }
 
@@ -272,11 +272,11 @@ func (d *Deps) materialize(jc *queue.JobCtx, dst string) error {
 }
 
 func findProject(dir string, repo *config.Repo) (string, error) {
-	if repo.Project.Xcodeproj != "" {
-		if _, err := os.Stat(filepath.Join(dir, repo.Project.Xcodeproj)); err != nil {
-			return "", fmt.Errorf("%s not found in %s", repo.Project.Xcodeproj, repo.Project.Dir)
+	if p := firstOf(repo.Project.Xcworkspace, repo.Project.Xcodeproj); p != "" {
+		if _, err := os.Stat(filepath.Join(dir, p)); err != nil {
+			return "", fmt.Errorf("%s not found in %s", p, repo.Project.Dir)
 		}
-		return repo.Project.Xcodeproj, nil
+		return p, nil
 	}
 	m, _ := filepath.Glob(filepath.Join(dir, "*.xcodeproj"))
 	if len(m) != 1 {

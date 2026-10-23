@@ -328,6 +328,19 @@ func (s *System) Doctor(ctx context.Context) any {
 	} else {
 		add("rsync", "ok", "/usr/bin/rsync")
 	}
+	if len(s.Config.Path) > 0 {
+		var missing []string
+		for _, dir := range s.Config.Path {
+			if fi, err := os.Stat(dir); err != nil || !fi.IsDir() {
+				missing = append(missing, dir)
+			}
+		}
+		if len(missing) > 0 {
+			add("tool path", "fail", "not a directory: "+strings.Join(missing, ", "))
+		} else {
+			add("tool path", "ok", strings.Join(s.Config.Path, ":"))
+		}
+	}
 	if s.ASC != nil {
 		h, err := s.ASC.Ping(ctx)
 		status := "ok"

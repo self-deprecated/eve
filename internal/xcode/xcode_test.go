@@ -63,6 +63,22 @@ func TestArchiveArgs(t *testing.T) {
 	}
 }
 
+func TestWorkspacesBuildWithWorkspaceFlag(t *testing.T) {
+	for name, args := range map[string][]string{
+		"archive":   ArchiveArgs(ArchiveSpec{Project: "App.xcworkspace", Scheme: "App"}),
+		"device":    DeviceBuildArgs(DeviceSpec{Project: "App.xcworkspace", Scheme: "App", Configuration: "Debug"}),
+		"simulator": SimBuildArgs(SimSpec{Project: "App.xcworkspace", Scheme: "App"}),
+		"test":      TestArgs(SimSpec{Project: "App.xcworkspace", Scheme: "App"}),
+	} {
+		if args[1] != "-workspace" || args[2] != "App.xcworkspace" || slices.Contains(args, "-project") {
+			t.Errorf("%s: %v", name, args)
+		}
+	}
+	if args := SimBuildArgs(SimSpec{Project: "App.xcodeproj"}); args[1] != "-project" {
+		t.Errorf("project: %v", args)
+	}
+}
+
 func TestExportOptionsPlist(t *testing.T) {
 	p := string(ExportOptionsPlist(ExportSpec{Destination: "upload", Team: "2559B88H6C", InternalOnly: true, UploadSymbols: false}))
 	for _, want := range []string{

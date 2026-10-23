@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Expo apps
+- eve.yml's `project.xcworkspace` builds a workspace (`-workspace`) for every verb: CocoaPods
+  projects and Expo apps.
+- eve looks for the project after `pre:`, so `pre:` can generate it (`expo prebuild`,
+  `pod install`).
+- server.yml's `path` appends tool directories (Node, CocoaPods) to every job's PATH, after
+  Apple's. `doctor --host` checks they exist.
+- `env.tool_missing` names a command a job couldn't find (`zsh: command not found: corepack`)
+  and points at `path`.
+- Expo/React Native is no longer a non-goal (design §18.10). docs/new-app.md has the recipe:
+  the eve.yml, `ios.appleTeamId`, `ios.buildNumber: "$(CURRENT_PROJECT_VERSION)"`, and
+  `EXPO_PUBLIC_*` values as server-side secrets.
+
 ### Simulator lifecycle
 - Track exact UDID ownership before boot and hold a non-expiring job lease. Shut down on
   completion, boot/test failure, cancellation and graceful stop, preserving installed apps/data.

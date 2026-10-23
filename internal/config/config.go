@@ -25,6 +25,7 @@ type Server struct {
 	ASC        ASC               `yaml:"asc"`
 	Apps       map[string]App    `yaml:"apps"`
 	AllowExec  bool              `yaml:"allowExec"` // every app may exec, as if each set allowExec
+	Path       []string          `yaml:"path"`      // tool directories appended to every job's PATH
 	SizeGuard  SizeGuard         `yaml:"sizeGuard"`
 	Device     DeviceDefaults    `yaml:"device"`
 	Notify     Notify            `yaml:"notify"`
@@ -265,6 +266,9 @@ func (s *Server) applyDefaults() {
 	}
 	s.DataDir = ExpandHome(s.DataDir)
 	s.ASC.KeyPath = ExpandHome(s.ASC.KeyPath)
+	for i, dir := range s.Path {
+		s.Path[i] = ExpandHome(dir)
+	}
 	if s.AllowExec {
 		for name, a := range s.Apps {
 			a.AllowExec = true
@@ -296,6 +300,11 @@ func (s *Server) Validate() error {
 	}
 	if s.Team == "" {
 		errs = append(errs, errors.New("team is required"))
+	}
+	for _, dir := range s.Path {
+		if !filepath.IsAbs(dir) || strings.Contains(dir, ":") {
+			errs = append(errs, fmt.Errorf("path %q: want an absolute directory without ':'", dir))
+		}
 	}
 	if !strings.HasPrefix(s.Listen, "127.0.0.1:") && !strings.HasPrefix(s.Listen, "localhost:") {
 		errs = append(errs, fmt.Errorf("listen %q: eve listens on loopback only; publish it with the Tailscale Service", s.Listen))
@@ -368,10 +377,11 @@ type Repo struct {
 
 // RepoProject locates the Xcode project.
 type RepoProject struct {
-	Dir       string `yaml:"dir"`       // relative directory holding the project, default "."
-	Xcodegen  string `yaml:"xcodegen"`  // project.yml path relative to Dir
-	Xcodeproj string `yaml:"xcodeproj"` // e.g. Lineage.xcodeproj
-	Scheme    string `yaml:"scheme"`
+	Dir         string `yaml:"dir"`         // relative directory holding the project, default "."
+	Xcodegen    string `yaml:"xcodegen"`    // project.yml path relative to Dir
+	Xcodeproj   string `yaml:"xcodeproj"`   // e.g. Lineage.xcodeproj
+	Xcworkspace string `yaml:"xcworkspace"` // e.g. ApproveAL.xcworkspace (CocoaPods, Expo)
+	Scheme      string `yaml:"scheme"`
 }
 
 // RepoCheck configures the check verb.
@@ -406,8 +416,14 @@ func LoadRepo(dir string) (*Repo, error) {
 	if r.Project.Scheme == "" {
 		return nil, fmt.Errorf("%s: project.scheme is required", RepoFile)
 	}
-	if (r.Project.Xcodegen == "") == (r.Project.Xcodeproj == "") {
-		return nil, fmt.Errorf("%s: set exactly one of project.xcodegen and project.xcodeproj", RepoFile)
+	set := 0
+	for _, v := range []string{r.Project.Xcodegen, r.Project.Xcodeproj, r.Project.Xcworkspace} {
+		if v != "" {
+			set++
+		}
+	}
+	if set != 1 {
+		return nil, fmt.Errorf("%s: set exactly one of project.xcodegen, project.xcodeproj and project.xcworkspace", RepoFile)
 	}
 	if filepath.IsAbs(r.Project.Dir) || strings.Contains(r.Project.Dir, "..") {
 		return nil, fmt.Errorf("%s: project.dir must be a relative path inside the repository", RepoFile)

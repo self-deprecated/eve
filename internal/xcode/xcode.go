@@ -243,7 +243,7 @@ func (k *APIKey) args() []string {
 // ArchiveSpec describes an archive build.
 type ArchiveSpec struct {
 	Dir         string // working directory (the project's directory)
-	Project     string // .xcodeproj, relative to Dir
+	Project     string // .xcodeproj or .xcworkspace, relative to Dir
 	Scheme      string
 	ArchivePath string
 	DerivedData string
@@ -253,10 +253,18 @@ type ArchiveSpec struct {
 	Auth        *APIKey
 }
 
+// projectFlag is how xcodebuild takes project: a workspace (CocoaPods, Expo) or a project.
+func projectFlag(project string) string {
+	if strings.HasSuffix(project, ".xcworkspace") {
+		return "-workspace"
+	}
+	return "-project"
+}
+
 // ArchiveArgs returns xcodebuild's arguments for spec (exported for tests and dry runs).
 func ArchiveArgs(s ArchiveSpec) []string {
 	args := []string{
-		"archive", "-project", s.Project, "-scheme", s.Scheme, "-configuration", "Release",
+		"archive", projectFlag(s.Project), s.Project, "-scheme", s.Scheme, "-configuration", "Release",
 		"-destination", "generic/platform=iOS", "-archivePath", s.ArchivePath,
 	}
 	if s.DerivedData != "" {

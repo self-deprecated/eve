@@ -1,0 +1,2 @@
+$ corepack pnpm install --frozen-lockfile
+zsh:1: command not found: corepack

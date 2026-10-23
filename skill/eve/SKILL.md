@@ -132,6 +132,7 @@ project:
   dir: ios                        # where the project lives, relative to the repo root (default .)
   xcodegen: project.yml           # exactly one of xcodegen (path relative to dir)
   # xcodeproj: Lineage.xcodeproj  #   or xcodeproj
+  # xcworkspace: App.xcworkspace  #   or xcworkspace (CocoaPods, Expo); pre may generate it
   scheme: Driver                  # required
 ignore:                           # gitignore-style paths never uploaded, on top of .gitignore
   - docs/screenshots/             #   and .eveignore: large assets the build doesn't need
@@ -142,6 +143,25 @@ check:                            # for `eve submit check`
   simulator: iPhone 17 Pro        # device type (default: the newest iPhone Pro)
 xcode: "26"                       # fail unless the build Mac's selected Xcode is this version (26 matches 26.x)
 ```
+
+An **Expo (React Native) app** builds from the workspace `expo prebuild` generates; never use
+EAS or `expo run:ios` for these tasks. Put eve.yml at the package-manager workspace root (where
+the lockfile is), point `project` at the generated workspace, and generate it in `pre`:
+
+```yaml
+app: approveal
+project: {dir: apps/mobile/ios, xcworkspace: ApproveAL.xcworkspace, scheme: ApproveAL}
+pre:
+  - corepack pnpm install --frozen-lockfile
+  - cd apps/mobile && corepack pnpm exec expo prebuild --platform ios --clean --no-install
+  - cd apps/mobile/ios && pod install
+```
+
+`--no-install` matters: prebuild exits 0 even when its own `pod install` fails. Node and
+`pod` come from the build Mac (server.yml `path`); a `command not found` for them is the user's
+to fix there. A `build.number_mismatch` means app.json lacks
+`"ios": {"buildNumber": "$(CURRENT_PROJECT_VERSION)"}`. `EXPO_PUBLIC_*` values come from the
+app's `secrets` in server.yml, because `.env` files are never uploaded.
 
 `device: {configuration: Release}` sets the configuration `eve submit device` builds (default
 Debug). Unknown keys are an error. Identity (bundle id, team, signing, secrets, TestFlight

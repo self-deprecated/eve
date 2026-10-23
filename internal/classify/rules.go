@@ -23,6 +23,7 @@ const (
 	ClassBuildCompile               = "build.compile"
 	ClassEnvRsync                   = "env.rsync"
 	ClassEnvMetalToolchain          = "env.metal_toolchain"
+	ClassEnvToolMissing             = "env.tool_missing"
 	ClassUploadDuplicate            = "upload.duplicate" // not a failure: reconcile (§5.5)
 	ClassUploadMissingIcon          = "upload.missing_icon"
 	ClassUploadPurposeString        = "upload.purpose_string"
@@ -219,6 +220,18 @@ var rules = []rule{
 		match:   []*regexp.Regexp{re(`missing Metal Toolchain`), re(`cannot execute tool 'metal'`), re(`error:.*-downloadComponent MetalToolchain`)},
 		summary: "The build compiles Metal shaders and this Xcode's Metal Toolchain isn't installed.",
 		hint:    "Run `xcodebuild -downloadComponent MetalToolchain` on the build Mac (eve doctor checks it).",
+	},
+	{
+		class: ClassEnvToolMissing,
+		// Only pre commands: build script phases print harmless "command not found" lines too.
+		phases:  []api.State{api.StatePreparing},
+		keys:    []string{"command not found"},
+		match:   []*regexp.Regexp{re(`command not found: (?P<tool>\S+)`), re(`(?P<tool>[^\s:]+): command not found`)},
+		summary: "A tool the build needs isn't on the build Mac's PATH for eve's jobs.",
+		hint:    "Install it on the build Mac and add its directory to `path` in server.yml (an operator change; tell the user).",
+		detail: func(g map[string]string, _ Input) (string, string) {
+			return "`" + g["tool"] + "` isn't on the build Mac's PATH for eve's jobs.", ""
+		},
 	},
 	{
 		class: ClassUploadDuplicate,

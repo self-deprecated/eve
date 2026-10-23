@@ -18,7 +18,8 @@ as `eve serve`, the build server on the Mac. **Module:** `github.com/self-deprec
 
 Eve gives the user and their agents the part of Expo EAS they miss: send a build off from
 anywhere, walk away, and be told when it is on the phone or in TestFlight. It runs on the user's
-own Mac Mini (Quartz), with Apple's tools, for their native iOS apps.
+own Mac Mini (Quartz), with Apple's tools, for their iOS apps: native ones, and Expo apps through
+the Xcode workspace `expo prebuild` generates (§18.10).
 
 The design target is **agent cost**, not build speed. Session mining (Lineage, BodyDiff,
 ScreenGate on Quartz, 2026-10-16) found that a main agent session re-reads 340–564K cached tokens
@@ -82,8 +83,8 @@ and the actual bill, not raw token counts.) The same sessions show:
 ### Non-goals for v1
 
 Android; multiple build Macs; App Store submission and review; external TestFlight groups;
-parallel jobs; Expo/React Native (all four apps are native SwiftUI now, BodyDiff since
-2026-10-14); git-ref builds; registering bundle IDs or capabilities; any computer use; keeping an
+parallel jobs; Expo's services (EAS Build, Submit and Update; Expo apps build like any other
+workspace, §18.10); git-ref builds; registering bundle IDs or capabilities; any computer use; keeping an
 Apple ID web session alive; isolating one app's builds from another's credentials (§14).
 
 ## 3. Ground truth this plan builds on
@@ -134,7 +135,8 @@ Apple ID web session alive; isolating one app's builds from another's credential
   None of these is assumed: M0's spike proves an archive+export from the installed agent, and
   `doctor --host` checks the keychain state and the age of the last successful signing.
 - **Child environment** (allowlist, nothing inherited from Nix): `HOME`, `USER`, `TMPDIR`,
-  `PATH=/usr/bin:/bin:/usr/sbin:/sbin:<eve tools>`, `DEVELOPER_DIR=$(xcode-select -p)` (or the
+  `PATH=/usr/bin:/bin:/usr/sbin:/sbin:<server.yml path>` (tool directories such as Node and
+  CocoaPods come after Apple's, so `/usr/bin/rsync` still wins), `DEVELOPER_DIR=$(xcode-select -p)` (or the
   pinned Xcode), `LANG=LC_ALL=en_US.UTF-8`; `SDKROOT`, `CC`, `LD` and the other compiler variables
   are never set.
 - **No shell startup files, ever.** Eve execs tools directly. `pre:` and `exec` commands run
@@ -324,12 +326,16 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
 1. Load `eve.yml` from the workspace; merge the server-side app config, which is authoritative
    for identity, signing, export options and secrets.
 2. Check the selected Xcode against `xcode:` if pinned and that the license is accepted.
-3. Generate the project with the pinned XcodeGen if `xcodegen:` is set.
-4. Write secrets the app needs as build settings into `jobs/<id>/secrets.xcconfig` (0600) and pass
+3. Write secrets the app needs as build settings into `jobs/<id>/secrets.xcconfig` (0600) and pass
    `-xcconfig`, so they appear neither in `ps` nor in xcodebuild's "Build settings from command
    line" header. Redaction of known secret values applies to stored logs, served logs and the
-   result document.
-5. Run `pre:` commands (e.g. `swift test --package-path BodyDiffCore`).
+   result document. Script phases see build settings as environment variables, so an Expo app's
+   `EXPO_PUBLIC_*` values reach Metro this way.
+4. Generate the project with the pinned XcodeGen if `xcodegen:` is set.
+5. Run `pre:` commands (e.g. `swift test --package-path BodyDiffCore`, or an Expo app's
+   `pnpm install`, `expo prebuild` and `pod install`).
+6. Find the `.xcodeproj` or `.xcworkspace` eve.yml names. This comes last because `pre:` may be
+   what generates it.
 
 ### 6.3 `testflight`
 
@@ -541,7 +547,7 @@ explicitly.
 ```yaml
 app: bodydiff                 # must match an allowlisted app on the server
 project:
-  xcodegen: project.yml       # or: xcodeproj: Lineage.xcodeproj
+  xcodegen: project.yml       # or: xcodeproj: Lineage.xcodeproj, or xcworkspace: X.xcworkspace
   scheme: BodyDiff
 xcode: "27.0"                 # optional pin
 pre:
@@ -555,6 +561,7 @@ ignore: [docs/screenshots/]
 
 ```yaml
 team: 2559B88H6C
+path: [/nix/store/…-nodejs-24/bin, /nix/store/…-cocoapods/bin]   # appended to every job's PATH
 asc:
   keyId: KEY1234567
   issuerId: 00000000-0000-0000-0000-000000000000
@@ -870,6 +877,17 @@ locked login keychain and a missing GUI session.
 *Status (2026-10-17):* retention (§4.3), exhausted-delivery copies to the human hook and in
 `eve status`, and the API-level skew check (§6.8) are done; `--path` exists; the load test is not.
 
+**Expo apps (2026-10-23).** `project.xcworkspace` in eve.yml (built with `-workspace`), the
+project found after `pre:`, and `path` in server.yml for Node and CocoaPods (§18.10).
+*Accept:* `check`, `device` and `testflight` for Approve AL, an Expo SDK 54 dev-client app with
+Clerk, from an `eve.yml` at its pnpm workspace root.
+*Status:* `eve run check` of this change on Quartz built Approve AL (2m22s with warm caches),
+with a scratch config whose `path` held Nix's Node 24 and CocoaPods 1.16. A Release build in the
+same environment bundled Hermes bytecode carrying an `EXPO_PUBLIC_*` value from `-xcconfig`,
+stamped CFBundleVersion from `CURRENT_PROJECT_VERSION`, and held nothing the bundle check
+counts as repository content. The app needed a Podfile fix for Xcode 27 first. `device` and
+`testflight` wait for the server update on Quartz.
+
 **M7 — Later, each independent and on demand.** Manual signing (dedicated keychain, API-key upload,
 `exporting`/`uploading` split; verify the unverified bodydiff-testflight design first); Luna
 fallback; `screenshots` verb; `app init` (bundle IDs, capabilities, record checks); git-ref builds;
@@ -969,6 +987,29 @@ today.
    (secrets as file paths), installs the LaunchAgent (`launchd.user.agents.eve`, Aqua), and puts
    the `eve` CLI and the agent skill on Quartz and Lattice. `eve agent install` remains only for
    non-Nix machines.
+
+10. **Expo apps build through eve's own pipeline** (2026-10-23), not EAS. An Expo app is an Xcode
+    workspace that doesn't exist until `expo prebuild` and `pod install` generate it, so eve.yml
+    can name an `.xcworkspace`, `pre:` generates it, and eve looks for it only after `pre:`.
+    Everything after that (build numbers, the archive check, signing, the size guard, delivery,
+    devices) is unchanged. The build Mac supplies Node and CocoaPods through `path` in
+    server.yml, appended after Apple's directories: the tools are the host's business, as Xcode
+    is, and Xcode's script phases (Metro, Hermes, Expo's config) find `node` there too. The
+    alternatives:
+    - *`eve submit exec` running prebuild, pod install and xcodebuild:* exec has no build
+      numbers, archive check, size guard, upload reconciliation or device handling. It would
+      rebuild eve inside a script.
+    - *Committing a prebuilt `ios/`:* the generated project drifts from `app.json` and the
+      config plugins, and Pods and node_modules paths are machine-specific. It is what Expo's
+      Continuous Native Generation exists to avoid.
+    - *EAS local builds on the build Mac (`eas build --local`):* fastlane, an Expo account and
+      EAS credentials on top of eve's own signing. It also yields an IPA that eve would still
+      have to upload and follow. Uploading through Expo remains possible for an app that needs
+      it, outside eve.
+
+    Repositories own what makes their generated project shippable, as they own a native project:
+    `ios.appleTeamId`, `ios.buildNumber: "$(CURRENT_PROJECT_VERSION)"` (the archive check
+    refuses a literal number), and Podfile fixes their dependencies need.
 
 Also in the account and candidates for later onboarding: Barbican, Quoth, Agent Tick.
 

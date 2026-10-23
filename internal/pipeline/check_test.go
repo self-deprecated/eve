@@ -320,3 +320,57 @@ func TestCheckNeverBootsWhenOwnershipCannotBeRecorded(t *testing.T) {
 		t.Fatalf("unregistered device must stay stopped: %+v %s %v", ds, sim.state, err)
 	}
 }
+
+// An Expo app has no Xcode project until pre generates it: eve.yml names the workspace that
+// `expo prebuild` and `pod install` produce, and the server's tool path supplies node and pod.
+func TestCheckBuildsTheWorkspacePreGenerates(t *testing.T) {
+	dir := t.TempDir()
+	st, err := store.Open(filepath.Join(dir, "eve.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = st.Close() })
+	repo := filepath.Join(dir, "approve-al")
+	_ = os.MkdirAll(filepath.Join(repo, "apps", "mobile"), 0o755)
+	_ = os.WriteFile(filepath.Join(repo, "eve.yml"), []byte(`app: approveal
+project: {dir: apps/mobile/ios, xcworkspace: ApproveAL.xcworkspace, scheme: ApproveAL}
+pre:
+  - cd apps/mobile && expo prebuild --platform ios --no-install && cd ios && pod install
+`), 0o644)
+	cfg := &config.Server{
+		DataDir: dir, Path: []string{"/nix/node/bin", "/nix/cocoapods/bin"},
+		Apps: map[string]config.App{"approveal": {BundleID: "ai.selfdeprecated.approveal"}},
+	}
+	sim := &simctlSim{}
+	f := &run.Fake{Handler: func(c run.Cmd) (string, int, error) {
+		if c.Name == "/bin/zsh" {
+			_ = os.MkdirAll(filepath.Join(c.Dir, "apps", "mobile", "ios", "ApproveAL.xcworkspace"), 0o755)
+		}
+		return sim.handle(c)
+	}}
+	d := &Deps{Config: cfg, Store: st, Runner: f, Sources: fakeSources{}, Classifier: fakeClassifier{}}
+	q := queue.New(st, dir, map[api.Verb]queue.Pipeline{api.VerbCheck: NewCheck(d)}, nil, nil)
+	j, _, err := st.CreateJob(context.Background(), store.Job{App: "approveal", Verb: api.VerbCheck, Request: api.JobRequest{
+		App: "approveal", Verb: api.VerbCheck, Source: api.JobSource{Path: repo},
+	}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	q.Exec(context.Background(), j)
+	got, _ := st.Get(context.Background(), j.ID)
+	if got.State != api.StateSucceeded {
+		t.Fatalf("%s %+v", got.State, got.Result.Failure)
+	}
+	path := "PATH=/usr/bin:/bin:/usr/sbin:/sbin:/nix/node/bin:/nix/cocoapods/bin"
+	pre, _ := f.Find("pod install")
+	build, err := f.Find("xcodebuild build")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Contains(pre.Env, path) || !slices.Contains(build.Env, path) {
+		t.Fatalf("tool path missing: pre %v, build %v", pre.Env, build.Env)
+	}
+	if !strings.Contains(build.String(), "-workspace ApproveAL.xcworkspace -scheme ApproveAL") || !strings.HasSuffix(build.Dir, filepath.Join("apps", "mobile", "ios")) {
+		t.Fatalf("not a workspace build in the project dir: %s in %s", build.String(), build.Dir)
+	}
+}

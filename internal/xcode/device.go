@@ -19,7 +19,7 @@ import (
 // builds; the development profile already lists every registered device.
 type DeviceSpec struct {
 	Dir           string // the project's directory
-	Project       string // .xcodeproj, relative to Dir
+	Project       string // .xcodeproj or .xcworkspace, relative to Dir
 	Scheme        string
 	Configuration string // Debug unless eve.yml or --release says otherwise
 	DerivedData   string
@@ -30,7 +30,7 @@ type DeviceSpec struct {
 // DeviceBuildArgs returns xcodebuild's arguments for a device build.
 func DeviceBuildArgs(s DeviceSpec) []string {
 	args := []string{
-		"build", "-project", s.Project, "-scheme", s.Scheme, "-configuration", s.Configuration,
+		"build", projectFlag(s.Project), s.Project, "-scheme", s.Scheme, "-configuration", s.Configuration,
 		"-destination", "generic/platform=iOS",
 	}
 	if s.DerivedData != "" {

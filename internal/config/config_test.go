@@ -108,6 +108,30 @@ func TestLoadRepo(t *testing.T) {
 	if _, err := LoadRepo(dir); err == nil {
 		t.Fatal("missing project kind accepted")
 	}
+	writeFile(t, dir, "eve.yml", "app: x\nproject: {dir: apps/mobile/ios, xcworkspace: X.xcworkspace, scheme: X}\n")
+	if r, err := LoadRepo(dir); err != nil || r.Project.Xcworkspace != "X.xcworkspace" {
+		t.Fatalf("workspace: %+v %v", r, err)
+	}
+	writeFile(t, dir, "eve.yml", "app: x\nproject: {xcodeproj: X.xcodeproj, xcworkspace: X.xcworkspace, scheme: X}\n")
+	if _, err := LoadRepo(dir); err == nil {
+		t.Fatal("two project kinds accepted")
+	}
+}
+
+func TestServerToolPath(t *testing.T) {
+	dir := t.TempDir()
+	s, err := LoadServer(writeFile(t, dir, "server.yml", "team: T\npath: [/nix/store/n-nodejs/bin, ~/bin]\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s.Path[0] != "/nix/store/n-nodejs/bin" || !filepath.IsAbs(s.Path[1]) {
+		t.Fatalf("path: %v", s.Path)
+	}
+	for _, bad := range []string{"[bin]", "['/a:/b']"} {
+		if _, err := LoadServer(writeFile(t, dir, "server.yml", "team: T\npath: "+bad+"\n")); err == nil || !strings.Contains(err.Error(), "absolute") {
+			t.Errorf("path %s: %v", bad, err)
+		}
+	}
 }
 
 func TestParseBytes(t *testing.T) {

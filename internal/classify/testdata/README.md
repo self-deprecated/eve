@@ -38,6 +38,7 @@ Sources, all on Quartz, harvested 2026-10-16:
 | device.unavailable | xcodebuild-destination | synthetic around real "Ineligible destinations" lines |
 | device.untrusted_developer | screengate-launch | transcript (devicectl launch, FBSOpenApplicationErrorDomain 3) |
 | env.metal_toolchain | bodydiff-expo-run | transcript (`expo run:ios`, Expo-formatted xcodebuild output) |
+| env.tool_missing | approveal-pre-corepack | pre log (Approve AL on Quartz without `path`, 2026-10-23) |
 | env.rsync | driver-distribution | distribution log (Driver, 2026-10-16 19:21) |
 | env.rsync | lineage-distribution | distribution log (Lineage, 2026-10-14 14:13) |
 | env.rsync | lineage-export | transcript (Lineage upload) |

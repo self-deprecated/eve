@@ -24,6 +24,9 @@ asc:                               # App Store Connect API key (App Manager role
 # listen: 127.0.0.1:4790           # loopback only; publish it on your tailnet
 # dataDir: ~/.local/share/eve
 # allowExec: true                  # every app may run `eve submit exec`
+# path:                            # tool directories for every job, after the system ones
+#   - /opt/homebrew/opt/node@24/bin   #   (Node and CocoaPods for Expo apps)
+#   - /opt/homebrew/bin
 
 apps:
   myapp:                           # lowercase letters, digits and dashes; eve.yml's `app:`
@@ -93,6 +96,10 @@ Notes:
 - **Secrets** are read on the build Mac when the job starts. They are passed to xcodebuild as a
   per-job 0600 xcconfig, never on the command line, and are redacted from stored and served logs,
   results and artifacts.
+- **`path`** lists tool directories, such as Node and CocoaPods for Expo apps, that every
+  job's commands find after `/usr/bin:/bin:/usr/sbin:/sbin`. Apple's tools always come first, so
+  a directory that also holds `rsync` or `clang` can't replace them. `eve doctor --host` checks
+  each directory exists.
 - **`allowExec`** decides whether `eve submit exec` is available. It prevents accidents, not
   attacks: any build can already run code (see the trust model in the README).
 - **Webhooks.** `--notify-url` posts the result document from a durable outbox, with
@@ -114,6 +121,7 @@ project:
   dir: ios                         # the project's directory, relative to the repo root (default .)
   xcodegen: project.yml            # exactly one of xcodegen (relative to dir)…
   # xcodeproj: MyApp.xcodeproj     # …or xcodeproj
+  # xcworkspace: MyApp.xcworkspace # …or xcworkspace (CocoaPods, Expo); may be made by pre
   scheme: MyApp                    # required
 ignore:                            # gitignore-style paths never uploaded, on top of .gitignore
   - docs/screenshots/              #   and .eveignore
@@ -134,6 +142,7 @@ wrong, but it doesn't trim them.
 
 `pre:` and `exec` commands run under `/bin/zsh -f`, with no shell startup files. A nix-darwin
 `/etc/zshenv` would otherwise put Nix's `rsync` ahead of `/usr/bin`, and that breaks IPA export.
-Commands get a clean environment: `HOME`, `USER`, `TMPDIR`, a system `PATH`, the selected Xcode's
-`DEVELOPER_DIR` and a UTF-8 locale. `exec` commands also get `$EVE_ARTIFACTS`,
+Commands get a clean environment: `HOME`, `USER`, `TMPDIR`, a system `PATH` followed by
+server.yml's `path`, the selected Xcode's `DEVELOPER_DIR` and a UTF-8 locale. xcodebuild gets
+the same environment, so its script phases find the same tools. `exec` commands also get `$EVE_ARTIFACTS`,
 `$EVE_PROJECT_DIR` and `$EVE_JOB`.

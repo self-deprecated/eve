@@ -50,7 +50,7 @@ func fixtures(t *testing.T) []fixture {
 // phaseFor is the phase a log of class would come from.
 func phaseFor(class string) api.State {
 	switch {
-	case class == ClassTestsPre:
+	case class == ClassTestsPre, class == ClassEnvToolMissing:
 		return api.StatePreparing
 	case class == ClassTestsFailed:
 		return api.StateTesting
@@ -128,6 +128,7 @@ func TestDetails(t *testing.T) {
 		human   string
 	}{
 		{path: "upload.purpose_string/driver-camera.log", hint: []string{"NSCameraUsageDescription"}},
+		{path: "env.tool_missing/approveal-pre-corepack.log", phase: api.StatePreparing, summary: []string{"`corepack`"}, hint: []string{"`path` in server.yml"}},
 		{path: "upload.purpose_string/asc-processing-two-keys.log", summary: []string{"NSMicrophoneUsageDescription, NSMotionUsageDescription"}},
 		{path: "upload.missing_icon/screengate-export.log", summary: []string{"152x152", "120x120"}},
 		{path: "tests.failed/screengate-xcuitest.log", summary: []string{"GateFlowTests.testUnlockShowsGate", "XCTAssertTrue failed - Gate button did not appear"}, hint: []string{"UITests/GateFlowTests.swift:42"}},
@@ -207,6 +208,16 @@ func TestPhaseScoping(t *testing.T) {
 		if got := Classify(Input{Phase: p, Log: log}).Class; got != ClassTestsFailed {
 			t.Fatalf("phase %q: %s", p, got)
 		}
+	}
+}
+
+func TestToolMissingOnlyForPreCommands(t *testing.T) {
+	log := []byte("/bin/sh: ccache: command not found\n/x/App/View.swift:3:1: error: cannot find 'Foo' in scope\n")
+	if got := Classify(Input{Phase: api.StateBuilding, Log: log}).Class; got != ClassBuildCompile {
+		t.Fatalf("building: %s", got)
+	}
+	if got := Classify(Input{Phase: api.StatePreparing, Log: log}).Class; got != ClassEnvToolMissing {
+		t.Fatalf("preparing: %s", got)
 	}
 }
 

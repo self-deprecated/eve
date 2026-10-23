@@ -38,6 +38,7 @@ Mac can reach it and `unavailable` when it can't.
 | `doctor --host`: "not in the GUI session", or the login keychain is locked | eve isn't running as the logged-in user's LaunchAgent, or the keychain locked | Log in at the console. eve must run in the Aqua session to sign |
 | `asc.agreement` / `needs_human: accept_agreement` | Apple wants a new agreement accepted | The Account Holder accepts it in App Store Connect |
 | `env.rsync` ("Copy failed" during export) | A non-system `rsync` came first on PATH (Nix's breaks IPA export) | eve puts `/usr/bin` first for its own commands. Check `pre:` scripts and the LaunchAgent's environment |
+| `env.tool_missing` (`command not found: corepack`, `node` or `pod`) | A `pre:` command needs a tool that isn't on jobs' PATH. Jobs get only Apple's directories plus server.yml's `path` | Install it on the build Mac and add its directory to `path` ([new-app.md](new-app.md#expo-react-native-apps)) |
 | `env.metal_toolchain` | The app compiles Metal shaders and this Xcode's Metal Toolchain isn't installed | `xcodebuild -downloadComponent MetalToolchain` |
 | `simulator.unavailable` mentioning bootstatus | The Simulator never finished booting, typically because the Mac is out of memory | Check memory and CoreSimulator, then resubmit |
 | A build or tool fails with `opening pseudoterminal master: Device not configured` | Every pseudoterminal is taken (`kern.tty.ptmx_max`), for example by idle detached terminal-multiplexer sessions | `lsof /dev/ptmx` shows who holds them |
