@@ -302,7 +302,8 @@ func (s *Server) Validate() error {
 		errs = append(errs, errors.New("team is required"))
 	}
 	for _, dir := range s.Path {
-		if !filepath.IsAbs(dir) || strings.Contains(dir, ":") {
+		// Directories on the build Mac, whatever OS reads this file.
+		if !strings.HasPrefix(dir, "/") || strings.Contains(dir, ":") {
 			errs = append(errs, fmt.Errorf("path %q: want an absolute directory without ':'", dir))
 		}
 	}

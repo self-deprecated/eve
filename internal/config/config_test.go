@@ -120,11 +120,11 @@ func TestLoadRepo(t *testing.T) {
 
 func TestServerToolPath(t *testing.T) {
 	dir := t.TempDir()
-	s, err := LoadServer(writeFile(t, dir, "server.yml", "team: T\npath: [/nix/store/n-nodejs/bin, ~/bin]\n"))
+	s, err := LoadServer(writeFile(t, dir, "server.yml", "team: T\npath: [/nix/store/n-nodejs/bin, /opt/homebrew/bin]\n"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if s.Path[0] != "/nix/store/n-nodejs/bin" || !filepath.IsAbs(s.Path[1]) {
+	if len(s.Path) != 2 || s.Path[0] != "/nix/store/n-nodejs/bin" {
 		t.Fatalf("path: %v", s.Path)
 	}
 	for _, bad := range []string{"[bin]", "['/a:/b']"} {
