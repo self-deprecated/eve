@@ -350,16 +350,22 @@ var rules = []rule{
 	},
 	{
 		// devicectl can't reach the phone at all (CoreDeviceError 4000 and 4016; seen 2026-10-17 with
-		// the phone's Wi-Fi off). Locking alone doesn't cause these.
+		// the phone's Wi-Fi off), or its tunnel failed (CoreDeviceError 4; seen 2026-10-27 through
+		// the bridge). Locking alone doesn't cause these.
 		class: ClassDeviceUnavailable,
-		keys:  []string{"A connection to this device could not be established", "not able to fulfill the requested usage assertion requirements"},
+		keys: []string{
+			"A connection to this device could not be established", "not able to fulfill the requested usage assertion requirements",
+			"The tunnel connection failed while the system tried to connect to the device",
+		},
 		match: []*regexp.Regexp{
 			re(`A connection to this device could not be established`),
 			re(`not able to fulfill the requested usage assertion requirements`),
+			re(`The tunnel connection failed while the system tried to connect to the device`),
 		},
 		summary: "The build Mac can't reach the phone: its Wi-Fi is off, it's on another network or away, or it's asleep.",
-		hint:    "Turn on the phone's Wi-Fi on the build Mac's network (or plug it into the Mac) and wake it.",
-		human:   api.HumanConnectPhone,
+		hint: "Turn on the phone's Wi-Fi on the build Mac's network (or plug it into the Mac) and wake it. " +
+			"If the phone is away, `eve bridge on` reaches it over Tailscale (it needs Wi-Fi and Tailscale on the phone).",
+		human: api.HumanConnectPhone,
 	},
 	{
 		// The connection dropped mid-install (CoreDeviceError 3002, IXRemoteErrorDomain 6; seen

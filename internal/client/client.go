@@ -327,6 +327,27 @@ func (c *Client) Apps(ctx context.Context) ([]api.App, error) {
 	return out, err
 }
 
+// Bridge reports the travel bridge.
+func (c *Client) Bridge(ctx context.Context) (api.Bridge, error) {
+	var b api.Bridge
+	err := c.doJSON(ctx, "GET", "/v1/bridge", nil, &b)
+	return b, err
+}
+
+// BridgeOn starts or extends the travel bridge; the server checks the phone answers through it.
+func (c *Client) BridgeOn(ctx context.Context, req api.BridgeRequest) (api.Bridge, error) {
+	var b api.Bridge
+	err := c.doJSON(ctx, "POST", "/v1/bridge", req, &b)
+	return b, err
+}
+
+// BridgeOff stops the travel bridge.
+func (c *Client) BridgeOff(ctx context.Context) (api.Bridge, error) {
+	var b api.Bridge
+	err := c.doJSON(ctx, "DELETE", "/v1/bridge", nil, &b)
+	return b, err
+}
+
 // Raw performs a GET and returns the JSON body (apps, builds, baseline, doctor).
 func (c *Client) Raw(ctx context.Context, path string) (json.RawMessage, error) {
 	var out json.RawMessage

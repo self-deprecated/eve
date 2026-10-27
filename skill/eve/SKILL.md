@@ -66,7 +66,17 @@ locked before Xcode's developer disk image is mounted, which needs one unlock af
 restarts) does the job wait in `waiting_for_device`, retrying every 5 s for up to 10 minutes; it
 continues within seconds, and otherwise ends `needs_human` (exit 78). `connect_phone` means
 the build Mac can't reach the phone at all (its Wi-Fi is off, it's away, or asleep); `unlock_phone`
-means it's locked. Pass `human.detail` on to the user in one line; resubmit once it's sorted. `--device <name or UDID>` picks another paired device. Success has a `launched` note
+means it's locked. Pass `human.detail` on to the user in one line; resubmit once it's sorted.
+
+**When the phone can't be found** (`connect_phone`, or `waiting_for_device` saying the build Mac
+can't reach it) and the user may be away from the build Mac's network, run
+`eve bridge on --json` yourself (default `--for 2h`): it reaches the phone over Tailscale and a
+job still waiting carries on by itself; otherwise resubmit. Exit 0 means a device call went
+through it; 69 (`reachable: false`) means the phone didn't answer: tell the user it needs Wi-Fi
+(any network, not mobile data alone) with Tailscale connected, and to wake it, then run
+`eve bridge on` again. If it fails because eve hasn't seen the phone on the build Mac's network,
+the bridge can't help until the phone has been on that Wi-Fi once. `eve bridge status` shows the
+lease; `eve bridge off` ends it early (it ends by itself too). `--device <name or UDID>` picks another paired device. Success has a `launched` note
 naming the phone.
 
 `eve submit exec --wait -- <command> [args…]` runs a repo command on the build Mac in the job's copy of
@@ -174,5 +184,5 @@ uploads that look wrong, and every submit uploads everything else.
 ## Useful commands
 
 `eve apps` · `eve init` · `eve artifacts <job> --out <dir>` · `eve status <job>` · `eve jobs` · `eve pending` · `eve logs <job> --errors` · `eve size <job>` ·
-`eve builds <app>` · `eve cancel <job>` (`--force` while uploading) · `eve doctor`
+`eve builds <app>` · `eve cancel <job>` (`--force` while uploading) · `eve bridge on|off|status` · `eve doctor`
 (`--host` for the build Mac's own checks).

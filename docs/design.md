@@ -389,7 +389,8 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
    when the phone can't take the step at all, saying which case it is:
    - Quartz can't reach it (CoreDevice 4000 "A connection to this device could not be
      established", 4016 "usage assertion requirements"; seen with the phone's Wi-Fi off):
-     `device.unavailable`, action `connect_phone`, "turn on its Wi-Fi on Quartz's network".
+     `device.unavailable`, action `connect_phone`, "turn on its Wi-Fi on Quartz's network", or,
+     away from it, `eve bridge on` (§6.4.1).
    - Reachable but locked before Xcode's developer disk image is mounted (12040, "the device was
      still locked"; one unlock after a restart): `device.locked`, action `unlock_phone`.
    Either enters `waiting_for_device` once (which notifies the human webhook, if set) and retries
@@ -399,6 +400,48 @@ timeout, cancellation). Every xcodebuild call writes its full log to `jobs/<id>/
 5. Failure classes: `device.locked` (FBSOpenApplicationErrorDomain 7), `device.unavailable`,
    `device.untrusted_developer`, `device.attestation` ("Unable to Verify App": hint restart the
    phone).
+
+#### 6.4.1 Travel bridge (`eve bridge`)
+
+When the phone is away from Quartz's network, `eve bridge on --for 2h` lets Quartz reach it over
+Tailscale for a lease (capped by `device.bridge.maxDuration`, default 12h); an agent turns it on
+when a device job reports `connect_phone`, and the waiting job carries on. The phone needs Wi-Fi
+(any network: its pairing listener is off on mobile data) with Tailscale connected. Verified
+2026-10-20 from a hotel abroad and 2026-10-27 from another network: install while locked, and
+a job in `waiting_for_device` that continued once the bridge was on.
+
+How it works, and why each part exists:
+
+- CoreDevice finds a phone only by its Bonjour `_remotepairing._tcp` advert on the Mac's network,
+  and connects only on the interface it heard it on (an advert pointing at a 100.x address
+  fails). So the bridge republishes the phone's advert (`dns-sd -P`) with Quartz's own `en0`
+  address as the host, and relays what remotepairingd connects to there.
+- The advert's TXT record (identifier, authTag) is what remotepairingd matches against the
+  pairing, and it stays valid for at least a week. eve remembers it whenever the phone is on
+  Quartz's network (`dns-sd -Z` every 15 min while the bridge is off, and at each `eve bridge
+  on`) in `bridge.json`. A phone never seen on Quartz's network can't be bridged.
+- The relay mirrors ports 1:1 to the phone's tailnet address: 49152 is the control channel, and
+  each tunnel listens on the next port of a counter the phone increments per tunnel (seen
+  60822, 60823, … one per tunnel). Binding the whole ephemeral range doesn't work: Quartz then
+  has no ports left for its own connections from that address (remotepairingd's connects fail
+  with EADDRNOTAVAIL; the same on IPv6 link-local). So eve follows remotepairingd's log
+  (`log stream`, "Got tunnel endpoint: '<ip>%en0:<port>'") and keeps a window of 32 ports from
+  the last one bound, saving the port for the next lease. `eve bridge on` makes one device call
+  (`devicectl device info lockState`), retrying for 40 s: a first tunnel outside the window
+  fails, moves the window, and the next one goes through.
+- Relayed connections have no deadlines (tunnels sit idle between calls; an idle timeout once
+  closed them under an install, CoreDevice 4000) and TCP keepalives. When the phone refuses, the
+  client is held 10 s, because dropping it straight away makes remotepairingd reconnect in a
+  tight loop. A tunnel that fails anyway (CoreDevice 4 "The tunnel connection failed") is
+  `device.unavailable`/`connect_phone`, so the job retries.
+- The relay listens on Quartz's LAN address, so it accepts connections only from that address
+  (remotepairingd's); anyone else on the network is turned away. A loopback-only relay doesn't
+  work (remotepairingd drops the handshake, CoreDevice 4016). Everything carried is CoreDevice's
+  own encrypted traffic; restricting the phone's ports to Quartz in the Tailscale ACL is the
+  operator's choice.
+- The phone's address is `device.bridge.phone`, `--phone`, or the only iPhone online in
+  `tailscale status --json`. The lease is saved, so an eve restart resumes it (and checks the
+  phone again); it never outlives `eve serve`, and there is no other daemon.
 
 ### 6.5 `check`
 
@@ -583,7 +626,9 @@ sizeGuard:                    # defaults; any app may override under apps.<app>.
   bundle: {growth: 15%, growthMin: 5MB, files: 20%, filesMin: 200, newFile: 5MB, ceiling: 300MB,
            allowPatterns: []}  # e.g. ["*.md"] for an app that ships help pages
   confirmTimeout: 24h
-device: {default: 00008150-…}
+device:
+  default: 00008150-…
+  bridge: {phone: iphone183, interface: en0, maxDuration: 12h}   # all optional (§6.4.1)
 notify:
   allowHosts: ["*.example.ts.net"]   # --notify-url webhooks must match
   human: {url: …}             # optional (e.g. a GrokBot webhook)
@@ -691,6 +736,9 @@ eve jobs [--app A] [--limit N]
 eve cancel <id>
 eve artifacts <id> [--out DIR]          download an exec job's artifacts (M3)
 eve builds <app>                        latest ASC builds and states
+eve bridge on [--for 2h] [--phone P]|off|status
+                                        travel bridge to the phone over Tailscale (§6.4.1);
+                                        `on` exits 0 once a device call went through, 69 if not
 eve token create|list|revoke            (server)
 eve serve                               (server)
 eve agent install|uninstall|status      (server, non-Nix)
@@ -720,6 +768,7 @@ eve version
 | `GET` | `/v1/apps/{app}/source-stats` | last accepted source: bytes, files, size per top-level dir |
 | `GET` / `PUT` | `/v1/apps/{app}/baseline` | show, or reset from a job |
 | `GET` | `/v1/doctor`, `/v1/version` | |
+| `GET` / `POST` / `DELETE` | `/v1/bridge` | status; `POST {for, phone?}` starts or extends the lease and checks the phone answers; `DELETE` stops it |
 
 ## 12. Code layout
 
@@ -745,6 +794,7 @@ internal/redact/             secret-value redaction for logs, results, artifacts
 internal/launchd/            LaunchAgent plist and bootstrap
 internal/config/             server.yml, client.yml, eve.yml
 internal/run/                Runner interface, real and fake
+internal/bridge/             travel bridge: advert capture and republishing, port-window relay
 skill/eve/SKILL.md           agent skill
 docs/                        design.md, setup.md, configuration.md, new-app.md, troubleshooting.md
 testdata/                    logs/, asc/ (ported recorded JSON), devicectl/

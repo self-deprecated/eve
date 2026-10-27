@@ -111,6 +111,26 @@ func ExitCode(s State) int {
 // refused before anything is uploaded, rather than misreading its answers. 2: apps list verbs.
 const APILevel = 2
 
+// Bridge is GET, POST and DELETE /v1/bridge: the travel bridge that reaches the phone over
+// Tailscale while it is on another network (docs/design.md §6.4.1).
+type Bridge struct {
+	On        bool      `json:"on"`
+	Until     time.Time `json:"until,omitzero"`
+	Phone     string    `json:"phone,omitempty"` // the tailnet address it relays to
+	Reachable bool      `json:"reachable"`       // a device call has gone through it
+	// AdvertSeenAt is when the build Mac last saw the phone's advert on its own network: the
+	// bridge stands in for that advert, so it needs one seen at least once.
+	AdvertSeenAt time.Time `json:"advertSeenAt,omitzero"`
+	MaxDuration  string    `json:"maxDuration,omitempty"` // the longest lease one `eve bridge on` gets
+	Detail       string    `json:"detail,omitempty"`      // what's wrong, or what to do
+}
+
+// BridgeRequest is POST /v1/bridge.
+type BridgeRequest struct {
+	For   string `json:"for"`             // lease from now, e.g. "2h"
+	Phone string `json:"phone,omitempty"` // the phone's tailnet name or address (default: the server's choice)
+}
+
 // VersionInfo is GET /v1/version.
 type VersionInfo struct {
 	Version string `json:"version"`

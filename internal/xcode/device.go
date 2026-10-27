@@ -194,6 +194,12 @@ func (t Tools) Launch(ctx context.Context, device, bundleID string, log io.Write
 	return err
 }
 
+// LockState asks the phone whether it is locked: a cheap call that still needs a tunnel to it.
+func (t Tools) LockState(ctx context.Context, device string) error {
+	_, err := t.devicectl(ctx, nil, "device", "info", "lockState", "--device", device)
+	return err
+}
+
 // devicectl runs `xcrun devicectl args…`, returning stdout. With log set, both streams go to it
 // as well. A non-zero exit is an ExitError, with stdout still returned (devicectl writes its
 // JSON error document there).

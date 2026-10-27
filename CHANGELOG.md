@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Travel bridge
+- `eve bridge on [--for 2h]` reaches the iPhone over Tailscale while it's on another Wi-Fi
+  network, for a lease (at most `device.bridge.maxDuration`, default 12h), inside `eve serve`.
+  A device job waiting for the phone carries on once it's on. `off` and `status`;
+  `GET/POST/DELETE /v1/bridge`.
+- eve remembers the phone's Bonjour advert whenever it's on the build Mac's network and
+  republishes it with the Mac's own address, relaying CoreDevice's connections to the phone's
+  tailnet address on a port window that follows remotepairingd's log. The relay accepts
+  connections only from the Mac itself.
+- `on` checks a device call goes through (exit 69 if not). The phone is `device.bridge.phone`,
+  `--phone`, or the only iPhone online on the tailnet. A lease survives an eve restart.
+- CoreDevice 4 ("The tunnel connection failed") is `device.unavailable`/`connect_phone`, and the
+  `connect_phone` hints mention `eve bridge on`. `doctor --host` reports the bridge and when the
+  phone was last seen.
+
 ### Expo apps
 - eve.yml's `project.xcworkspace` builds a workspace (`-workspace`) for every verb: CocoaPods
   projects and Expo apps.

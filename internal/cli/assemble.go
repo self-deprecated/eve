@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/asc"
+	"github.com/self-deprecated/eve/internal/bridge"
 	"github.com/self-deprecated/eve/internal/classify"
 	"github.com/self-deprecated/eve/internal/config"
 	"github.com/self-deprecated/eve/internal/launchd"
@@ -38,6 +40,7 @@ type System struct {
 	Deliverer *notify.Deliverer
 	Sources   source.Store
 	ASC       *asc.Client
+	Bridge    *bridge.Manager
 	Log       *slog.Logger
 }
 
@@ -96,6 +99,13 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 		}
 	}
 
+	bridgeTools := xcode.Tools{Runner: deps.Runner, Env: xcode.ChildEnv(xcode.EnvSpec{Home: home, User: os.Getenv("USER")})}
+	sys.Bridge = &bridge.Manager{
+		DataDir: cfg.DataDir, Settings: cfg.Device.Bridge, Runner: deps.Runner, Log: log,
+		Tailscale: func() (string, error) { return findTailscale(cfg.Path) },
+		Probe:     func(ctx context.Context) error { return probePhone(ctx, bridgeTools, cfg.Device.Default) },
+	}
+
 	sys.Deliverer = &notify.Deliverer{
 		Outbox: outboxAdapter{st}, Secrets: notify.ConfigSecrets{Notify: cfg.Notify}, AllowHosts: cfg.Notify.AllowHosts,
 		Version: version, Logger: log,
@@ -119,6 +129,7 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 		SizeDetails: sys.sizeDetails,
 		Doctor:      sys.Doctor,
 		ErrorLines:  func(b []byte, max int) []string { return classify.Excerpt(b, max) },
+		Bridge:      sys.Bridge,
 	}
 	if ascClient != nil {
 		sys.Server.Builds = sys.builds
@@ -160,6 +171,43 @@ func (s *System) EnsureOwnerToken(ctx context.Context) error {
 	}
 	s.Log.Info("created the owner token", "path", path)
 	return nil
+}
+
+// probePhone makes one device call that needs a tunnel to the phone eve installs on by default
+// (device.default, else the first paired physical iPhone).
+func probePhone(ctx context.Context, tools xcode.Tools, want string) error {
+	devices, err := tools.Devices(ctx)
+	if err != nil {
+		return err
+	}
+	for _, d := range devices {
+		if d.Physical && d.Platform == "iOS" && (want != "" && d.Matches(want) || want == "" && d.Paired && d.Type == "iPhone") {
+			return tools.LockState(ctx, d.ID)
+		}
+	}
+	return errors.New("no paired iPhone is known to the build Mac")
+}
+
+// findTailscale finds the tailscale CLI: eve serve's PATH has only Apple's tools.
+func findTailscale(extra []string) (string, error) {
+	if p, err := exec.LookPath("tailscale"); err == nil {
+		return p, nil
+	}
+	dirs := append(append([]string{}, extra...), "/run/current-system/sw/bin", "/etc/profiles/per-user/"+os.Getenv("USER")+"/bin", "/opt/homebrew/bin", "/usr/local/bin")
+	for _, d := range dirs {
+		if p := filepath.Join(d, "tailscale"); fileExecutable(p) {
+			return p, nil
+		}
+	}
+	if p := "/Applications/Tailscale.app/Contents/MacOS/Tailscale"; fileExecutable(p) {
+		return p, nil
+	}
+	return "", errors.New("the tailscale CLI isn't installed where eve looks (PATH, server.yml path, /run/current-system/sw/bin, Homebrew, Tailscale.app)")
+}
+
+func fileExecutable(p string) bool {
+	fi, err := os.Stat(p)
+	return err == nil && fi.Mode().IsRegular() && fi.Mode()&0o111 != 0
 }
 
 // Housekeep prunes old uploads and job workspaces.
@@ -354,6 +402,19 @@ func (s *System) Doctor(ctx context.Context) any {
 		add("app store connect", status, detail)
 	} else {
 		add("app store connect", "warn", "no API key configured (asc.keyId)")
+	}
+	if s.Bridge != nil {
+		b := s.Bridge.Status()
+		switch {
+		case b.On && b.Reachable:
+			add("phone bridge", "ok", fmt.Sprintf("on until %s to %s; the phone answered through it", b.Until.Local().Format(time.DateTime), b.Phone))
+		case b.On:
+			add("phone bridge", "warn", b.Detail)
+		case b.AdvertSeenAt.IsZero():
+			add("phone bridge", "warn", "off; "+bridge.ErrNoAdvert.Error())
+		default:
+			add("phone bridge", "ok", "off; ready to start: the phone was last seen on this network "+b.AdvertSeenAt.Local().Format(time.DateTime))
+		}
 	}
 	var stfs syscallStatfs
 	if free, ok := stfs.free(s.Config.DataDir); ok {

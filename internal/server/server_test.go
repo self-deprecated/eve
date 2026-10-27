@@ -53,6 +53,7 @@ func (p pipe) Watch(jc *queue.JobCtx) error { return nil }
 
 type fixture struct {
 	srv   *httptest.Server
+	s     *Server
 	st    *store.Store
 	q     *queue.Queue
 	tok   string
@@ -90,7 +91,7 @@ func newFixture(t *testing.T, run func(jc *queue.JobCtx) error) *fixture {
 	t.Cleanup(srv.Close)
 	tok, _ := st.CreateToken(context.Background(), "lattice", false)
 	owner, _ := st.CreateToken(context.Background(), "owner", true)
-	return &fixture{srv: srv, st: st, q: q, tok: tok, owner: owner, sha: sha, dir: dir}
+	return &fixture{srv: srv, s: s, st: st, q: q, tok: tok, owner: owner, sha: sha, dir: dir}
 }
 
 func (f *fixture) do(t *testing.T, method, path, tok string, body any) (*http.Response, []byte) {
@@ -339,5 +340,50 @@ func TestDirectoryArtifactIsATarOfItsFiles(t *testing.T) {
 	}
 	if resp, _ := f.do(t, "GET", "/v1/jobs/"+c.ID+"/artifacts/etc", f.tok, nil); resp.StatusCode != 404 {
 		t.Fatalf("a symlinked artifact was served: %d", resp.StatusCode)
+	}
+}
+
+type fakeBridge struct {
+	on    bool
+	d     time.Duration
+	phone string
+}
+
+func (b *fakeBridge) On(_ context.Context, d time.Duration, phone string) (api.Bridge, error) {
+	if phone == "nowhere" {
+		return api.Bridge{}, errors.New("can't find the phone")
+	}
+	b.on, b.d, b.phone = true, d, phone
+	return b.Status(), nil
+}
+
+func (b *fakeBridge) Off() api.Bridge { b.on = false; return b.Status() }
+
+func (b *fakeBridge) Status() api.Bridge {
+	return api.Bridge{On: b.on, Phone: b.phone, Reachable: b.on}
+}
+
+func TestBridgeEndpoints(t *testing.T) {
+	f := newFixture(t, nil)
+	if resp, _ := f.do(t, "GET", "/v1/bridge", f.tok, nil); resp.StatusCode != http.StatusNotImplemented {
+		t.Fatalf("without a bridge: %d, want 501", resp.StatusCode)
+	}
+	b := &fakeBridge{}
+	f.s.Bridge = b
+	for _, body := range []any{map[string]string{"for": "soon"}, map[string]string{"for": "-1h"}, map[string]string{}} {
+		if resp, _ := f.do(t, "POST", "/v1/bridge", f.tok, body); resp.StatusCode != http.StatusBadRequest {
+			t.Errorf("POST %v: %d, want 400", body, resp.StatusCode)
+		}
+	}
+	if resp, body := f.do(t, "POST", "/v1/bridge", f.tok, api.BridgeRequest{For: "2h", Phone: " nowhere "}); resp.StatusCode != http.StatusConflict || !strings.Contains(string(body), "can't find the phone") {
+		t.Errorf("failing on: %d %s", resp.StatusCode, body)
+	}
+	resp, body := f.do(t, "POST", "/v1/bridge", f.tok, api.BridgeRequest{For: "2h", Phone: "iphone183"})
+	var got api.Bridge
+	if resp.StatusCode != http.StatusOK || json.Unmarshal(body, &got) != nil || !got.On || b.d != 2*time.Hour || b.phone != "iphone183" {
+		t.Fatalf("on: %d %s (bridge %+v)", resp.StatusCode, body, b)
+	}
+	if resp, body := f.do(t, "DELETE", "/v1/bridge", f.tok, nil); resp.StatusCode != http.StatusOK || b.on || strings.Contains(string(body), `"on": true`) {
+		t.Errorf("off: %d %s", resp.StatusCode, body)
 	}
 }

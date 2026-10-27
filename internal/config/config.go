@@ -96,7 +96,32 @@ type TestflightConfig struct {
 
 // DeviceDefaults is the server-wide default device.
 type DeviceDefaults struct {
-	Default string `yaml:"default"`
+	Default string         `yaml:"default"`
+	Bridge  BridgeSettings `yaml:"bridge"`
+}
+
+// BridgeSettings configures `eve bridge`, which reaches the phone over Tailscale while it is on
+// another network (docs/design.md §6.4.1).
+type BridgeSettings struct {
+	Phone       string   `yaml:"phone"`       // the phone's tailnet name or address; default: the only iPhone online
+	Interface   string   `yaml:"interface"`   // the build Mac's LAN interface; default en0
+	MaxDuration Duration `yaml:"maxDuration"` // longest lease per `eve bridge on`; default 12h
+}
+
+// Iface returns the LAN interface, en0 unless configured.
+func (b BridgeSettings) Iface() string {
+	if b.Interface == "" {
+		return "en0"
+	}
+	return b.Interface
+}
+
+// MaxLease returns the longest lease, 12h unless configured.
+func (b BridgeSettings) MaxLease() time.Duration {
+	if b.MaxDuration == 0 {
+		return 12 * time.Hour
+	}
+	return time.Duration(b.MaxDuration)
 }
 
 // Notify configures outgoing notifications.
@@ -289,6 +314,9 @@ func (s *Server) Validate() error {
 	}
 	if d := s.Simulators.ShutdownWithin(); d < time.Second || d > 2*time.Minute {
 		errs = append(errs, errors.New("simulators.shutdownTimeout must be between 1s and 2m"))
+	}
+	if s.Device.Bridge.MaxLease() < time.Minute {
+		errs = append(errs, errors.New("device.bridge.maxDuration must be at least 1m (omitted or 0s uses 12h)"))
 	}
 	if s.Simulators.LeaseLimit() < time.Second {
 		errs = append(errs, errors.New("simulators.maxLeaseDuration must be at least 1s (omitted or 0s uses 1h)"))

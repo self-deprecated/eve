@@ -1,0 +1,3 @@
+ERROR: The tunnel connection failed while the system tried to connect to the device. (com.apple.dt.CoreDeviceError error 4 (0x04))
+       ----------------------------------------
+           The tunnel connection failed while the system tried to connect to the device. (com.apple.dt.RemotePairingError error 4 (0x04))

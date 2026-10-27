@@ -21,7 +21,7 @@ versions) and `eve doctor --host` (the build Mac's own checks).
 
 | Result | Meaning | Fix |
 |---|---|---|
-| `waiting_for_device`, then `needs_human: connect_phone` | The build Mac can't reach the phone (CoreDevice 4000 or 4016): Wi-Fi off, another network, away, or asleep. Or the connection dropped mid-install (3002) | Turn on the phone's Wi-Fi on the Mac's network (or plug it in) and wake it. eve retries every 5 s for 10 minutes |
+| `waiting_for_device`, then `needs_human: connect_phone` | The build Mac can't reach the phone (CoreDevice 4000 or 4016, or 4 through the bridge): Wi-Fi off, another network, away, or asleep. Or the connection dropped mid-install (3002) | Turn on the phone's Wi-Fi on the Mac's network (or plug it in) and wake it; away from it, `eve bridge on` (below). eve retries every 5 s for 10 minutes |
 | `waiting_for_device`, then `needs_human: unlock_phone` | The phone is reachable but locked, and Xcode's developer disk image isn't mounted yet (CoreDevice 12040; once after the phone restarts) | Unlock it once; later installs work while it's locked |
 | `succeeded` with a `not_launched` note | Installed, but the phone was locked at launch | Open the app on the phone |
 | `device.unknown` | No paired physical device matches `--device`, or none is paired | Pair it in Xcode on the build Mac (Window → Devices and Simulators). The failure lists the devices the Mac knows |
@@ -29,6 +29,29 @@ versions) and `eve doctor --host` (the build Mac's own checks).
 
 On the build Mac, `xcrun devicectl list devices` shows the phone as `available (paired)` when the
 Mac can reach it and `unavailable` when it can't.
+
+### Away from the build Mac's network
+
+`eve bridge on --for 2h` lets the build Mac reach the phone over Tailscale; a job waiting for the
+phone carries on by itself. It needs:
+
+- the phone on **Wi-Fi** (any network; on mobile data alone it doesn't listen for Xcode) with
+  **Tailscale connected**, and awake for the first call;
+- the phone seen on the build Mac's Wi-Fi at least once before (eve remembers it; `eve doctor
+  --host` says when it last saw it);
+- the phone not restarted since it was last unlocked near the Mac, if Xcode's developer disk
+  image has to be mounted again (untested away from home).
+
+| `eve bridge on` says | Fix |
+|---|---|
+| eve hasn't seen the phone on the build Mac's network yet | Put the phone on the Mac's Wi-Fi once, then try again |
+| no iPhone is online on the tailnet / several iPhones are online | Open Tailscale on the phone; or pass `--phone <tailnet name>` (or set `device.bridge.phone`) |
+| on, but the phone hasn't answered (exit 69) | Wake the phone, check it's on Wi-Fi with Tailscale connected, and run `eve bridge on` again |
+
+The bridge ends by itself at the end of its lease (default 2h, at most `device.bridge.maxDuration`)
+or with `eve bridge off`. While it runs, the build Mac republishes the phone's Bonjour advert on
+its own network and relays CoreDevice's (encrypted) connections to the phone's tailnet address,
+accepting them only from itself ([design §6.4.1](design.md)).
 
 ## The build Mac
 

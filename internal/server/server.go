@@ -55,6 +55,15 @@ type Server struct {
 	ErrorLines func(log []byte, max int) []string
 	// MaxUpload caps a source upload (compressed).
 	MaxUpload int64
+	// Bridge runs the travel bridge to the phone (eve bridge); nil when unavailable.
+	Bridge Bridge
+}
+
+// Bridge is the travel bridge (internal/bridge.Manager).
+type Bridge interface {
+	On(ctx context.Context, d time.Duration, phone string) (api.Bridge, error)
+	Off() api.Bridge
+	Status() api.Bridge
 }
 
 type ctxKey int
@@ -91,6 +100,9 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /v1/apps/{app}/baseline", s.getBaseline)
 	mux.HandleFunc("PUT /v1/apps/{app}/baseline", s.putBaseline)
 	mux.HandleFunc("GET /v1/doctor", s.doctor)
+	mux.HandleFunc("GET /v1/bridge", s.bridgeStatus)
+	mux.HandleFunc("POST /v1/bridge", s.bridgeOn)
+	mux.HandleFunc("DELETE /v1/bridge", s.bridgeOff)
 	return s.auth(mux)
 }
 
@@ -607,6 +619,49 @@ func (s *Server) doctor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, s.Doctor(r.Context()))
+}
+
+func (s *Server) bridge(w http.ResponseWriter) bool {
+	if s.Bridge == nil {
+		writeErr(w, http.StatusNotImplemented, "no_bridge", "the travel bridge isn't available on this server")
+		return false
+	}
+	return true
+}
+
+func (s *Server) bridgeStatus(w http.ResponseWriter, r *http.Request) {
+	if s.bridge(w) {
+		writeJSON(w, http.StatusOK, s.Bridge.Status())
+	}
+}
+
+func (s *Server) bridgeOn(w http.ResponseWriter, r *http.Request) {
+	if !s.bridge(w) {
+		return
+	}
+	var req api.BridgeRequest
+	if err := json.NewDecoder(io.LimitReader(r.Body, 64<<10)).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
+		return
+	}
+	d, err := time.ParseDuration(req.For)
+	if err != nil || d <= 0 {
+		writeErr(w, http.StatusBadRequest, "bad_duration", `"for" must be a positive duration, e.g. "2h"`)
+		return
+	}
+	b, err := s.Bridge.On(r.Context(), d, strings.TrimSpace(req.Phone))
+	if err != nil {
+		writeErr(w, http.StatusConflict, "bridge", err.Error())
+		return
+	}
+	s.Log.Info("bridge requested", "token", tokenOf(r).Name, "for", d.String(), "requester", r.Header.Get("Tailscale-User-Login"))
+	writeJSON(w, http.StatusOK, b)
+}
+
+func (s *Server) bridgeOff(w http.ResponseWriter, r *http.Request) {
+	if s.bridge(w) {
+		writeJSON(w, http.StatusOK, s.Bridge.Off())
+	}
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

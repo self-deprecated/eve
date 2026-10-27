@@ -34,6 +34,7 @@ Sources, all on Quartz, harvested 2026-10-16:
 | device.attestation | screengate-unable-to-verify | synthetic ("Unable to Verify App", syslog line from the dossier) |
 | device.locked | bodydiff-launch | transcript (devicectl launch) |
 | device.locked | lineage-launch | transcript (devicectl launch) |
+| device.unavailable | bridge-tunnel-refused | transcript (`devicectl device info apps` through the bridge, tunnel port outside its window, 2026-10-27) |
 | device.unavailable | lineage-devicectl-info | transcript (`devicectl device info details`) |
 | device.unavailable | xcodebuild-destination | synthetic around real "Ineligible destinations" lines |
 | device.untrusted_developer | screengate-launch | transcript (devicectl launch, FBSOpenApplicationErrorDomain 3) |

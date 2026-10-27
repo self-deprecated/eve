@@ -48,6 +48,10 @@ apps:
 
 # device:
 #   default: "Sam’s iPhone"        # default phone for every app
+#   bridge:                        # `eve bridge`: reach the phone over Tailscale away from home
+#     phone: iphone183             # its tailnet name or address (default: the only iPhone online)
+#     interface: en0               # the build Mac's LAN interface
+#     maxDuration: 12h             # longest lease per `eve bridge on`
 
 # simulators:                      # only exact devices created and tracked by Eve
 #   idleTimeout: 15m               # pending/recovered cleanup; 0s disables automatic retries

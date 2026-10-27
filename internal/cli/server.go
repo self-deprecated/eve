@@ -72,6 +72,7 @@ func serveCmd(env *Env, load func() (*config.Server, error)) *cobra.Command {
 				}
 			}()
 			go sys.Housekeep(ctx)
+			go sys.Bridge.Run(ctx)
 			log.Info("eve serving", "listen", cfg.Listen, "data", cfg.DataDir, "version", env.Version)
 			select {
 			case <-ctx.Done():
