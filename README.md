@@ -91,13 +91,17 @@ wait in one command, read only the result, and pass on what a person has to do. 
 include it, and the Nix module installs it. After that, "ship it to TestFlight" is enough.
 
 [docs/setup.md](docs/setup.md) covers publishing on your tailnet, reboots and disk use, and
-[docs/new-app.md](docs/new-app.md) covers adding apps.
+[docs/new-app.md](docs/new-app.md) covers adding apps. `eve apple` creates a new app's bundle
+ids, App Store Connect record and APNs key from your own machine, with fastlane
+([commands](docs/commands.md#apple-provisioning)).
 
 ## Trust model
 
 - **A token that can submit a build can run code as you on the Mac.** Build phases and scripts
   run as the logged-in user with the keychain unlocked. Issue one token per machine you control,
   and revoke them with `eve token revoke`.
+- `eve apple login` caches a full Apple account session on that machine, in
+  `~/.config/eve/apple/` (0600). Sign in only on machines you control.
 - eve listens only on loopback; publish it on your tailnet, never the internet. Stored and served
   logs are redacted.
 - It uses one Mac and runs one job at a time. It doesn't do App Store submission, external

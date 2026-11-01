@@ -1,6 +1,6 @@
 ---
 name: eve
-description: Build the user's iOS apps on their build Mac with eve — ship to TestFlight, install and launch on their iPhone, check that it builds and its tests pass, or run a repo script (screenshots) on the Mac — with one long-running command that returns the result. Use when the user says "ship it", "send it to TestFlight", "put it on my phone", "upload a build", "check it builds", "update the screenshots", or when you would otherwise run xcodebuild archive/export/test, devicectl, simctl, App Store Connect calls, or ssh/rsync to the build Mac yourself.
+description: Build the user's iOS apps on their build Mac with eve — ship to TestFlight, install and launch on their iPhone, check that it builds and its tests pass, or run a repo script (screenshots) on the Mac — with one long-running command that returns the result; and set up a new app on Apple's side (bundle ids, capabilities, App Store Connect record, APNs key). Use when the user says "ship it", "send it to TestFlight", "put it on my phone", "upload a build", "check it builds", "update the screenshots", "create the app in App Store Connect", "register the bundle id", "make an APNs key", or when you would otherwise run xcodebuild archive/export/test, devicectl, simctl, App Store Connect calls, fastlane/Spaceship, or ssh/rsync to the build Mac yourself.
 ---
 
 # Eve
@@ -180,6 +180,33 @@ group) lives on the server, not here.
 Before the first submit, make sure big directories the build doesn't need (screenshots, design
 files, fixtures) are covered by `.gitignore`, `.eveignore` or `ignore`: the size guard only stops
 uploads that look wrong, and every submit uploads everything else.
+
+## A new app on Apple's side
+
+`eve apple` creates what a new app needs at Apple from this machine (not the build Mac); it needs
+`fastlane` on PATH. Never write your own fastlane, Spaceship or developer-portal scripts for this.
+
+```bash
+eve apple app create <bundle-id> --name "App Name" --sku <sku> --locale en-GB \
+  --like <existing-bundle-id> --extension <suffix>... --dry-run --json
+```
+
+- Run with `--dry-run` first and show the user the `changes`; confirm the name with them (it is
+  public and hard to change), then run it again without `--dry-run`. Rerunning is safe: exit 0
+  with no `changes` means everything already exists.
+- `--like` copies an existing app's capabilities and app-group use, and its same-suffix
+  extensions'. Without it, use `--capability TYPE` (Apple's names, e.g. `PUSH_NOTIFICATIONS`),
+  `--extension-capability TYPE` and `--app-group`.
+- `eve apple key create --name "App Name Push" --env sandbox|production|all --doppler <project>`
+  creates an APNs key (team scope by default; `--scope topic --topic <bundle-id>` for one app, in
+  one environment) and stores `APNS_KEY_P8`, `APNS_KEY_ID`, `APPLE_TEAM_ID` in Doppler
+  (`<project>` means `dev`/`prd` by `--env`; `<project>/<config>` names one). Check
+  `eve apple keys` first: Apple limits keys per team, so don't create one the user already has.
+  If the error names a rescue file, tell the user: it's the only copy of the key.
+- `eve apple apps` and `eve apple keys` list what exists.
+- Exit 78: the Apple session expired. Tell the user to run `eve apple login` in a terminal
+  (password and 2FA code) and stop; never ask for their password. Exit 65: Apple refused (e.g.
+  the app name is taken): ask the user for another. Exit 64 with "pass --team": ask which team.
 
 ## Useful commands
 

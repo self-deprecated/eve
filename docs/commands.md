@@ -10,8 +10,11 @@
 | `eve artifacts <job> --out DIR` | Download what an `exec` job produced |
 | `eve builds <app>` · `eve apps` | Latest builds in App Store Connect; configured apps and their verbs |
 | `eve bridge on [--for 2h]` · `eve bridge off` · `eve bridge status` | Reach the phone over Tailscale while it's on another Wi-Fi network ([travel](troubleshooting.md#away-from-the-build-macs-network)). `on` exits 0 once a device call went through it, 69 if the phone didn't answer |
-| `eve init` · `eve doctor [--host]` · `eve login` | Starter `eve.yml`; check the connection or the build Mac; store a server and token |
+| `eve init` · `eve doctor [--host]` · `eve login` | Starter `eve.yml`; check the connection (and that `eve apple`'s tools are here) or the build Mac; store a server and token |
 | `eve serve` · `eve agent install` · `eve token create` · `eve run <verb>` | Server side: run, install as a LaunchAgent, issue tokens, build in-process without the server |
+| `eve apple login` · `eve apple apps` · `eve apple keys` | Client side: sign in to Apple (password and 2FA, cached on this machine); list App Store Connect apps and keys |
+| `eve apple app create <bundle-id> --name … --sku …` | Client side: create the app group, bundle id and capabilities, App Store Connect record and extensions; only what's missing ([below](#apple-provisioning)) |
+| `eve apple key create --name … --env … --doppler …` | Client side: create an APNs key and store it in Doppler |
 | `eve simulator list` · `eve simulator renew <udid> --for 30m` · `eve simulator release <udid>` | Build host only: inspect tracked devices, acquire/renew timed borrowing, or release it early ([lifecycle](operations.md)) |
 
 Every command takes `--json`.
@@ -31,6 +34,36 @@ For `eve wait`, `submit --wait` and `run`:
 | 76 | confirmation required (size guard) |
 | 78 | needs a human (`human.action`: unlock the phone, sign in to Xcode, accept an agreement, …) |
 | 130 | cancelled |
+
+## Apple provisioning
+
+`eve apple` runs on the machine you type it on, with `fastlane` on its PATH (and the Doppler CLI,
+signed in, for keys). Sign in once with `eve apple login`; the session lasts until Apple expires
+it, then commands exit 78 with "run `eve apple login`". Pick the team with `--team` or
+`EVE_APPLE_TEAM` when the Apple account has more than one.
+
+```sh
+eve apple app create com.example.myapp --name "My App" --sku myapp --locale en-GB \
+  --like com.example.otherapp --extension widget --dry-run     # drop --dry-run to apply
+eve apple key create --name "My App Push" --env all --doppler myapp   # myapp/dev and myapp/prd
+```
+
+- `app create` creates `group.<bundle-id>` (when the app or `--like` uses an app group), the
+  bundle id and its capabilities, the App Store Connect record (`--version`, default 1.0), then
+  `<bundle-id>.<extension>` for each `--extension`. `--like` copies an existing app's
+  capabilities with their settings, and each same-suffix extension's; `--capability`,
+  `--extension-capability` and `--app-group` add to that. Anything that exists is left alone:
+  a rerun reports `no changes`.
+- `key create` makes a team key (every topic) or, with `--scope topic --topic <bundle-id>`, a
+  topic key in one environment. `--doppler <project>` stores it in the configs `--env` implies
+  (sandbox: `dev`, production: `prd`, all: both); `--doppler <project>/<config>` names one
+  config, and both repeat. Missing projects are created. `APNS_KEY_P8` is restricted;
+  `APNS_KEY_ID` and `APPLE_TEAM_ID` aren't. Key names take letters, digits and spaces. If
+  Doppler fails after Apple created the key, the error names a 0600 file holding the `.p8`,
+  which Apple won't serve again.
+
+Exit codes: 0 done, 1 failed, 64 usage, 65 Apple refused (a taken app name), 69 Apple
+unreachable, 78 sign in again.
 
 ## The size guard
 

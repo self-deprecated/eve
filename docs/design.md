@@ -67,6 +67,8 @@ and the actual bill, not raw token counts.) The same sessions show:
 - Failure classification (rules first, optional small-model fallback).
 - A resumable event stream for each job (`eve wait`), and an optional human webhook.
 - Host diagnostics (`doctor --host`).
+- Provisioning an app on Apple's side from the client machine (`eve apple`, §20): bundle ids,
+  capabilities, app groups, App Store Connect records and APNs keys.
 
 ### Repositories own
 
@@ -75,8 +77,8 @@ and the actual bill, not raw token counts.) The same sessions show:
 
 ### The user owns
 
-- Apple ID sign-in in Xcode, 2FA, agreements, export compliance answers, Family Controls approval,
-  app names, creating app records.
+- Apple ID sign-in in Xcode and for `eve apple login`, 2FA, agreements, export compliance answers,
+  the team's Family Controls approval, app names.
 - Unlocking and restarting the phone, accepting TestFlight invites.
 - Logging in at Quartz's console after a reboot (§4.1).
 
@@ -84,8 +86,8 @@ and the actual bill, not raw token counts.) The same sessions show:
 
 Android; multiple build Macs; App Store submission and review; external TestFlight groups;
 parallel jobs; Expo's services (EAS Build, Submit and Update; Expo apps build like any other
-workspace, §18.10); git-ref builds; registering bundle IDs or capabilities; any computer use; keeping an
-Apple ID web session alive; isolating one app's builds from another's credentials (§14).
+workspace, §18.10); git-ref builds; any computer use; keeping an Apple ID web session alive (`eve apple` reuses
+one until it expires, §20); isolating one app's builds from another's credentials (§14).
 
 ## 3. Ground truth this plan builds on
 
@@ -743,6 +745,9 @@ eve token create|list|revoke            (server)
 eve serve                               (server)
 eve agent install|uninstall|status      (server, non-Nix)
 eve run <verb> [<app>]                  in-process on Quartz, same lock and allocator (dev + break-glass)
+eve apple login|apps|keys               client-side Apple account session and listings (§20)
+eve apple app create <bundle-id> …      bundle ids, capabilities, app group, app record (§20)
+eve apple key create …                  APNs key, stored in Doppler (§20)
 eve version
 ```
 
@@ -795,6 +800,7 @@ internal/launchd/            LaunchAgent plist and bootstrap
 internal/config/             server.yml, client.yml, eve.yml
 internal/run/                Runner interface, real and fake
 internal/bridge/             travel bridge: advert capture and republishing, port-window relay
+internal/apple/              `eve apple`: embedded Fastfile, lanes over Spaceship, Doppler storage
 skill/eve/SKILL.md           agent skill
 docs/                        design.md, setup.md, configuration.md, new-app.md, troubleshooting.md
 testdata/                    logs/, asc/ (ported recorded JSON), devicectl/
@@ -845,6 +851,10 @@ Stated plainly, as slipway does:
 - Secrets are read on the server, written only to the job's 0600 `secrets.xcconfig`, redacted from
   stored and served logs, results and artifacts, and never returned by the API.
 - Uploaded archives are treated as hostile input during extraction (§6.1).
+- **The Spaceship cookie `eve apple login` caches is a full Apple account session** on that client
+  machine (§20): whoever can read `~/.config/eve/apple/` can act as the user on the developer
+  portal and App Store Connect until Apple expires it. It is kept 0600 in a 0700 directory and
+  never leaves the machine; sign in only on machines you control.
 - Real isolation between apps (a separate macOS user per app, or manual signing with per-app
   keychains outside the user's home) is possible later and out of scope for v1.
 
@@ -1123,3 +1133,49 @@ Both reviewers: "revise; the architecture is sound". Resolutions:
 | Secrets in build settings leak via `ps` and the xcodebuild header | Fable | `-xcconfig` file per job; redaction of served logs and artifacts (§6.2) |
 | Manual signing route is unverified | Astra | Marked unverified; M7 starts by verifying it |
 | Minor: SSE heartbeat; API row typo; client token can't use a login keychain on Lattice; no cheap Xcode-account probe | Fable | Fixed (§8.2, §11, §4.2, §6.8) |
+
+## 20. Apple provisioning (client-side, 2026-11-01)
+
+`eve apple` creates what an app needs on Apple's side from the machine running the CLI. The
+build server isn't involved and there are no API endpoints for it: the team lives in the
+server's config, the Apple ID session on the client.
+
+**Why fastlane.** App Store Connect API keys can create neither app records nor APNs keys; only
+an Apple ID web session can. eve doesn't reimplement Apple's web login (SRP, 2FA, cookies);
+it embeds a Fastfile (`internal/apple/Fastfile`) and runs `fastlane <lane>` from a private
+temporary directory, so fastlane must be on the client's PATH. The request goes in as JSON and
+the lane writes a JSON result with an error kind eve maps to an exit code. fastlane runs with
+`opt_out_usage`, `FASTLANE_SKIP_UPDATE_CHECK=1` and `FASTLANE_OPT_OUT_USAGE=1`.
+
+**The session.** `eve apple login` is the only command that asks for a password, in the terminal
+(it is never stored; Spaceship asks for the 2FA code). Spaceship's cookie goes to
+`~/.config/eve/apple/spaceship/<apple-id>/cookie` (`SPACESHIP_COOKIE_PATH`, 0700 directory,
+0600 file) and the Apple ID to `apple/apple-id`. Every other lane builds Spaceship's portal and
+App Store Connect clients from the cookie and checks it: `Spaceship::Portal.login` would ask for
+a password even with a valid cookie, and eve never sends Apple a password non-interactively. An
+expired or missing session ends `needs_human` (exit 78, `human.action: apple_login`, "run
+`eve apple login`"); a network failure, which Spaceship can't tell from an expired session, is
+told apart and ends `unavailable` (69). Exit codes otherwise: 64 usage (including a `--like`
+or `--topic` bundle id that doesn't exist), 65 Apple refused (a taken app name, a rejected key
+name), 1 anything else. The team is `--team`, `$EVE_APPLE_TEAM`, or the account's only team.
+
+**`eve apple app create`** creates, in order and only what's missing: the app group
+`group.<bundle-id>`, the bundle id with its capabilities and group association, the App Store
+Connect record, then each `<bundle-id>.<extension>`. The record comes before the extensions, so
+a taken name stops the run before they exist; a new record takes seconds to appear in listings,
+so the lane polls for up to 40 s. `--like` copies an existing app's capabilities (with settings)
+and app-group use, and each same-suffix extension's. Over the web session capabilities are only
+accepted as a PATCH on the bundle id (`update_capability`), and `capability_type` can be empty,
+so the type is read from the capability id (`<bundleId>_<TYPE>`). `FAMILY_CONTROLS_DISTRIBUTION`
+is an ordinary capability once the team has Apple's approval (a one-time request per team).
+Rerunning changes nothing and says so; `--dry-run` lists what would change.
+
+**`eve apple key create`** creates an APNs key (Apple's environments are `sandbox`, `prod` and
+`all`; topic keys are single-environment and name portal app ids) and stores `APNS_KEY_P8`
+(restricted), `APNS_KEY_ID` and `APPLE_TEAM_ID` with the Doppler CLI's own login, in each
+`--doppler` config: `<project>/<config>`, or `<project>` for the configs `--env` implies
+(sandbox: dev, production: prd, all: both). Doppler is checked first (missing projects are
+created, configs must exist), so a key is only created when it can be stored. Values go on
+stdin and Doppler's stdout is discarded. Apple serves a key's `.p8` exactly once, so the lane
+writes it to a 0600 `O_EXCL` file in `$XDG_RUNTIME_DIR` (or the temp directory); eve deletes it
+once every config has the key, and otherwise names it in the error.

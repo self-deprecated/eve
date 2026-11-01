@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -118,10 +119,16 @@ func doctorCmd(env *Env) *cobra.Command {
 				_, _ = fmt.Fprintf(env.Err, "warning: this client is older than the server (API level %d, server %d); update it (sd fast-lane update)\n", api.APILevel, v.API)
 			}
 			if !host {
+				tools := appleTools()
 				if env.JSON {
-					return env.printJSON(map[string]any{"server": c.BaseURL, "serverVersion": v.Version, "serverAPI": v.API, "status": "ok"})
+					return env.printJSON(map[string]any{"server": c.BaseURL, "serverVersion": v.Version, "serverAPI": v.API, "status": "ok", "appleTools": tools})
 				}
 				_, _ = fmt.Fprintf(env.Out, "ok: %s (server %s, API level %d)\n", c.BaseURL, v.Version, v.API)
+				for _, name := range []string{"fastlane", "doppler"} {
+					if tools[name] == "" {
+						_, _ = fmt.Fprintf(env.Out, "note: %s is not on PATH (only `eve apple` needs it)\n", name)
+					}
+				}
 				return nil
 			}
 			raw, err := c.Raw(ctx, "/v1/doctor")
@@ -138,6 +145,15 @@ func doctorCmd(env *Env) *cobra.Command {
 	}
 	cmd.Flags().BoolVar(&host, "host", false, "run the server's host checks (keychain, Xcode, App Store Connect, disk)")
 	return cmd
+}
+
+// appleTools finds the tools `eve apple` runs on this machine ("" when missing).
+func appleTools() map[string]string {
+	tools := map[string]string{}
+	for _, name := range []string{"fastlane", "doppler"} {
+		tools[name], _ = exec.LookPath(name)
+	}
+	return tools
 }
 
 func waitCmd(env *Env) *cobra.Command {

@@ -10,10 +10,25 @@ Neither file knows the other's details.
 
 ## 1. Apple's side
 
-eve creates neither the bundle id nor the app record. A `create_app_record` action in a result
-means the record is missing. Before the first build:
+From your own machine, with `fastlane` installed, eve can create the bundle ids, capabilities, app
+group and App Store Connect record ([commands](commands.md#apple-provisioning)):
 
-- The bundle id is registered for your team, and the app record exists in App Store Connect.
+```sh
+eve apple login                                   # once: Apple ID password and 2FA code
+eve apple app create com.example.myapp --name "My App" --sku myapp --locale en-US \
+  --like com.example.otherapp --extension widget --dry-run
+```
+
+Drop `--dry-run` to apply it; running it again changes nothing. `--like` copies another app's
+capabilities and app-group use; without it, pass `--capability PUSH_NOTIFICATIONS` (and so on)
+and `--app-group`. A taken app name fails before the extensions are registered. Family Controls
+(Distribution) is enabled like any other capability once your team has Apple's approval, which is
+requested once per team. For push, `eve apple key create --name "My App Push" --env all
+--doppler myapp` creates an APNs key and stores it in Doppler.
+
+A `create_app_record` action in a build's result means the record is missing. Before the first
+build, also check:
+
 - The TestFlight group the builds go to exists and is internal.
 - The project signs automatically with your team, so the Apple ID signed in to Xcode on the build
   Mac can sign it.

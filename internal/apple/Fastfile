@@ -1,0 +1,312 @@
+# eve's Apple provisioning lanes (docs/design.md §20). eve writes this file to a private temporary
+# directory and runs `fastlane <lane>` there. The request is JSON in $EVE_APPLE_REQUEST; each lane
+# writes {"result": …, "error": {kind, message, action, url}} to $EVE_APPLE_RESULT and eve maps the
+# error kind to an exit code. Nothing here prints key material or sends Apple a password, except
+# `login`, which asks for it in the user's terminal.
+#
+# Everything runs over the Apple ID web session Spaceship caches in $SPACESHIP_COOKIE_PATH:
+# App Store Connect API keys can create neither app records nor APNs keys.
+
+opt_out_usage
+
+require "json"
+require "spaceship"
+
+File.umask(0o077)
+
+REQUEST = JSON.parse(File.read(ENV.fetch("EVE_APPLE_REQUEST")))
+# Sign in with Apple's default setting when a capability flag asks for it without --like.
+DEFAULT_SETTINGS = {
+  "APPLE_ID_AUTH" => [{ key: "APPLE_ID_AUTH_APP_CONSENT", options: [{ key: "PRIMARY_APP_CONSENT" }] }]
+}
+
+class EveError < StandardError
+  attr_reader :kind, :action, :url
+
+  def initialize(kind, message, action: nil, url: nil)
+    super(message)
+    @kind = kind
+    @action = action
+    @url = url
+  end
+end
+
+def fail!(kind, message, **opts)
+  raise EveError.new(kind, message, **opts)
+end
+
+def apple_message(error)
+  error.message.to_s.gsub(/\s+/, " ").strip[0, 600]
+end
+
+# Runs a lane body and writes its result, keeping whatever it did before an error.
+def respond
+  out = {}
+  error = nil
+  begin
+    yield out
+  rescue EveError => e
+    error = { kind: e.kind, message: e.message, action: e.action, url: e.url }
+  rescue Spaceship::UnauthorizedAccessError, Spaceship::InvalidUserCredentialsError, Spaceship::NoUserCredentialsError
+    error = { kind: "session", message: "the Apple session for #{REQUEST['appleId']} has expired" }
+  rescue Spaceship::ProgramLicenseAgreementUpdated, Spaceship::AppleIDAndPrivacyAcknowledgementNeeded => e
+    error = { kind: "agreement", message: apple_message(e), action: "accept_agreement", url: "https://developer.apple.com/account" }
+  rescue Spaceship::InternalServerError, Spaceship::BadGatewayError, Spaceship::GatewayTimeoutError,
+         Spaceship::AppleTimeoutError, Spaceship::TooManyRequestsError, Faraday::ConnectionFailed,
+         Faraday::TimeoutError, SocketError, OpenSSL::SSL::SSLError, Errno::ECONNREFUSED,
+         Errno::ECONNRESET, Errno::ETIMEDOUT, Errno::EHOSTUNREACH, Errno::ENETUNREACH => e
+    error = { kind: "unavailable", message: "Apple could not be reached: #{apple_message(e)}" }
+  rescue Spaceship::UnexpectedResponse, Spaceship::BasicPreferredInfoError => e
+    error = { kind: "rejected", message: "Apple refused: #{apple_message(e)}" }
+  rescue StandardError => e
+    error = { kind: "failed", message: "#{e.class}: #{apple_message(e)}" }
+  end
+  File.write(ENV.fetch("EVE_APPLE_RESULT"), JSON.generate({ result: out, error: error&.compact }.compact))
+end
+
+# has_valid_session treats a network failure like an expired session, so tell them apart before
+# sending the user to sign in again.
+def require_session(client)
+  return if client.has_valid_session
+  begin
+    Faraday.head("https://appstoreconnect.apple.com/")
+  rescue Faraday::Error, SocketError, SystemCallError => e
+    fail!("unavailable", "Apple could not be reached: #{apple_message(e)}")
+  end
+  fail!("session", "no valid Apple session for #{REQUEST['appleId']}")
+end
+
+# Spaceship::Portal.login demands a password even when the cached cookie is still valid, so build
+# the client from the cookie and never send Apple a password from here.
+def portal_login(out, pick_team: true)
+  client = Spaceship::PortalClient.new
+  client.user = REQUEST.fetch("appleId")
+  require_session(client)
+  teams = client.teams.map { |t| { "id" => t["teamId"], "name" => t["name"] } }
+  listed = teams.map { |t| "#{t['id']} (#{t['name']})" }.join(", ")
+  team = REQUEST["team"].to_s
+  if team.empty?
+    if teams.size != 1
+      out["teams"] = teams
+      return if !pick_team
+      fail!("usage", "the Apple account is in #{teams.size} teams; pass --team or set EVE_APPLE_TEAM: #{listed}")
+    end
+    team = teams.first["id"]
+  elsif teams.none? { |t| t["id"] == team }
+    fail!("usage", "team #{team} is not one of this Apple account's teams: #{listed}")
+  end
+  client.team_id = team
+  Spaceship::Portal.client = client
+  out["team"] = team
+  out["teamName"] = teams.find { |t| t["id"] == team }["name"]
+  team
+end
+
+# App Store Connect over the same cached web session.
+def connect_login(out)
+  team = portal_login(out)
+  tunes = Spaceship::TunesClient.new
+  tunes.user = REQUEST.fetch("appleId")
+  require_session(tunes)
+  tunes.select_team(team_id: team)
+  Spaceship::ConnectAPI.client = Spaceship::ConnectAPI::Client.new(
+    tunes_client: tunes, portal_client: Spaceship::Portal.client
+  )
+  team
+end
+
+lane :login do
+  respond do |out|
+    user = REQUEST.fetch("appleId")
+    client = Spaceship::PortalClient.new
+    client.user = user
+    unless client.has_valid_session
+      fail!("usage", "signing in to Apple needs a terminal") unless UI.interactive?
+      # Passing the password keeps it out of the keychain; Spaceship asks for the 2FA code itself.
+      Spaceship::Portal.login(user, UI.password("Apple ID password for #{user}:"))
+      out["signedIn"] = true
+    end
+    portal_login(out, pick_team: false)
+  end
+end
+
+lane :apps do
+  respond do |out|
+    connect_login(out)
+    out["apps"] = Spaceship::ConnectAPI::App.all.map do |app|
+      { id: app.id, name: app.name, bundleId: app.bundle_id, sku: app.sku, locale: app.primary_locale }
+    end
+  end
+end
+
+lane :keys do
+  respond do |out|
+    portal_login(out)
+    out["keys"] = Spaceship::Portal::Key.all.map do |key|
+      { id: key.id, name: key.name, services: (key.services || []).map { |s| s["name"] } }
+    end
+  end
+end
+
+# Over the web session capability_type is sometimes empty; the id is "<bundle>_<TYPE>".
+def capability_type(cap)
+  cap.capability_type || cap.id.to_s.split("_", 2).last
+end
+
+def capabilities_of(bundle)
+  bundle.get_capabilities.to_h do |cap|
+    settings = (cap.settings || []).map do |s|
+      { key: s["key"], options: (s["options"] || []).map { |o| { key: o["key"] } } }
+    end
+    [capability_type(cap), settings]
+  end
+end
+
+def uses_app_group?(identifier)
+  app = Spaceship::Portal::App.find(identifier)
+  !(app&.details&.associated_groups || []).empty?
+end
+
+def change(out, description)
+  yield unless REQUEST["dryRun"]
+  out["changes"] << description
+end
+
+def ensure_bundle(out, identifier, name, capabilities, group_id, group)
+  bundle = Spaceship::ConnectAPI::BundleId.find(identifier)
+  unless bundle
+    change(out, "registered bundle id #{identifier} (#{name})") do
+      bundle = Spaceship::ConnectAPI::BundleId.create(name: name, platform: "IOS", identifier: identifier, seed_id: out["team"])
+    end
+  end
+  have = bundle ? bundle.get_capabilities.map { |cap| capability_type(cap) } : []
+  capabilities.each do |type, settings|
+    next if have.include?(type)
+    # The web session only accepts capability changes as a PATCH on the bundle id.
+    change(out, "#{identifier}: enabled #{type}") do
+      bundle.update_capability(type, enabled: true, settings: settings)
+    end
+  end
+  if group_id
+    portal_app = bundle && Spaceship::Portal::App.find(identifier)
+    unless (portal_app&.details&.associated_groups || []).any? { |g| g.group_id == group_id }
+      change(out, "#{identifier}: added to app group #{group_id}") { portal_app.associate_groups([group]) }
+    end
+  end
+end
+
+# Creates what an app needs on Apple's side, skipping anything that exists: the app group, the main
+# bundle id with its capabilities, the App Store Connect record, then the extensions' bundle ids.
+# The record comes straight after the main bundle id, so a taken name stops the run before any
+# extension is registered.
+lane :app_create do
+  respond do |out|
+    out["changes"] = []
+    out["notes"] = []
+    connect_login(out)
+    bundle_id = REQUEST.fetch("bundleId")
+    name = REQUEST.fetch("name")
+    like = REQUEST["like"].to_s
+    extensions = REQUEST["extensions"] || []
+    explicit = (REQUEST["capabilities"] || []).to_h { |type| [type, DEFAULT_SETTINGS.fetch(type, [])] }
+    explicit_ext = (REQUEST["extensionCapabilities"] || []).to_h { |type| [type, DEFAULT_SETTINGS.fetch(type, [])] }
+
+    main_caps = explicit.dup
+    main_group = REQUEST["appGroup"] == true
+    ext_caps = extensions.to_h { |ext| [ext, explicit_ext.dup] }
+    ext_group = extensions.to_h { |ext| [ext, main_group] }
+    unless like.empty?
+      like_bundle = Spaceship::ConnectAPI::BundleId.find(like) or
+        fail!("usage", "--like #{like} is not a registered bundle id in team #{out['team']}")
+      main_caps = capabilities_of(like_bundle).merge(explicit)
+      main_group ||= uses_app_group?(like)
+      extensions.each do |ext|
+        like_ext = Spaceship::ConnectAPI::BundleId.find("#{like}.#{ext}")
+        if like_ext
+          ext_caps[ext] = capabilities_of(like_ext).merge(explicit_ext)
+          ext_group[ext] = main_group || uses_app_group?("#{like}.#{ext}")
+        else
+          out["notes"] << "#{like}.#{ext} doesn't exist; #{bundle_id}.#{ext} gets only the explicit capabilities"
+          ext_group[ext] = main_group
+        end
+      end
+    end
+
+    group_id = "group.#{bundle_id}"
+    group = nil
+    if main_group || ext_group.values.any?
+      main_caps["APP_GROUPS"] ||= [] if main_group
+      ext_group.each { |ext, uses| ext_caps[ext]["APP_GROUPS"] ||= [] if uses }
+      group = Spaceship::Portal::AppGroup.find(group_id)
+      unless group
+        change(out, "created app group #{group_id}") do
+          group = Spaceship::Portal::AppGroup.create!(group_id: group_id, name: "#{name} group")
+        end
+      end
+    end
+
+    ensure_bundle(out, bundle_id, name, main_caps, main_group ? group_id : nil, group)
+
+    existing = Spaceship::ConnectAPI::App.find(bundle_id)
+    if existing
+      out["appId"] = existing.id
+      out["notes"] << "the app record is named #{existing.name.inspect}, not #{name.inspect}" if existing.name != name
+    else
+      sku = REQUEST.fetch("sku")
+      locale = REQUEST.fetch("locale")
+      change(out, "created app record #{name.inspect} (sku #{sku}, #{locale})") do
+        begin
+          Spaceship::ConnectAPI::App.create(name: name, version_string: REQUEST.fetch("version"), sku: sku,
+                                            primary_locale: locale, bundle_id: bundle_id, platforms: ["IOS"])
+        rescue Spaceship::UnauthorizedAccessError
+          raise
+        rescue StandardError => e
+          fail!("rejected", "App Store Connect refused the app record: #{apple_message(e)}")
+        end
+        # A new record takes several seconds to show up in listings.
+        created = nil
+        8.times do
+          break if (created = Spaceship::ConnectAPI::App.find(bundle_id))
+          sleep(5)
+        end
+        out["appId"] = created&.id
+        out["notes"] << "the new app record isn't listed yet; it can take a minute" unless created
+      end
+    end
+
+    extensions.each do |ext|
+      ensure_bundle(out, "#{bundle_id}.#{ext}", "#{name} #{ext.capitalize}", ext_caps[ext],
+                    ext_group[ext] ? group_id : nil, group)
+    end
+  end
+end
+
+lane :apns_key do
+  respond do |out|
+    portal_login(out)
+    scope = REQUEST.fetch("scope")
+    config = { environment: REQUEST.fetch("environment"), scope: scope, identifiers: {} }
+    if scope == "topic"
+      ids = REQUEST.fetch("topics").map do |identifier|
+        app = Spaceship::Portal::App.find(identifier) or
+          fail!("usage", "bundle id #{identifier} is not registered in team #{out['team']}")
+        app.app_id
+      end
+      config[:identifiers] = { bundle: ids }
+    end
+    created = Spaceship::Portal.client.create_key!(
+      name: REQUEST.fetch("name"), service_configs: { Spaceship::Portal::Key::APNS_ID => config }
+    )
+    key_id = created["keyId"]
+    out["keyId"] = key_id
+    # The .p8 can be downloaded exactly once: keep it in a 0600 file eve deletes once it's stored.
+    begin
+      p8 = Spaceship::Portal.client.download_key(id: key_id)
+      path = File.join(REQUEST.fetch("rescueDir"), "eve-AuthKey_#{key_id}.p8")
+      File.open(path, File::WRONLY | File::CREAT | File::EXCL, 0o600) { |f| f.write(p8) }
+      out["rescuePath"] = path
+    rescue StandardError => e
+      fail!("failed", "created APNs key #{key_id} but could not save it (#{apple_message(e)}); revoke it at https://developer.apple.com/account/resources/authkeys/list and run again")
+    end
+  end
+end

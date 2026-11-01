@@ -13,7 +13,9 @@ import (
 	"syscall"
 
 	"github.com/self-deprecated/eve/internal/api"
+	"github.com/self-deprecated/eve/internal/apple"
 	"github.com/self-deprecated/eve/internal/client"
+	"github.com/self-deprecated/eve/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -40,11 +42,16 @@ type Env struct {
 	Err     io.Writer
 	// NewClient builds the API client (replaced in tests).
 	NewClient func() (*client.Client, error)
+	// NewApple builds the client for `eve apple` (replaced in tests).
+	NewApple func() *apple.Client
 }
 
 // Root builds the command tree. Server-side commands are added by AddServerCommands.
 func Root(version string) (*cobra.Command, *Env) {
-	env := &Env{Version: version, Out: os.Stdout, Err: os.Stderr, NewClient: client.FromConfig}
+	env := &Env{
+		Version: version, Out: os.Stdout, Err: os.Stderr, NewClient: client.FromConfig,
+		NewApple: func() *apple.Client { return apple.New(config.ClientDir(), version) },
+	}
 	root := &cobra.Command{
 		Use:           "eve",
 		Short:         "Fire-and-forget iOS builds on your own Mac: TestFlight, device installs and checks",
@@ -57,6 +64,7 @@ func Root(version string) (*cobra.Command, *Env) {
 		jobsCmd(env), cancelCmd(env), confirmCmd(env), rejectCmd(env), sizeCmd(env), buildsCmd(env),
 		baselineCmd(env), appsCmd(env), submitCmd(env), pendingCmd(env), initCmd(env), artifactsCmd(env),
 		bridgeCmd(env),
+		appleCmd(env),
 	)
 	return root, env
 }

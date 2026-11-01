@@ -17,6 +17,22 @@
   `connect_phone` hints mention `eve bridge on`. `doctor --host` reports the bridge and when the
   phone was last seen.
 
+### Apple provisioning from the client
+- `eve apple login` signs in to Apple (password and 2FA in the terminal) and caches Spaceship's
+  session under `~/.config/eve/apple/` (0700/0600). `eve apple apps` and `eve apple keys` list
+  App Store Connect apps and keys.
+- `eve apple app create <bundle-id> --name … --sku …` creates only what's missing: the app group,
+  the bundle id with its capabilities, the App Store Connect record, then extension bundle ids.
+  `--like` copies another app's capabilities (with settings) and app-group use; `--dry-run`
+  reports the plan. Family Controls (Distribution) is copied like any capability.
+- `eve apple key create --name … --env sandbox|production|all --doppler <project>[/<config>]`
+  creates an APNs key (team or topic scope) and stores `APNS_KEY_P8` (restricted), `APNS_KEY_ID`
+  and `APPLE_TEAM_ID` with the Doppler CLI, keeping a 0600 rescue copy of the one-time `.p8`
+  until it's stored.
+- These run fastlane with an embedded Fastfile on the client; the server is unchanged. An expired
+  session exits 78 with "run `eve apple login`". `eve doctor` notes when fastlane or doppler is
+  missing. Design §20; trust note in §14.
+
 ### Expo apps
 - eve.yml's `project.xcworkspace` builds a workspace (`-workspace`) for every verb: CocoaPods
   projects and Expo apps.
