@@ -124,6 +124,9 @@ lane :login do
       fail!("usage", "signing in to Apple needs a terminal") unless UI.interactive?
       # Passing the password keeps it out of the keychain; Spaceship asks for the 2FA code itself.
       Spaceship::Portal.login(user, UI.password("Apple ID password for #{user}:"))
+      # PortalClient only writes the cookie after a 2FA prompt. A trusted device skips 2FA, so save
+      # the new session here, or the next step loads the stale cookie from disk.
+      Spaceship::Portal.client.store_cookie
       out["signedIn"] = true
     end
     portal_login(out, pick_team: false)
