@@ -13,7 +13,7 @@
 | `eve init` · `eve doctor [--host]` · `eve login` | Starter `eve.yml`; check the connection (and that `eve apple`'s tools are here) or the build Mac; store a server and token |
 | `eve serve` · `eve agent install` · `eve token create` · `eve run <verb>` | Server side: run, install as a LaunchAgent, issue tokens, build in-process without the server |
 | `eve apple login` · `eve apple apps` · `eve apple keys` | Client side: sign in to Apple (password and 2FA, cached on this machine); list App Store Connect apps and keys |
-| `eve apple app create <bundle-id> --name … --sku …` | Client side: create the app group, bundle id and capabilities, App Store Connect record and extensions; only what's missing ([below](#apple-provisioning)) |
+| `eve apple app create <bundle-id> [--name … --sku …]` | Client side: create the app group, bundle id and capabilities, App Store Connect record, extensions and internal TestFlight group; only what's missing ([below](#apple-provisioning)) |
 | `eve apple key create --name … --env … --doppler …` | Client side: create an APNs key and store it in Doppler |
 | `eve simulator list` · `eve simulator renew <udid> --for 30m` · `eve simulator release <udid>` | Build host only: inspect tracked devices, acquire/renew timed borrowing, or release it early ([lifecycle](operations.md)) |
 
@@ -44,16 +44,21 @@ it, then commands exit 78 with "run `eve apple login`". Pick the team with `--te
 
 ```sh
 eve apple app create com.example.myapp --name "My App" --sku myapp --locale en-GB \
-  --like com.example.otherapp --extension widget --dry-run     # drop --dry-run to apply
+  --like com.example.otherapp --extension widget --group Internal --tester you@example.com \
+  --dry-run                                                    # drop --dry-run to apply
 eve apple key create --name "My App Push" --env all --doppler myapp   # myapp/dev and myapp/prd
 ```
 
 - `app create` creates `group.<bundle-id>` (when the app or `--like` uses an app group), the
   bundle id and its capabilities, the App Store Connect record (`--version`, default 1.0), then
-  `<bundle-id>.<extension>` for each `--extension`. `--like` copies an existing app's
+  `<bundle-id>.<extension>` for each `--extension`, then the internal TestFlight `--group` with
+  access to every build, and `--tester` in it. A tester must be a user on the App Store Connect
+  team (Users and Access); an external group by that name is refused. `--like` copies an existing app's
   capabilities with their settings, and each same-suffix extension's; `--capability`,
   `--extension-capability` and `--app-group` add to that. Anything that exists is left alone:
-  a rerun reports `no changes`.
+  a rerun reports `no changes`. `--name` and `--sku` are only needed for a new record, so for an
+  existing app `eve apple app create <bundle-id> --group Internal --tester you@example.com` is
+  enough.
 - `key create` makes a team key (every topic) or, with `--scope topic --topic <bundle-id>`, a
   topic key in one environment. `--doppler <project>` stores it in the configs `--env` implies
   (sandbox: `dev`, production: `prd`, all: both); `--doppler <project>/<config>` names one
@@ -62,7 +67,8 @@ eve apple key create --name "My App Push" --env all --doppler myapp   # myapp/de
   Doppler fails after Apple created the key, the error names a 0600 file holding the `.p8`,
   which Apple won't serve again.
 
-Exit codes: 0 done, 1 failed, 64 usage, 65 Apple refused (a taken app name), 69 Apple
+Exit codes: 0 done, 1 failed, 64 usage, 65 Apple refused (a taken app name, a tester who isn't a
+team user), 69 Apple
 unreachable, 78 sign in again.
 
 ## The size guard

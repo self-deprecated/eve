@@ -198,17 +198,62 @@ def ensure_bundle(out, identifier, name, capabilities, group_id, group)
   end
 end
 
+# Creates the internal TestFlight group eve adds builds to, with access to every build, and adds the
+# tester to it. app is nil in a dry run for a record that doesn't exist yet.
+def ensure_testflight_group(out, app, name, tester)
+  group = app&.get_beta_groups(filter: { name: name })&.find { |g| g.name == name }
+  if group && !group.is_internal_group
+    fail!("usage", "TestFlight group #{name.inspect} is external; eve only distributes to internal groups")
+  end
+  unless group
+    change(out, "created internal TestFlight group #{name.inspect}, which gets every build") do
+      # Not App#create_beta_group: it sends public-link attributes, which Apple refuses for an
+      # internal group.
+      group = Spaceship::ConnectAPI.client.test_flight_request_client.post("v1/betaGroups", {
+        data: {
+          type: "betaGroups",
+          attributes: { name: name, isInternalGroup: true, hasAccessToAllBuilds: true },
+          relationships: { app: { data: { type: "apps", id: app.id } } }
+        }
+      }).to_models.first
+    end
+  end
+  return if tester.empty?
+  return if group && !Spaceship::ConnectAPI::BetaTester.all(filter: { email: tester, betaGroups: group.id }).empty?
+  change(out, "added #{tester} to TestFlight group #{name.inspect}") do
+    begin
+      # Tester records are per app: another app's record for the same email can't join this group.
+      existing = app.get_beta_testers(filter: { email: tester }).first
+      if existing
+        group.add_beta_testers(beta_tester_ids: [existing.id])
+      else
+        Spaceship::ConnectAPI.post_beta_tester_assignment(beta_group_ids: [group.id], attributes: { email: tester })
+      end
+    rescue Spaceship::UnauthorizedAccessError
+      raise
+    rescue StandardError => e
+      fail!("rejected", "App Store Connect refused tester #{tester}: #{apple_message(e)}; an internal tester must be a user in Users and Access")
+    end
+  end
+end
+
 # Creates what an app needs on Apple's side, skipping anything that exists: the app group, the main
-# bundle id with its capabilities, the App Store Connect record, then the extensions' bundle ids.
-# The record comes straight after the main bundle id, so a taken name stops the run before any
-# extension is registered.
+# bundle id with its capabilities, the App Store Connect record, the extensions' bundle ids, then
+# the internal TestFlight group and its tester. The record comes straight after the main bundle id,
+# so a taken name stops the run before any extension is registered.
 lane :app_create do
   respond do |out|
     out["changes"] = []
     out["notes"] = []
     connect_login(out)
     bundle_id = REQUEST.fetch("bundleId")
-    name = REQUEST.fetch("name")
+    # An existing record supplies the name; only a new one needs --name and --sku.
+    existing = Spaceship::ConnectAPI::App.find(bundle_id)
+    name = REQUEST["name"].to_s
+    name = existing.name if name.empty? && existing
+    if !existing && (name.empty? || REQUEST["sku"].to_s.empty?)
+      fail!("usage", "#{bundle_id} has no App Store Connect record yet: --name and --sku are needed to create it")
+    end
     like = REQUEST["like"].to_s
     extensions = REQUEST["extensions"] || []
     explicit = (REQUEST["capabilities"] || []).to_h { |type| [type, DEFAULT_SETTINGS.fetch(type, [])] }
@@ -250,7 +295,7 @@ lane :app_create do
 
     ensure_bundle(out, bundle_id, name, main_caps, main_group ? group_id : nil, group)
 
-    existing = Spaceship::ConnectAPI::App.find(bundle_id)
+    record = existing
     if existing
       out["appId"] = existing.id
       out["notes"] << "the app record is named #{existing.name.inspect}, not #{name.inspect}" if existing.name != name
@@ -272,6 +317,7 @@ lane :app_create do
           break if (created = Spaceship::ConnectAPI::App.find(bundle_id))
           sleep(5)
         end
+        record = created
         out["appId"] = created&.id
         out["notes"] << "the new app record isn't listed yet; it can take a minute" unless created
       end
@@ -280,6 +326,15 @@ lane :app_create do
     extensions.each do |ext|
       ensure_bundle(out, "#{bundle_id}.#{ext}", "#{name} #{ext.capitalize}", ext_caps[ext],
                     ext_group[ext] ? group_id : nil, group)
+    end
+
+    beta_group = REQUEST["group"].to_s
+    unless beta_group.empty?
+      if record || REQUEST["dryRun"]
+        ensure_testflight_group(out, record, beta_group, REQUEST["tester"].to_s)
+      else
+        out["notes"] << "the TestFlight group wasn't created because the record isn't listed yet; run this again in a minute"
+      end
     end
   end
 end

@@ -154,18 +154,21 @@ func appleKeysCmd(env *Env, team *string) *cobra.Command {
 func appleAppCreateCmd(env *Env, team *string) *cobra.Command {
 	var s apple.AppSpec
 	cmd := &cobra.Command{
-		Use:   "create <bundle-id> --name NAME --sku SKU",
+		Use:   "create <bundle-id> [--name NAME --sku SKU]",
 		Short: "Create what an app needs on Apple's side; anything that exists is left alone",
 		Long: "Creates, in this order and only what's missing: the app group (group.<bundle-id>), the bundle\n" +
 			"id with its capabilities, the App Store Connect record, then each extension's bundle id\n" +
-			"(<bundle-id>.<extension>). --like copies an existing app's capabilities (with settings) and\n" +
-			"app-group use, and each same-suffix extension's. Running it again changes nothing.",
+			"(<bundle-id>.<extension>), then the internal TestFlight --group (with access to every build)\n" +
+			"and --tester in it. --like copies an existing app's capabilities (with settings) and\n" +
+			"app-group use, and each same-suffix extension's. --name and --sku are only needed when the\n" +
+			"App Store Connect record doesn't exist yet. Running it again changes nothing.",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			s.BundleID = args[0]
 			res, err := env.NewApple().CreateApp(cmd.Context(), *team, s)
 			if err != nil {
-				if !env.JSON {
+				// Only what changed before the error: "no changes" would read as success.
+				if !env.JSON && len(res.Changes) > 0 {
 					_, _ = fmt.Fprint(env.Out, formatAppResult(res))
 				}
 				return env.appleFailure(err, res)
@@ -178,8 +181,8 @@ func appleAppCreateCmd(env *Env, team *string) *cobra.Command {
 		},
 	}
 	f := cmd.Flags()
-	f.StringVar(&s.Name, "name", "", "the app's name in App Store Connect (required)")
-	f.StringVar(&s.SKU, "sku", "", "App Store Connect SKU (required)")
+	f.StringVar(&s.Name, "name", "", "the app's name in App Store Connect (required for a new record)")
+	f.StringVar(&s.SKU, "sku", "", "App Store Connect SKU (required for a new record)")
 	f.StringVar(&s.Locale, "locale", "en-US", "primary locale")
 	f.StringVar(&s.Version, "version", "1.0", "first version")
 	f.StringVar(&s.Like, "like", "", "copy capabilities and app-group use from this existing bundle id and its extensions")
@@ -187,6 +190,8 @@ func appleAppCreateCmd(env *Env, team *string) *cobra.Command {
 	f.StringArrayVar(&s.Capabilities, "capability", nil, "enable this capability on the app, e.g. PUSH_NOTIFICATIONS (repeatable)")
 	f.StringArrayVar(&s.ExtensionCapabilities, "extension-capability", nil, "enable this capability on every extension (repeatable)")
 	f.BoolVar(&s.AppGroup, "app-group", false, "create group.<bundle-id> and add the app and extensions to it")
+	f.StringVar(&s.Group, "group", "", "create this internal TestFlight group, which gets every build (server.yml testflight.group)")
+	f.StringVar(&s.Tester, "tester", "", "add this App Store Connect user to --group (server.yml testflight.tester)")
 	f.BoolVar(&s.DryRun, "dry-run", false, "only report what would change")
 	return cmd
 }

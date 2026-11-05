@@ -1,5 +1,6 @@
 // Package apple provisions an app on Apple's side from the machine running the eve CLI: bundle
-// ids, capabilities, app groups, App Store Connect records and APNs keys (docs/design.md §20).
+// ids, capabilities, app groups, App Store Connect records, internal TestFlight groups and APNs
+// keys (docs/design.md §20).
 //
 // It runs fastlane with an embedded Fastfile over the Apple ID web session Spaceship caches under
 // eve's config directory; App Store Connect API keys can create neither app records nor APNs keys.

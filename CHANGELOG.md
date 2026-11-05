@@ -24,7 +24,9 @@
 - `eve apple app create <bundle-id> --name … --sku …` creates only what's missing: the app group,
   the bundle id with its capabilities, the App Store Connect record, then extension bundle ids.
   `--like` copies another app's capabilities (with settings) and app-group use; `--dry-run`
-  reports the plan. Family Controls (Distribution) is copied like any capability.
+  reports the plan. Family Controls (Distribution) is copied like any capability. `--group`
+  creates the internal TestFlight group with access to every build, and `--tester` adds a team
+  user to it. `--name` and `--sku` are only needed when the record doesn't exist yet.
 - `eve apple key create --name … --env sandbox|production|all --doppler <project>[/<config>]`
   creates an APNs key (team or topic scope) and stores `APNS_KEY_P8` (restricted), `APNS_KEY_ID`
   and `APPLE_TEAM_ID` with the Doppler CLI, keeping a 0600 rescue copy of the one-time `.p8`

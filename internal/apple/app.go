@@ -13,15 +13,18 @@ var (
 	skuRE        = regexp.MustCompile(`^[A-Za-z0-9._-]+$`)
 	localeRE     = regexp.MustCompile(`^[a-z]{2,3}(-[A-Za-z]{2,4})?$`)
 	versionRE    = regexp.MustCompile(`^[0-9]+(\.[0-9]+){0,2}$`)
+	emailRE      = regexp.MustCompile(`^[^@\s]+@[^@\s]+\.[^@\s]+$`)
 )
 
 // AppSpec is what `eve apple app create` asks for.
 type AppSpec struct {
 	BundleID string
-	Name     string
-	SKU      string
-	Locale   string
-	Version  string
+	// Name and SKU are only needed to create the App Store Connect record; an existing record
+	// supplies the name.
+	Name    string
+	SKU     string
+	Locale  string
+	Version string
 	// Like is an existing app whose capabilities (with settings) and app-group use are copied,
 	// for the app and for each extension with the same suffix.
 	Like       string
@@ -33,7 +36,11 @@ type AppSpec struct {
 	// AppGroup creates group.<bundle-id> and adds the app and its extensions to it (implied
 	// when Like uses an app group).
 	AppGroup bool
-	DryRun   bool
+	// Group is the internal TestFlight group to create (with access to every build) when the
+	// app has none by that name; Tester is an App Store Connect user to add to it.
+	Group  string
+	Tester string
+	DryRun bool
 }
 
 // Validate checks the spec before anything talks to Apple.
@@ -41,10 +48,8 @@ func (s AppSpec) Validate() error {
 	switch {
 	case !bundleIDRE.MatchString(s.BundleID):
 		return usage("bundle id %q must look like com.example.app (letters, digits, hyphens and dots)", s.BundleID)
-	case s.Name == "":
-		return usage("--name is required: the app's name in App Store Connect")
-	case !skuRE.MatchString(s.SKU):
-		return usage("--sku is required (letters, digits, dots, hyphens and underscores)")
+	case s.SKU != "" && !skuRE.MatchString(s.SKU):
+		return usage("--sku %q may only use letters, digits, dots, hyphens and underscores", s.SKU)
 	case !localeRE.MatchString(s.Locale):
 		return usage("--locale %q must be a locale code such as en-US or en-GB", s.Locale)
 	case !versionRE.MatchString(s.Version):
@@ -53,6 +58,10 @@ func (s AppSpec) Validate() error {
 		return usage("--like %q must be a bundle id", s.Like)
 	case s.Like == s.BundleID:
 		return usage("--like must name another app")
+	case s.Tester != "" && s.Group == "":
+		return usage("--tester needs --group: the tester is added to that TestFlight group")
+	case s.Tester != "" && !emailRE.MatchString(s.Tester):
+		return usage("--tester %q must be an email address", s.Tester)
 	}
 	for _, e := range s.Extensions {
 		if !extensionRE.MatchString(e) {
@@ -79,7 +88,8 @@ type AppResult struct {
 }
 
 // CreateApp creates whatever the app is missing on Apple's side: the app group, the bundle id and
-// its capabilities, the App Store Connect record, then the extensions' bundle ids. Anything that
+// its capabilities, the App Store Connect record, the extensions' bundle ids, then the internal
+// TestFlight group and its tester. Anything that
 // exists is left alone, so it is safe to run again. On error the result still lists what changed.
 func (c *Client) CreateApp(ctx context.Context, team string, s AppSpec) (AppResult, error) {
 	res := AppResult{BundleID: s.BundleID, DryRun: s.DryRun}
@@ -89,7 +99,8 @@ func (c *Client) CreateApp(ctx context.Context, team string, s AppSpec) (AppResu
 	req, err := c.request(team, map[string]any{
 		"bundleId": s.BundleID, "name": s.Name, "sku": s.SKU, "locale": s.Locale, "version": s.Version,
 		"like": s.Like, "extensions": nonNil(s.Extensions), "capabilities": nonNil(s.Capabilities),
-		"extensionCapabilities": nonNil(s.ExtensionCapabilities), "appGroup": s.AppGroup, "dryRun": s.DryRun,
+		"extensionCapabilities": nonNil(s.ExtensionCapabilities), "appGroup": s.AppGroup,
+		"group": s.Group, "tester": s.Tester, "dryRun": s.DryRun,
 	})
 	if err != nil {
 		return res, err

@@ -68,7 +68,7 @@ and the actual bill, not raw token counts.) The same sessions show:
 - A resumable event stream for each job (`eve wait`), and an optional human webhook.
 - Host diagnostics (`doctor --host`).
 - Provisioning an app on Apple's side from the client machine (`eve apple`, §20): bundle ids,
-  capabilities, app groups, App Store Connect records and APNs keys.
+  capabilities, app groups, App Store Connect records, internal TestFlight groups and APNs keys.
 
 ### Repositories own
 
@@ -1161,9 +1161,12 @@ name), 1 anything else. The team is `--team`, `$EVE_APPLE_TEAM`, or the account'
 
 **`eve apple app create`** creates, in order and only what's missing: the app group
 `group.<bundle-id>`, the bundle id with its capabilities and group association, the App Store
-Connect record, then each `<bundle-id>.<extension>`. The record comes before the extensions, so
-a taken name stops the run before they exist; a new record takes seconds to appear in listings,
-so the lane polls for up to 40 s. `--like` copies an existing app's capabilities (with settings)
+Connect record, each `<bundle-id>.<extension>`, then (with `--group`) the internal TestFlight
+group with `hasAccessToAllBuilds`, and `--tester` in it: the app's tester record is linked to the
+group, anyone else is created with the group, which Apple only accepts for a user on the team.
+An external group by that name is a usage error, since eve only distributes to internal groups.
+The record comes before the extensions, so a taken name stops the run before they exist; a new
+record takes seconds to appear in listings, so the lane polls for up to 40 s. `--like` copies an existing app's capabilities (with settings)
 and app-group use, and each same-suffix extension's. Over the web session capabilities are only
 accepted as a PATCH on the bundle id (`update_capability`), and `capability_type` can be empty,
 so the type is read from the capability id (`<bundleId>_<TYPE>`). `FAMILY_CONTROLS_DISTRIBUTION`

@@ -197,16 +197,17 @@ func TestAppSpecValidation(t *testing.T) {
 		t.Fatal(err)
 	}
 	for name, mutate := range map[string]func(*AppSpec){
-		"bundle id":   func(s *AppSpec) { s.BundleID = "intentpal" },
-		"name":        func(s *AppSpec) { s.Name = "" },
-		"sku":         func(s *AppSpec) { s.SKU = "intent pal" },
-		"locale":      func(s *AppSpec) { s.Locale = "English" },
-		"version":     func(s *AppSpec) { s.Version = "v1" },
-		"like itself": func(s *AppSpec) { s.Like = s.BundleID },
-		"like":        func(s *AppSpec) { s.Like = "screengate" },
-		"extension":   func(s *AppSpec) { s.Extensions = []string{"a.b"} },
-		"capability":  func(s *AppSpec) { s.Capabilities = []string{"push"} },
-		"ext cap":     func(s *AppSpec) { s.ExtensionCapabilities = []string{"App Groups"} },
+		"bundle id":    func(s *AppSpec) { s.BundleID = "intentpal" },
+		"sku":          func(s *AppSpec) { s.SKU = "intent pal" },
+		"locale":       func(s *AppSpec) { s.Locale = "English" },
+		"version":      func(s *AppSpec) { s.Version = "v1" },
+		"like itself":  func(s *AppSpec) { s.Like = s.BundleID },
+		"like":         func(s *AppSpec) { s.Like = "screengate" },
+		"extension":    func(s *AppSpec) { s.Extensions = []string{"a.b"} },
+		"capability":   func(s *AppSpec) { s.Capabilities = []string{"push"} },
+		"ext cap":      func(s *AppSpec) { s.ExtensionCapabilities = []string{"App Groups"} },
+		"tester alone": func(s *AppSpec) { s.Tester = "sam@example.com" },
+		"tester":       func(s *AppSpec) { s.Group, s.Tester = "Internal", "sam" },
 	} {
 		s := ok
 		mutate(&s)
@@ -214,6 +215,10 @@ func TestAppSpecValidation(t *testing.T) {
 		if err := s.Validate(); !errors.As(err, &ae) || ae.ExitCode() != api.ExitUsage {
 			t.Errorf("%s: %v", name, err)
 		}
+	}
+	existing := AppSpec{BundleID: "com.example.intentpal", Locale: "en-US", Version: "1.0", Group: "Internal", Tester: "sam@example.com"}
+	if err := existing.Validate(); err != nil {
+		t.Fatal("an existing record needs no --name or --sku:", err)
 	}
 	s := ok
 	s.Capabilities = []string{"FAMILY_CONTROLS_DISTRIBUTION", "PUSH_NOTIFICATIONS"}
@@ -228,7 +233,8 @@ func TestCreateAppSendsTheSpecAndKeepsPartialChanges(t *testing.T) {
 	signIn(t, c)
 	res, err := c.CreateApp(context.Background(), "", AppSpec{
 		BundleID: "com.example.intentpal", Name: "Intent Pal", SKU: "intentpal", Locale: "en-GB", Version: "1.0",
-		Like: "com.example.screengate", Extensions: []string{"monitor", "shield"}, DryRun: true,
+		Like: "com.example.screengate", Extensions: []string{"monitor", "shield"},
+		Group: "Internal", Tester: "sam@example.com", DryRun: true,
 	})
 	var ae *Error
 	if !errors.As(err, &ae) || ae.ExitCode() != api.ExitRejected {
@@ -243,7 +249,8 @@ func TestCreateAppSendsTheSpecAndKeepsPartialChanges(t *testing.T) {
 	exts, _ := json.Marshal(req["extensions"])
 	caps, _ := json.Marshal(req["capabilities"])
 	if req["like"] != "com.example.screengate" || string(exts) != `["monitor","shield"]` || string(caps) != `[]` ||
-		req["dryRun"] != true || req["locale"] != "en-GB" || req["team"] != "" {
+		req["dryRun"] != true || req["locale"] != "en-GB" || req["team"] != "" ||
+		req["group"] != "Internal" || req["tester"] != "sam@example.com" {
 		t.Fatal(req)
 	}
 }
