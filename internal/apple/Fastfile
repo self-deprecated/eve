@@ -2,12 +2,16 @@
 # directory and runs `fastlane <lane>` there. The request is JSON in $EVE_APPLE_REQUEST; each lane
 # writes {"result": …, "error": {kind, message, action, url}} to $EVE_APPLE_RESULT and eve maps the
 # error kind to an exit code. Nothing here prints key material or sends Apple a password, except
-# `login`, which asks for it in the user's terminal.
+# `login`, which takes it from $EVE_APPLE_PASSWORD (eve read it from Doppler) or asks for it in the
+# user's terminal.
 #
 # Everything runs over the Apple ID web session Spaceship caches in $SPACESHIP_COOKIE_PATH:
 # App Store Connect API keys can create neither app records nor APNs keys.
 
 opt_out_usage
+
+# Only `login` uses it; take it out of the environment before anything else can inherit it.
+PASSWORD = ENV.delete("EVE_APPLE_PASSWORD")
 
 require "json"
 require "spaceship"
@@ -123,7 +127,7 @@ lane :login do
     unless client.has_valid_session
       fail!("usage", "signing in to Apple needs a terminal") unless UI.interactive?
       # Passing the password keeps it out of the keychain; Spaceship asks for the 2FA code itself.
-      Spaceship::Portal.login(user, UI.password("Apple ID password for #{user}:"))
+      Spaceship::Portal.login(user, PASSWORD || UI.password("Apple ID password for #{user}:"))
       # PortalClient only writes the cookie after a 2FA prompt. A trusted device skips 2FA, so save
       # the new session here, or the next step loads the stale cookie from disk.
       Spaceship::Portal.client.store_cookie

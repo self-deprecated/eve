@@ -27,7 +27,10 @@ var keyEnvironments = map[string]string{"sandbox": "sandbox", "production": "pro
 // envConfigs are the Doppler configs a --doppler target without a config gets, per --env.
 var envConfigs = map[string][]string{"sandbox": {"dev"}, "production": {"prd"}, "all": {"dev", "prd"}}
 
-var dopplerNameRE = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
+var (
+	dopplerNameRE = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
+	secretNameRE  = regexp.MustCompile(`^[A-Za-z0-9_]+$`)
+)
 
 // KeySpec is what `eve apple key create` asks for.
 type KeySpec struct {

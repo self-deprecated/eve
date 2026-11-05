@@ -4,8 +4,9 @@
 //
 // It runs fastlane with an embedded Fastfile over the Apple ID web session Spaceship caches under
 // eve's config directory; App Store Connect API keys can create neither app records nor APNs keys.
-// The eve server is not involved. Only `eve apple login` asks for a password, in the terminal;
-// every other command reuses the cached session and ends needs_human (exit 78) when it expired.
+// The eve server is not involved. Only `eve apple login` signs in, with a password typed in the
+// terminal or read from Doppler; every other command reuses the cached session and ends
+// needs_human (exit 78) when it expired.
 package apple
 
 import (
@@ -192,10 +193,11 @@ func (c *Client) request(team string, fields map[string]any) (map[string]any, er
 // lane runs one lane non-interactively and decodes its result into out. A lane that fails after
 // doing something still fills out with what it did.
 func (c *Client) lane(ctx context.Context, name string, req map[string]any, out any) error {
-	return c.runLane(ctx, false, name, req, out)
+	return c.runLane(ctx, false, name, req, nil, out)
 }
 
-func (c *Client) runLane(ctx context.Context, interactive bool, name string, req map[string]any, out any) error {
+// runLane runs one lane; extra is added to its environment.
+func (c *Client) runLane(ctx context.Context, interactive bool, name string, req map[string]any, extra map[string]string, out any) error {
 	fastlane, err := c.LookPath("fastlane")
 	if err != nil {
 		return &Error{Kind: KindFailed, Message: "fastlane is not on PATH; install it (brew install fastlane, or nix profile install nixpkgs#fastlane)"}
@@ -223,7 +225,7 @@ func (c *Client) runLane(ctx context.Context, interactive bool, name string, req
 		return err
 	}
 	var log bytes.Buffer
-	cmd := run.Cmd{Name: fastlane, Args: []string{name}, Dir: work, Env: c.env(reqPath, resPath)}
+	cmd := run.Cmd{Name: fastlane, Args: []string{name}, Dir: work, Env: c.env(reqPath, resPath, extra)}
 	r := c.Interactive
 	if !interactive {
 		r = c.Runner
@@ -260,8 +262,10 @@ func (c *Client) runLane(ctx context.Context, interactive bool, name string, req
 
 // env is the caller's environment with fastlane quiet, offline from its update and analytics
 // services, and Spaceship's cookie under eve's directory instead of ~/.fastlane.
-func (c *Client) env(reqPath, resPath string) []string {
+// EVE_APPLE_PASSWORD only reaches the lane through extra.
+func (c *Client) env(reqPath, resPath string, extra map[string]string) []string {
 	set := map[string]string{
+		"EVE_APPLE_PASSWORD":         "",
 		"SPACESHIP_COOKIE_PATH":      c.Dir,
 		"FASTLANE_SKIP_UPDATE_CHECK": "1",
 		"FASTLANE_OPT_OUT_USAGE":     "1",
@@ -281,8 +285,13 @@ func (c *Client) env(reqPath, resPath string) []string {
 		hasLang = hasLang || k == "LANG" || k == "LC_ALL"
 		env = append(env, kv)
 	}
+	for k, v := range extra {
+		set[k] = v
+	}
 	for k, v := range set {
-		env = append(env, k+"="+v)
+		if v != "" {
+			env = append(env, k+"="+v)
+		}
 	}
 	if !hasLang {
 		env = append(env, "LANG=en_US.UTF-8") // fastlane warns and misbehaves without a UTF-8 locale
@@ -307,10 +316,20 @@ type LoginResult struct {
 }
 
 // Login signs in interactively (password and 2FA in the terminal) unless the cached session for
-// appleID is still valid, then remembers appleID for the other commands.
-func (c *Client) Login(ctx context.Context, appleID, team string) (LoginResult, error) {
+// appleID is still valid, then remembers appleID for the other commands. A non-empty
+// passwordDoppler, <project>/<config>/<SECRET>, reads the password with the Doppler CLI instead of
+// asking for it; the 2FA code is still asked for in the terminal.
+func (c *Client) Login(ctx context.Context, appleID, team, passwordDoppler string) (LoginResult, error) {
 	res := LoginResult{AppleID: appleID}
-	err := c.runLane(ctx, true, "login", map[string]any{"appleId": appleID, "team": team}, &res)
+	var extra map[string]string
+	if passwordDoppler != "" {
+		password, err := c.dopplerPassword(ctx, passwordDoppler)
+		if err != nil {
+			return res, err
+		}
+		extra = map[string]string{"EVE_APPLE_PASSWORD": password}
+	}
+	err := c.runLane(ctx, true, "login", map[string]any{"appleId": appleID, "team": team}, extra, &res)
 	if err != nil {
 		return res, err
 	}
@@ -330,6 +349,31 @@ func (c *Client) Login(ctx context.Context, appleID, team string) (LoginResult, 
 		return os.Chmod(p, 0o600)
 	})
 	return res, nil
+}
+
+// dopplerPassword reads the Apple ID password from <project>/<config>/<SECRET> with the Doppler
+// CLI's own login. The value is never printed, and Doppler's stderr is only shown when it fails.
+func (c *Client) dopplerPassword(ctx context.Context, ref string) (string, error) {
+	parts := strings.Split(ref, "/")
+	if len(parts) != 3 || !dopplerNameRE.MatchString(parts[0]) || !dopplerNameRE.MatchString(parts[1]) || !secretNameRE.MatchString(parts[2]) {
+		return "", usage("--password-doppler %q must be <project>/<config>/<SECRET>", ref)
+	}
+	path, err := c.LookPath("doppler")
+	if err != nil {
+		return "", &Error{Kind: KindFailed, Message: "doppler is not on PATH; install the Doppler CLI and run `doppler login`"}
+	}
+	stdout, errOut, code, err := c.capture(ctx, path, "secrets", "get", parts[2], "--project", parts[0], "--config", parts[1], "--plain")
+	if err != nil {
+		return "", err
+	}
+	if code != 0 {
+		return "", &Error{Kind: KindFailed, Message: fmt.Sprintf("doppler couldn't read %s (signed in? `doppler login`): %s", ref, tail(strings.TrimSpace(errOut), 4))}
+	}
+	password := strings.TrimRight(stdout, "\r\n")
+	if password == "" {
+		return "", usage("Doppler secret %s is empty", ref)
+	}
+	return password, nil
 }
 
 // App is an App Store Connect app record.

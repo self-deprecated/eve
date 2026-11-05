@@ -176,7 +176,7 @@ func TestLoginRemembersTheAppleIDAndKeepsTheCookiePrivate(t *testing.T) {
 		_ = os.WriteFile(cookie, []byte("session"), 0o644)
 		return lane(`{"result":{"signedIn":true,"team":"TEAM123456"}}`, nil)(cmd)
 	}
-	res, err := c.Login(context.Background(), "sam@example.com", "")
+	res, err := c.Login(context.Background(), "sam@example.com", "", "")
 	if err != nil || !res.SignedIn || res.AppleID != "sam@example.com" || c.AppleID() != "sam@example.com" {
 		t.Fatal(res, err)
 	}
@@ -188,6 +188,81 @@ func TestLoginRemembersTheAppleIDAndKeepsTheCookiePrivate(t *testing.T) {
 		if fi.Mode().Perm() != 0o600 {
 			t.Fatal(fi.Mode())
 		}
+	}
+}
+
+func TestLoginReadsThePasswordFromDoppler(t *testing.T) {
+	c, f := newClient(t, nil)
+	c.Environ = append(c.Environ, "EVE_APPLE_PASSWORD=inherited")
+	var password string
+	var n int
+	answer := lane(`{"result":{"signedIn":true}}`, nil)
+	f.Handler = func(cmd run.Cmd) (string, int, error) {
+		if strings.HasSuffix(cmd.Name, "doppler") {
+			return "hunter2 pass\n", 0, nil
+		}
+		password, n = envValue(cmd, "EVE_APPLE_PASSWORD")
+		return answer(cmd)
+	}
+	if _, err := c.Login(context.Background(), "sam@example.com", "", "apple/prd/APPLE_ID_PASSWORD"); err != nil {
+		t.Fatal(err)
+	}
+	if password != "hunter2 pass" || n != 1 {
+		t.Fatalf("lane got %q (%d times)", password, n)
+	}
+	cmds := f.Commands()
+	if cmds[0] != "/bin/doppler secrets get APPLE_ID_PASSWORD --project apple --config prd --plain" {
+		t.Fatal(cmds)
+	}
+	for _, cmd := range cmds {
+		if strings.Contains(cmd, "hunter2") {
+			t.Fatal("password in argv:", cmd)
+		}
+	}
+}
+
+func TestLoginWithoutDopplerAndOtherLanesNeverInheritAPassword(t *testing.T) {
+	c, f := newClient(t, lane(`{"result":{}}`, nil))
+	c.Environ = append(c.Environ, "EVE_APPLE_PASSWORD=inherited")
+	if _, err := c.Login(context.Background(), "sam@example.com", "", ""); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.Keys(context.Background(), ""); err != nil {
+		t.Fatal(err)
+	}
+	for _, cmd := range f.Calls {
+		if _, n := envValue(cmd, "EVE_APPLE_PASSWORD"); n != 0 {
+			t.Fatal("inherited password reached", cmd.Args)
+		}
+	}
+}
+
+func TestLoginDopplerFailures(t *testing.T) {
+	for name, tc := range map[string]struct {
+		ref   string
+		out   string
+		code  int
+		kind  string
+		inMsg string
+	}{
+		"bad ref":     {ref: "apple/APPLE_ID_PASSWORD", kind: KindUsage, inMsg: "<project>/<config>/<SECRET>"},
+		"bad secret":  {ref: "apple/prd/apple-pw", kind: KindUsage, inMsg: "<project>/<config>/<SECRET>"},
+		"doppler":     {ref: "apple/prd/PW", code: 1, kind: KindFailed, inMsg: "doppler login"},
+		"empty value": {ref: "apple/prd/PW", out: "\n", kind: KindUsage, inMsg: "is empty"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			c, f := newClient(t, func(run.Cmd) (string, int, error) { return tc.out, tc.code, nil })
+			_, err := c.Login(context.Background(), "sam@example.com", "", tc.ref)
+			var ae *Error
+			if !errors.As(err, &ae) || ae.Kind != tc.kind || !strings.Contains(ae.Message, tc.inMsg) {
+				t.Fatal(err)
+			}
+			for _, cmd := range f.Commands() {
+				if strings.Contains(cmd, "fastlane") {
+					t.Fatal("ran fastlane after Doppler failed")
+				}
+			}
+		})
 	}
 }
 

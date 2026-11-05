@@ -40,7 +40,10 @@ For `eve wait`, `submit --wait` and `run`:
 `eve apple` runs on the machine you type it on, with `fastlane` on its PATH (and the Doppler CLI,
 signed in, for keys). Sign in once with `eve apple login`; the session lasts until Apple expires
 it, then commands exit 78 with "run `eve apple login`". Pick the team with `--team` or
-`EVE_APPLE_TEAM` when the Apple account has more than one.
+`EVE_APPLE_TEAM` when the Apple account has more than one. To skip typing the password, keep it
+in Doppler and set `EVE_APPLE_PASSWORD_DOPPLER=<project>/<config>/<SECRET>` (or pass
+`--password-doppler`): login reads it with the Doppler CLI. Apple's two-factor code is still
+asked for in the terminal.
 
 ```sh
 eve apple app create com.example.myapp --name "My App" --sku myapp --locale en-GB \

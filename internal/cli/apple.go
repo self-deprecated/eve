@@ -57,11 +57,14 @@ func teamLabel(a apple.Account) string {
 }
 
 func appleLoginCmd(env *Env, team *string) *cobra.Command {
-	var appleID string
+	var appleID, passwordDoppler string
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Sign in to Apple (password and two-factor code) and cache the session on this machine",
-		Args:  cobra.NoArgs,
+		Long: "Signs in unless the cached session is still valid. The password is asked for in the\n" +
+			"terminal, or read with the Doppler CLI from --password-doppler <project>/<config>/<SECRET>\n" +
+			"(default $EVE_APPLE_PASSWORD_DOPPLER); Apple's two-factor code is always asked for.",
+		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			if fi, err := os.Stdin.Stat(); err != nil || fi.Mode()&os.ModeCharDevice == 0 {
 				return &ExitError{Code: api.ExitUsage, Err: errors.New("eve apple login needs a terminal: it asks for the Apple ID password and a two-factor code")}
@@ -78,7 +81,7 @@ func appleLoginCmd(env *Env, team *string) *cobra.Command {
 			if appleID == "" {
 				return &ExitError{Code: api.ExitUsage, Err: errors.New("no Apple ID given")}
 			}
-			res, err := a.Login(cmd.Context(), appleID, *team)
+			res, err := a.Login(cmd.Context(), appleID, *team, passwordDoppler)
 			if err != nil {
 				return env.appleFailure(err, nil)
 			}
@@ -106,6 +109,8 @@ func appleLoginCmd(env *Env, team *string) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&appleID, "apple-id", "", "Apple ID email (default: the last one used, or asked)")
+	cmd.Flags().StringVar(&passwordDoppler, "password-doppler", os.Getenv("EVE_APPLE_PASSWORD_DOPPLER"),
+		"read the password from this Doppler <project>/<config>/<SECRET> instead of asking (default $EVE_APPLE_PASSWORD_DOPPLER)")
 	return cmd
 }
 
