@@ -79,3 +79,42 @@ func TestAppleAppCreateReportsNoChanges(t *testing.T) {
 		t.Fatalf("%q", out)
 	}
 }
+
+// Tests run without a terminal on stdin, as an agent's shell does.
+func TestAppleLoginWithoutATerminalNeedsThePasswordFromDoppler(t *testing.T) {
+	t.Setenv("EVE_APPLE_PASSWORD_DOPPLER", "")
+	_, err := runApple(t, nil, true, "login")
+	if exitCode(err) != api.ExitUsage || !strings.Contains(err.Error(), "--password-doppler") {
+		t.Fatal("no terminal, no Doppler:", err)
+	}
+	_, err = runApple(t, nil, false, "login", "--password-doppler", "apple/prd/APPLE_ID_PASSWORD")
+	if exitCode(err) != api.ExitUsage || !strings.Contains(err.Error(), "--apple-id") {
+		t.Fatal("no terminal to ask for the Apple ID:", err)
+	}
+	handler := func(result string) func(run.Cmd) (string, int, error) {
+		return func(c run.Cmd) (string, int, error) {
+			if strings.HasSuffix(c.Name, "doppler") {
+				return "hunter2\n", 0, nil
+			}
+			for _, kv := range c.Env {
+				if p, ok := strings.CutPrefix(kv, "EVE_APPLE_RESULT="); ok {
+					return "", 0, os.WriteFile(p, []byte(result), 0o600)
+				}
+			}
+			return "", 1, nil
+		}
+	}
+	out, err := runApple(t, handler(`{"result":{"signedIn":true,"team":"TEAM123456"}}`), true, "login", "--password-doppler", "apple/prd/APPLE_ID_PASSWORD")
+	if err != nil || !strings.Contains(out, "signed in to Apple as sam@example.com") {
+		t.Fatal(out, err)
+	}
+	// Apple asked for a two-factor code the lane can't prompt for.
+	out, err = runApple(t, handler(`{"error":{"kind":"session","message":"Apple asked for a two-factor code, which needs a terminal"}}`), true, "login", "--json", "--password-doppler", "apple/prd/APPLE_ID_PASSWORD")
+	var doc struct {
+		Outcome api.State
+		Human   api.Human
+	}
+	if exitCode(err) != api.ExitNeedsHuman || json.Unmarshal([]byte(out), &doc) != nil || doc.Outcome != api.StateNeedsHuman || doc.Human.Action != "apple_login" {
+		t.Fatal(out, err)
+	}
+}

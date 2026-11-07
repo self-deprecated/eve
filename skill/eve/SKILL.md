@@ -204,8 +204,12 @@ eve apple app create <bundle-id> --name "App Name" --sku <sku> --locale en-GB \
   `eve apple keys` first: Apple limits keys per team, so don't create one the user already has.
   If the error names a rescue file, tell the user: it's the only copy of the key.
 - `eve apple apps` and `eve apple keys` list what exists.
-- Exit 78: the Apple session expired. Tell the user to run `eve apple login` in a terminal
-  (password and 2FA code) and stop; never ask for their password. Exit 65: Apple refused (e.g.
+- Exit 78: the Apple session expired. Run `eve apple login --json` yourself once: with
+  `EVE_APPLE_PASSWORD_DOPPLER` set it reads the password from Doppler and signs in while the
+  machine is still trusted (exit 64 "needs a terminal" means it isn't set). If that also exits 78
+  (Apple wants a 2FA code), tell the user to run `eve apple login` in a terminal and stop. Never
+  ask for their password, and never feed one to a prompt yourself (stdin, `script`, a pty): a
+  terminal echoes it into your output. Exit 65: Apple refused (e.g.
   the app name is taken): ask the user for another. Exit 64 with "pass --team": ask which team.
 
 ## Useful commands

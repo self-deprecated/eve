@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/mattn/go-isatty"
 	"github.com/self-deprecated/eve/internal/api"
 	"github.com/self-deprecated/eve/internal/apple"
 	"github.com/spf13/cobra"
@@ -63,15 +64,22 @@ func appleLoginCmd(env *Env, team *string) *cobra.Command {
 		Short: "Sign in to Apple (password and two-factor code) and cache the session on this machine",
 		Long: "Signs in unless the cached session is still valid. The password is asked for in the\n" +
 			"terminal, or read with the Doppler CLI from --password-doppler <project>/<config>/<SECRET>\n" +
-			"(default $EVE_APPLE_PASSWORD_DOPPLER); Apple's two-factor code is always asked for.",
+			"(default $EVE_APPLE_PASSWORD_DOPPLER). Apple's two-factor code, when Apple wants one, is\n" +
+			"asked for in the terminal; with the password from Doppler and no terminal (an agent),\n" +
+			"that ends needs_human (exit 78) instead.",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			if fi, err := os.Stdin.Stat(); err != nil || fi.Mode()&os.ModeCharDevice == 0 {
-				return &ExitError{Code: api.ExitUsage, Err: errors.New("eve apple login needs a terminal: it asks for the Apple ID password and a two-factor code")}
+			// A real terminal: /dev/null is a character device too, and an agent's stdin often is it.
+			interactive := isatty.IsTerminal(os.Stdin.Fd()) || isatty.IsCygwinTerminal(os.Stdin.Fd())
+			if !interactive && passwordDoppler == "" {
+				return &ExitError{Code: api.ExitUsage, Err: errors.New("eve apple login needs a terminal to ask for the Apple ID password, or --password-doppler")}
 			}
 			a := env.NewApple()
 			if appleID == "" {
 				appleID = a.AppleID()
+			}
+			if appleID == "" && !interactive {
+				return &ExitError{Code: api.ExitUsage, Err: errors.New("no Apple ID: pass --apple-id")}
 			}
 			if appleID == "" {
 				_, _ = fmt.Fprint(env.Err, "Apple ID (email): ")

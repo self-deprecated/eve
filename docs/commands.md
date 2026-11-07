@@ -42,8 +42,10 @@ signed in, for keys). Sign in once with `eve apple login`; the session lasts unt
 it, then commands exit 78 with "run `eve apple login`". Pick the team with `--team` or
 `EVE_APPLE_TEAM` when the Apple account has more than one. To skip typing the password, keep it
 in Doppler and set `EVE_APPLE_PASSWORD_DOPPLER=<project>/<config>/<SECRET>` (or pass
-`--password-doppler`): login reads it with the Doppler CLI. Apple's two-factor code is still
-asked for in the terminal.
+`--password-doppler`): login reads it with the Doppler CLI. Apple's two-factor code, when Apple
+wants one, is still asked for in the terminal. With the password from Doppler, login also runs
+without a terminal (an agent's shell): it signs in while this machine is still trusted, and ends
+needs_human (exit 78) when Apple asks for a two-factor code.
 
 ```sh
 eve apple app create com.example.myapp --name "My App" --sku myapp --locale en-GB \

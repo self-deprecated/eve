@@ -119,13 +119,23 @@ def connect_login(out)
   team
 end
 
+# Without a terminal nobody can type Apple's two-factor code: end needs_human instead of waiting for it.
+module NoTwoFactorPrompt
+  def handle_two_step_or_factor(_response)
+    raise EveError.new("session", "Apple asked for a two-factor code, which needs a terminal")
+  end
+end
+
 lane :login do
   respond do |out|
     user = REQUEST.fetch("appleId")
     client = Spaceship::PortalClient.new
     client.user = user
     unless client.has_valid_session
-      fail!("usage", "signing in to Apple needs a terminal") unless UI.interactive?
+      unless UI.interactive?
+        fail!("usage", "signing in to Apple needs a terminal, or the password from Doppler") unless PASSWORD
+        Spaceship::Client.prepend(NoTwoFactorPrompt)
+      end
       # Passing the password keeps it out of the keychain; Spaceship asks for the 2FA code itself.
       Spaceship::Portal.login(user, PASSWORD || UI.password("Apple ID password for #{user}:"))
       # PortalClient only writes the cookie after a 2FA prompt. A trusted device skips 2FA, so save
