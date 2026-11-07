@@ -1151,7 +1151,9 @@ the lane writes a JSON result with an error kind eve maps to an exit code. fastl
 in the terminal, or read with the Doppler CLI from `--password-doppler`
 (`$EVE_APPLE_PASSWORD_DOPPLER`, `<project>/<config>/<SECRET>`) and handed to the login lane as
 `EVE_APPLE_PASSWORD`, which the Fastfile deletes from its environment first and no other lane
-gets. eve never stores it; Spaceship asks for the 2FA code in the terminal either way. Without a
+gets. A restricted secret reads as empty with a personal login, so the user's own Doppler login
+makes a read-only service token for that config, which lives a minute, reads the secret with it
+(in `DOPPLER_TOKEN`, never argv) and revokes it. eve never stores it; Spaceship asks for the 2FA code in the terminal either way. Without a
 terminal, login needs the password from Doppler, and the Fastfile replaces Spaceship's 2FA prompt
 (`handle_two_step_or_factor`) with a `session` error, so an agent gets exit 78 instead of a prompt
 nobody can answer; Apple skips 2FA while the machine is still trusted. Spaceship's cookie goes to

@@ -19,6 +19,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/self-deprecated/eve/internal/api"
@@ -351,23 +352,41 @@ func (c *Client) Login(ctx context.Context, appleID, team, passwordDoppler strin
 	return res, nil
 }
 
-// dopplerPassword reads the Apple ID password from <project>/<config>/<SECRET> with the Doppler
-// CLI's own login. The value is never printed, and Doppler's stderr is only shown when it fails.
+// dopplerPassword reads the Apple ID password from <project>/<config>/<SECRET>. A restricted
+// secret reads as empty with a personal login, so the Doppler CLI's own login makes a read-only
+// service token for the config that lives a minute, the value is read with it, and the token is
+// revoked. The token and the value are never printed or put in argv, and Doppler's stderr is only
+// shown when it fails.
 func (c *Client) dopplerPassword(ctx context.Context, ref string) (string, error) {
 	parts := strings.Split(ref, "/")
 	if len(parts) != 3 || !dopplerNameRE.MatchString(parts[0]) || !dopplerNameRE.MatchString(parts[1]) || !secretNameRE.MatchString(parts[2]) {
 		return "", usage("--password-doppler %q must be <project>/<config>/<SECRET>", ref)
 	}
+	project, config, secret := parts[0], parts[1], parts[2]
 	path, err := c.LookPath("doppler")
 	if err != nil {
 		return "", &Error{Kind: KindFailed, Message: "doppler is not on PATH; install the Doppler CLI and run `doppler login`"}
 	}
-	stdout, errOut, code, err := c.capture(ctx, path, "secrets", "get", parts[2], "--project", parts[0], "--config", parts[1], "--plain")
+	stdout, errOut, code, err := c.capture(ctx, path, "configs", "tokens", "create", "eve-apple-login",
+		"--project", project, "--config", config, "--access", "read", "--max-age", "1m", "--json")
+	if err != nil {
+		return "", err
+	}
+	var token struct{ Token, Slug string }
+	if code != 0 || json.Unmarshal([]byte(stdout), &token) != nil || token.Token == "" {
+		return "", &Error{Kind: KindFailed, Message: fmt.Sprintf("doppler couldn't make a read token for %s/%s (signed in? allowed to make service tokens there?): %s", project, config, tail(strings.TrimSpace(errOut), 4))}
+	}
+	defer func() {
+		// It ends by itself within the minute if this fails.
+		_, _, _, _ = c.capture(context.WithoutCancel(ctx), path, "configs", "tokens", "revoke", "--slug", token.Slug, "--project", project, "--config", config, "--silent")
+	}()
+	env := slices.DeleteFunc(slices.Clone(c.Environ), func(kv string) bool { return strings.HasPrefix(kv, "DOPPLER_TOKEN=") })
+	stdout, errOut, code, err = c.captureEnv(ctx, append(env, "DOPPLER_TOKEN="+token.Token), path, "secrets", "get", secret, "--plain")
 	if err != nil {
 		return "", err
 	}
 	if code != 0 {
-		return "", &Error{Kind: KindFailed, Message: fmt.Sprintf("doppler couldn't read %s (signed in? `doppler login`): %s", ref, tail(strings.TrimSpace(errOut), 4))}
+		return "", &Error{Kind: KindFailed, Message: fmt.Sprintf("doppler couldn't read %s: %s", ref, tail(strings.TrimSpace(errOut), 4))}
 	}
 	password := strings.TrimRight(stdout, "\r\n")
 	if password == "" {

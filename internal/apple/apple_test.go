@@ -191,17 +191,50 @@ func TestLoginRemembersTheAppleIDAndKeepsTheCookiePrivate(t *testing.T) {
 	}
 }
 
+// fakeDoppler answers the Doppler CLI: tokens create, secrets get (with the token it made) and
+// tokens revoke. A non-zero createCode or getCode fails that step.
+type fakeDoppler struct {
+	createCode, getCode int
+	createOut, value    string
+	gotToken            []string // DOPPLER_TOKEN of each secrets get
+	revoked             []string
+}
+
+func (d *fakeDoppler) answer(cmd run.Cmd) (string, int, error) {
+	args := strings.Join(cmd.Args, " ")
+	switch {
+	case strings.HasPrefix(args, "configs tokens create"):
+		if d.createOut == "" {
+			d.createOut = `{"name":"eve-apple-login","token":"dp.st.prd.SECRET","slug":"slug-1"}`
+		}
+		return d.createOut, d.createCode, nil
+	case strings.HasPrefix(args, "secrets get"):
+		tok, _ := envValue(cmd, "DOPPLER_TOKEN")
+		d.gotToken = append(d.gotToken, tok)
+		return d.value, d.getCode, nil
+	case strings.HasPrefix(args, "configs tokens revoke"):
+		d.revoked = append(d.revoked, args)
+		return "", 0, nil
+	}
+	return "", 1, nil
+}
+
 func TestLoginReadsThePasswordFromDoppler(t *testing.T) {
 	c, f := newClient(t, nil)
-	c.Environ = append(c.Environ, "EVE_APPLE_PASSWORD=inherited")
+	c.Environ = append(c.Environ, "EVE_APPLE_PASSWORD=inherited", "DOPPLER_TOKEN=inherited")
+	d := &fakeDoppler{value: "hunter2 pass\n"}
 	var password string
 	var n int
+	var laneToken int
 	answer := lane(`{"result":{"signedIn":true}}`, nil)
 	f.Handler = func(cmd run.Cmd) (string, int, error) {
 		if strings.HasSuffix(cmd.Name, "doppler") {
-			return "hunter2 pass\n", 0, nil
+			return d.answer(cmd)
 		}
 		password, n = envValue(cmd, "EVE_APPLE_PASSWORD")
+		if v, _ := envValue(cmd, "DOPPLER_TOKEN"); v == "dp.st.prd.SECRET" {
+			laneToken++
+		}
 		return answer(cmd)
 	}
 	if _, err := c.Login(context.Background(), "sam@example.com", "", "apple/prd/APPLE_ID_PASSWORD"); err != nil {
@@ -210,13 +243,34 @@ func TestLoginReadsThePasswordFromDoppler(t *testing.T) {
 	if password != "hunter2 pass" || n != 1 {
 		t.Fatalf("lane got %q (%d times)", password, n)
 	}
+	if laneToken != 0 {
+		t.Fatal("the service token reached fastlane")
+	}
 	cmds := f.Commands()
-	if cmds[0] != "/bin/doppler secrets get APPLE_ID_PASSWORD --project apple --config prd --plain" {
+	want := []string{
+		"/bin/doppler configs tokens create eve-apple-login --project apple --config prd --access read --max-age 1m --json",
+		"/bin/doppler secrets get APPLE_ID_PASSWORD --plain",
+	}
+	if len(cmds) < 2 || cmds[0] != want[0] || cmds[1] != want[1] {
 		t.Fatal(cmds)
 	}
+	// Read with the new token alone, then revoked.
+	if len(d.gotToken) != 1 || d.gotToken[0] != "dp.st.prd.SECRET" {
+		t.Fatal("secrets get used", d.gotToken)
+	}
+	for _, cmd := range f.Calls {
+		if strings.Join(cmd.Args, " ") == "secrets get APPLE_ID_PASSWORD --plain" {
+			if _, k := envValue(cmd, "DOPPLER_TOKEN"); k != 1 {
+				t.Fatal("DOPPLER_TOKEN set", k, "times")
+			}
+		}
+	}
+	if len(d.revoked) != 1 || d.revoked[0] != "configs tokens revoke --slug slug-1 --project apple --config prd --silent" {
+		t.Fatal("revoked", d.revoked)
+	}
 	for _, cmd := range cmds {
-		if strings.Contains(cmd, "hunter2") {
-			t.Fatal("password in argv:", cmd)
+		if strings.Contains(cmd, "hunter2") || strings.Contains(cmd, "dp.st.prd.SECRET") {
+			t.Fatal("secret in argv:", cmd)
 		}
 	}
 }
@@ -239,23 +293,29 @@ func TestLoginWithoutDopplerAndOtherLanesNeverInheritAPassword(t *testing.T) {
 
 func TestLoginDopplerFailures(t *testing.T) {
 	for name, tc := range map[string]struct {
-		ref   string
-		out   string
-		code  int
-		kind  string
-		inMsg string
+		ref     string
+		d       fakeDoppler
+		kind    string
+		inMsg   string
+		revoked int
 	}{
 		"bad ref":     {ref: "apple/APPLE_ID_PASSWORD", kind: KindUsage, inMsg: "<project>/<config>/<SECRET>"},
 		"bad secret":  {ref: "apple/prd/apple-pw", kind: KindUsage, inMsg: "<project>/<config>/<SECRET>"},
-		"doppler":     {ref: "apple/prd/PW", code: 1, kind: KindFailed, inMsg: "doppler login"},
-		"empty value": {ref: "apple/prd/PW", out: "\n", kind: KindUsage, inMsg: "is empty"},
+		"no token":    {ref: "apple/prd/PW", d: fakeDoppler{createCode: 1}, kind: KindFailed, inMsg: "signed in?"},
+		"odd token":   {ref: "apple/prd/PW", d: fakeDoppler{createOut: "{}"}, kind: KindFailed, inMsg: "read token"},
+		"read failed": {ref: "apple/prd/PW", d: fakeDoppler{getCode: 1}, kind: KindFailed, inMsg: "couldn't read", revoked: 1},
+		"empty value": {ref: "apple/prd/PW", d: fakeDoppler{value: "\n"}, kind: KindUsage, inMsg: "is empty", revoked: 1},
 	} {
 		t.Run(name, func(t *testing.T) {
-			c, f := newClient(t, func(run.Cmd) (string, int, error) { return tc.out, tc.code, nil })
+			d := tc.d
+			c, f := newClient(t, d.answer)
 			_, err := c.Login(context.Background(), "sam@example.com", "", tc.ref)
 			var ae *Error
 			if !errors.As(err, &ae) || ae.Kind != tc.kind || !strings.Contains(ae.Message, tc.inMsg) {
 				t.Fatal(err)
+			}
+			if len(d.revoked) != tc.revoked {
+				t.Fatal("revoked", d.revoked)
 			}
 			for _, cmd := range f.Commands() {
 				if strings.Contains(cmd, "fastlane") {

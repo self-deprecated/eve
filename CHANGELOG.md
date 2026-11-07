@@ -21,7 +21,8 @@
 - `eve apple login` signs in to Apple (password and 2FA in the terminal) and caches Spaceship's
   session under `~/.config/eve/apple/` (0700/0600). `eve apple apps` and `eve apple keys` list
   App Store Connect apps and keys. `--password-doppler <project>/<config>/<SECRET>` (or
-  `EVE_APPLE_PASSWORD_DOPPLER`) reads the password with the Doppler CLI instead of asking, and
+  `EVE_APPLE_PASSWORD_DOPPLER`) reads the password with the Doppler CLI instead of asking (through
+  a one-minute read-only service token, so the secret can be restricted), and
   then also works without a terminal, ending needs_human (exit 78) if Apple wants a 2FA code.
 - `eve apple app create <bundle-id> --name … --sku …` creates only what's missing: the app group,
   the bundle id with its capabilities, the App Store Connect record, then extension bundle ids.

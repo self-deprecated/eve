@@ -94,6 +94,9 @@ func TestAppleLoginWithoutATerminalNeedsThePasswordFromDoppler(t *testing.T) {
 	handler := func(result string) func(run.Cmd) (string, int, error) {
 		return func(c run.Cmd) (string, int, error) {
 			if strings.HasSuffix(c.Name, "doppler") {
+				if len(c.Args) > 2 && c.Args[2] == "create" {
+					return `{"token":"dp.st.prd.x","slug":"s"}`, 0, nil
+				}
 				return "hunter2\n", 0, nil
 			}
 			for _, kv := range c.Env {

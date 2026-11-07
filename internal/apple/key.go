@@ -281,7 +281,11 @@ func (c *Client) dopplerSet(ctx context.Context, path string, t target, name str
 }
 
 func (c *Client) capture(ctx context.Context, name string, args ...string) (string, string, int, error) {
+	return c.captureEnv(ctx, slices.Clone(c.Environ), name, args...)
+}
+
+func (c *Client) captureEnv(ctx context.Context, env []string, name string, args ...string) (string, string, int, error) {
 	var out, errOut bytes.Buffer
-	res, err := c.Runner.Run(ctx, run.Cmd{Name: name, Args: args, Env: slices.Clone(c.Environ), Stdout: &out, Stderr: &errOut})
+	res, err := c.Runner.Run(ctx, run.Cmd{Name: name, Args: args, Env: env, Stdout: &out, Stderr: &errOut})
 	return out.String(), errOut.String(), res.ExitCode, err
 }
