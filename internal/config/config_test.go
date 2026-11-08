@@ -190,19 +190,23 @@ apps:
 
 func TestSimulatorLifecycleConfiguration(t *testing.T) {
 	for _, tc := range []struct {
-		body           string
-		idle, shutdown time.Duration
-		invalid        bool
+		body                   string
+		idle, shutdown, delete time.Duration
+		invalid                bool
 	}{
-		{"", 15 * time.Minute, 30 * time.Second, false},
-		{"simulators: {idleTimeout: 0s, shutdownTimeout: 5s}\n", 0, 5 * time.Second, false},
-		{"simulators: {idleTimeout: 45m, protectedDevices: [2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856]}\n", 45 * time.Minute, 30 * time.Second, false},
-		{"simulators: {idleTimeout: -1m}\n", 0, 0, true},
-		{"simulators: {shutdownTimeout: -1s}\n", 0, 0, true},
-		{"simulators: {shutdownTimeout: 1ms}\n", 0, 0, true},
-		{"simulators: {shutdownTimeout: 3m}\n", 0, 0, true},
-		{"simulators: {protectedDevices: [booted]}\n", 0, 0, true},
-		{"simulators: {idleTimeout: yesterday}\n", 0, 0, true},
+		{"", 15 * time.Minute, 30 * time.Second, 12 * time.Hour, false},
+		{"simulators: {idleTimeout: 0s, shutdownTimeout: 5s}\n", 0, 5 * time.Second, 12 * time.Hour, false},
+		{"simulators: {idleTimeout: 45m, protectedDevices: [2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856]}\n", 45 * time.Minute, 30 * time.Second, 12 * time.Hour, false},
+		{"simulators: {deleteAfter: 2h}\n", 15 * time.Minute, 30 * time.Second, 2 * time.Hour, false},
+		{"simulators: {deleteAfter: 0s}\n", 15 * time.Minute, 30 * time.Second, 0, false},
+		{"simulators: {deleteAfter: -1h}\n", 0, 0, 0, true},
+		{"simulators: {deleteAfter: never}\n", 0, 0, 0, true},
+		{"simulators: {idleTimeout: -1m}\n", 0, 0, 0, true},
+		{"simulators: {shutdownTimeout: -1s}\n", 0, 0, 0, true},
+		{"simulators: {shutdownTimeout: 1ms}\n", 0, 0, 0, true},
+		{"simulators: {shutdownTimeout: 3m}\n", 0, 0, 0, true},
+		{"simulators: {protectedDevices: [booted]}\n", 0, 0, 0, true},
+		{"simulators: {idleTimeout: yesterday}\n", 0, 0, 0, true},
 	} {
 		t.Run(tc.body, func(t *testing.T) {
 			p := writeFile(t, t.TempDir(), "server.yml", "team: T\napps: {}\n"+tc.body)
@@ -216,7 +220,7 @@ func TestSimulatorLifecycleConfiguration(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if s.Simulators.IdleAfter() != tc.idle || s.Simulators.ShutdownWithin() != tc.shutdown {
+			if s.Simulators.IdleAfter() != tc.idle || s.Simulators.ShutdownWithin() != tc.shutdown || s.Simulators.DeleteSettledAfter() != tc.delete {
 				t.Fatal(s.Simulators)
 			}
 		})

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Simulator retention
+- Delete settled test Simulators `simulators.deleteAfter` (default 12h) after their shutdown,
+  in the once-a-minute sweep. Only devices still matching the recorded UDID and exact name,
+  stopped, not booted since cleanup and not protected are deleted; adopted or renamed devices are
+  kept with a note. `0s` keeps them. `eve simulator list` shows `deleted`; JSON adds `settledAt`
+  and `deletedAt`. Existing settled records count their grace from their recorded shutdown.
+
 ### Travel bridge
 - `eve bridge on [--for 2h]` reaches the iPhone over Tailscale while it's on another Wi-Fi
   network, for a lease (at most `device.bridge.maxDuration`, default 12h), inside `eve serve`.

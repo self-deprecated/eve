@@ -7,6 +7,7 @@ import (
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/self-deprecated/eve/internal/run"
 )
@@ -170,4 +171,51 @@ func asExit(err error, target **ExitError) bool {
 		*target = e
 	}
 	return ok
+}
+
+// Shape of `simctl list -j devices` from Xcode 26.5 (CoreSimulator reports lastUsedAt, set at boot).
+const simctlDevices = `{"devices":{"com.apple.CoreSimulator.SimRuntime.iOS-26-5":[
+ {"dataPath":"/Users/jmo/Library/Developer/CoreSimulator/Devices/17FE73E1-7789-478E-BC9C-286CD675D7A0/data",
+  "dataPathSize":2325372928,"udid":"17FE73E1-7789-478E-BC9C-286CD675D7A0","lastUsedAt":"2026-11-07T12:51:27Z",
+  "isAvailable":true,"deviceTypeIdentifier":"com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+  "state":"Shutdown","name":"10 & 2 review"},
+ {"udid":"81FC86DE-A74C-4643-A332-EBBEC3EBCB9B","state":"Shutdown","name":"never booted","isAvailable":true},
+ {"udid":"2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856","state":"Shutdown","name":"older Xcode",
+  "lastUsedAt":"2026-11-01T10:00:00Z","lastBootedAt":"2026-11-02T10:00:00Z"}]}}`
+
+func TestSimulatorInventoryReportsLastBoot(t *testing.T) {
+	tools := Tools{Runner: &run.Fake{Handler: func(run.Cmd) (string, int, error) { return simctlDevices, 0, nil }}}
+	ds, err := tools.Simulators(context.Background())
+	if err != nil || len(ds) != 3 {
+		t.Fatal(ds, err)
+	}
+	want := map[string]string{"10 & 2 review": "2026-11-07T12:51:27Z", "never booted": "0001-01-01T00:00:00Z", "older Xcode": "2026-11-02T10:00:00Z"}
+	for _, d := range ds {
+		boot, err := d.LastBoot()
+		if err != nil || boot.Format(time.RFC3339) != want[d.Name] {
+			t.Errorf("%s: %v %v, want %s", d.Name, boot, err, want[d.Name])
+		}
+	}
+	if _, err := (SimDevice{LastUsedAt: "yesterday"}).LastBoot(); err == nil {
+		t.Error("unreadable boot time accepted")
+	}
+}
+
+func TestDeleteSimulatorRefusesNonUDIDs(t *testing.T) {
+	fake := &run.Fake{Handler: func(run.Cmd) (string, int, error) { return "", 0, nil }}
+	tools := Tools{Runner: fake}
+	for _, id := range []string{"", "all", "unavailable", "eve-j_x", "booted"} {
+		if err := tools.DeleteSimulator(context.Background(), id); err == nil {
+			t.Errorf("deleted %q", id)
+		}
+	}
+	if len(fake.Commands()) != 0 {
+		t.Fatal(fake.Commands())
+	}
+	if err := tools.DeleteSimulator(context.Background(), "81FC86DE-A74C-4643-A332-EBBEC3EBCB9B"); err != nil {
+		t.Fatal(err)
+	}
+	if got := fake.Commands(); len(got) != 1 || !strings.HasSuffix(got[0], "simctl delete 81FC86DE-A74C-4643-A332-EBBEC3EBCB9B") {
+		t.Fatal(got)
+	}
 }

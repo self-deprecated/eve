@@ -237,10 +237,40 @@ func (t Tools) ShutdownSimulator(ctx context.Context, id string) error {
 	return t.simctl(ctx, nil, "shutdown", id)
 }
 
+// DeleteSimulator removes one stopped device and its data. Callers must have proven ownership.
+func (t Tools) DeleteSimulator(ctx context.Context, id string) error {
+	if !udid.MatchString(id) {
+		return fmt.Errorf("invalid Simulator UDID %q", id)
+	}
+	return t.simctl(ctx, nil, "delete", id)
+}
+
 type SimDevice struct {
 	UDID  string `json:"udid"`
 	Name  string `json:"name"`
 	State string `json:"state"`
+	// RFC 3339, absent if never booted. Current CoreSimulator reports lastUsedAt, set at boot
+	// (not at shutdown); older releases reported lastBootedAt.
+	LastUsedAt   string `json:"lastUsedAt,omitempty"`
+	LastBootedAt string `json:"lastBootedAt,omitempty"`
+}
+
+// LastBoot is the latest boot time the inventory reports; zero if it reports none.
+func (d SimDevice) LastBoot() (time.Time, error) {
+	var latest time.Time
+	for _, s := range []string{d.LastUsedAt, d.LastBootedAt} {
+		if s == "" {
+			continue
+		}
+		t, err := time.Parse(time.RFC3339Nano, s)
+		if err != nil {
+			return time.Time{}, fmt.Errorf("unreadable boot time %q", s)
+		}
+		if t.After(latest) {
+			latest = t
+		}
+	}
+	return latest, nil
 }
 
 // Simulators is an inventory, not an ownership or activity heuristic.

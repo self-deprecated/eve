@@ -129,6 +129,10 @@ var migrations = []string{
 		last_error TEXT NOT NULL DEFAULT ''
 	)`,
 	`ALTER TABLE simulators ADD COLUMN lease_until INTEGER NOT NULL DEFAULT 0`,
+	`ALTER TABLE simulators ADD COLUMN settled_at INTEGER NOT NULL DEFAULT 0`,
+	// Before settled_at existed, the successful shutdown was the last attempt.
+	`UPDATE simulators SET settled_at=last_attempt_at WHERE settled=1`,
+	`ALTER TABLE simulators ADD COLUMN deleted_at INTEGER NOT NULL DEFAULT 0`,
 }
 
 func (s *Store) migrate(ctx context.Context) error {
