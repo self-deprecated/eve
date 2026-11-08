@@ -103,6 +103,9 @@ func simulatorCmd(env *Env, load func() (*config.Server, error)) *cobra.Command 
 				if v.Settled {
 					state = "settled"
 				}
+				if !v.DeletedAt.IsZero() {
+					state = "deleted"
+				}
 				if v.LegacyProtected {
 					state += ",legacy-protected"
 				}

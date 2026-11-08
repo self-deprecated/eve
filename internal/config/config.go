@@ -38,6 +38,7 @@ type SimulatorSettings struct {
 	IdleTimeout      *Duration `yaml:"idleTimeout"`      // nil: 15m; zero: disable automatic retry/recovery
 	ShutdownTimeout  Duration  `yaml:"shutdownTimeout"`  // zero: 30s
 	MaxLeaseDuration Duration  `yaml:"maxLeaseDuration"` // zero: 1h, per acquisition/renewal
+	DeleteAfter      *Duration `yaml:"deleteAfter"`      // nil: 12h after shutdown settles; zero: keep devices
 	ProtectedDevices []string  `yaml:"protectedDevices"`
 }
 
@@ -46,6 +47,14 @@ func (s SimulatorSettings) IdleAfter() time.Duration {
 		return 15 * time.Minute
 	}
 	return time.Duration(*s.IdleTimeout)
+}
+
+// DeleteSettledAfter is how long a settled, still-stopped device is kept before deletion.
+func (s SimulatorSettings) DeleteSettledAfter() time.Duration {
+	if s.DeleteAfter == nil {
+		return 12 * time.Hour
+	}
+	return time.Duration(*s.DeleteAfter)
 }
 
 func (s SimulatorSettings) ShutdownWithin() time.Duration {
@@ -311,6 +320,9 @@ func (s *Server) Validate() error {
 	var errs []error
 	if s.Simulators.IdleAfter() < 0 {
 		errs = append(errs, errors.New("simulators.idleTimeout must be non-negative (0s disables automatic cleanup)"))
+	}
+	if s.Simulators.DeleteSettledAfter() < 0 {
+		errs = append(errs, errors.New("simulators.deleteAfter must be non-negative (0s keeps stopped devices)"))
 	}
 	if d := s.Simulators.ShutdownWithin(); d < time.Second || d > 2*time.Minute {
 		errs = append(errs, errors.New("simulators.shutdownTimeout must be between 1s and 2m"))

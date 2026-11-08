@@ -48,7 +48,8 @@ outcome nobody has seen.
 **only builds**: tests run only when eve.yml sets `check: {test: true}`, on a fresh Simulator. A
 failing test exits 1 with `failure.class: test.failed`; `tests.failures` names the first failing
 tests and their assertions. Eve leases each fresh device through the test, then shuts it down on
-success, failure or cancellation, preserving its apps/data. A `simulator_cleanup` result note
+success, failure or cancellation, and deletes it 12h later (server `simulators.deleteAfter`) unless
+it has been booted since. A `simulator_cleanup` result note
 means teardown was deferred; inspect `eve simulator list` on the build Mac. Do not use a pending
 Eve-owned device through T3 Device, agent-device, Indentured or Simulator.app until
 `eve simulator renew <udid> --for 30m --json` succeeds; wait for its Eve job to finish. Use the

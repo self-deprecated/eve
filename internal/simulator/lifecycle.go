@@ -108,13 +108,15 @@ func (m *Manager) Release(ctx context.Context, tools xcode.Tools, id string) err
 }
 
 // Sweep retries released leases, and releases crash leases only after queue recovery has
-// cleared their process group and requeued/finished the job. The caller holds the host lock,
-// so neither a worker nor `eve run` can be actively using a device while this runs.
+// cleared their process group and requeued/finished the job. It then deletes settled devices
+// whose deleteAfter grace period has passed. The caller holds the host lock, so neither a
+// worker nor `eve run` can be actively using a device while this runs.
 func (m *Manager) Sweep(ctx context.Context, tools xcode.Tools) error {
-	idle := m.Settings.IdleAfter()
-	if idle <= 0 {
+	idle, keep := m.Settings.IdleAfter(), m.Settings.DeleteSettledAfter()
+	if idle <= 0 && keep <= 0 {
 		return nil
 	}
+	tools.OnStart = nil // cleanup must not overwrite any job's process group
 	unlock, err := m.lock(ctx, false)
 	if err != nil {
 		return err
@@ -125,11 +127,32 @@ func (m *Manager) Sweep(ctx context.Context, tools xcode.Tools) error {
 		return err
 	}
 	var errs []error
+	var inventory []xcode.SimDevice // fetched once, only when a settled device is due
 	for _, d := range ds {
 		if ctx.Err() != nil {
 			return errors.Join(append(errs, ctx.Err())...)
 		}
+		if !d.DeletedAt.IsZero() {
+			continue
+		}
 		if d.Settled {
+			if keep <= 0 || d.SettledAt.IsZero() || m.now().Sub(d.SettledAt) < keep || m.protected(d) {
+				continue
+			}
+			if inventory == nil {
+				list, cancel := context.WithTimeout(ctx, m.Settings.ShutdownWithin())
+				inventory, err = tools.Simulators(list)
+				cancel()
+				if err != nil {
+					return errors.Join(append(errs, fmt.Errorf("simulator inventory: %w", err))...)
+				}
+			}
+			if err := m.delete(ctx, tools, d, inventory); err != nil {
+				errs = append(errs, fmt.Errorf("%s: %w", d.UDID, err))
+			}
+			continue
+		}
+		if idle <= 0 {
 			continue
 		}
 		if d.ReleasedAt.IsZero() {
@@ -210,6 +233,45 @@ func (m *Manager) shutdown(ctx context.Context, tools xcode.Tools, d store.Simul
 		}
 	}
 	return errors.New("device missing from inventory; ownership needs operator review")
+}
+
+// delete removes a settled device only while it is provably still Eve's: same UDID and exact
+// name, stopped, and not booted since Eve shut it down. A later boot means a person or another
+// workflow adopted it; such devices, and renamed ones, are kept and noted, never retried as
+// errors. A device already gone from the inventory ends its lifecycle without a command.
+func (m *Manager) delete(ctx context.Context, tools xcode.Tools, d store.Simulator, inventory []xcode.SimDevice) error {
+	record := func(deleted bool, detail string) error {
+		rec, cancel := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
+		defer cancel()
+		return m.Store.SimulatorDeletion(rec, d.UDID, deleted, detail, m.now())
+	}
+	for _, actual := range inventory {
+		if !strings.EqualFold(actual.UDID, d.UDID) {
+			continue
+		}
+		if actual.Name != d.Name {
+			return record(false, "device renamed after cleanup; kept for operator review")
+		}
+		if actual.State != "Shutdown" {
+			return record(false, fmt.Sprintf("device %s after cleanup; kept for its new user", strings.ToLower(actual.State)))
+		}
+		// Eve's own boot precedes settling; any later boot means someone else used the device.
+		booted, err := actual.LastBoot()
+		if err != nil {
+			return record(false, err.Error()+"; kept for operator review")
+		}
+		if booted.After(d.SettledAt) {
+			return record(false, "booted after cleanup; kept for its new user")
+		}
+		del, cancel := context.WithTimeout(ctx, m.Settings.ShutdownWithin())
+		err = tools.DeleteSimulator(del, d.UDID)
+		cancel()
+		if err != nil {
+			return errors.Join(err, record(false, "delete deferred: "+err.Error()))
+		}
+		return record(true, "")
+	}
+	return record(true, "")
 }
 
 func (m *Manager) protected(d store.Simulator) bool {

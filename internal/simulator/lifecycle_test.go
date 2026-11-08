@@ -29,6 +29,8 @@ type rig struct {
 	inventoryError bool
 	shutdownError  bool
 	shutdowns      []string
+	deleteError    bool
+	deletes        []string
 }
 
 func newRig(t *testing.T) *rig {
@@ -47,6 +49,7 @@ func newRig(t *testing.T) *rig {
 		t.Fatal(err)
 	}
 	r := &rig{job: j, now: time.Date(2026, 10, 19, 12, 0, 0, 0, time.UTC), device: xcode.SimDevice{UDID: ownedID, Name: "eve-" + j.ID, State: "Booted"}}
+	r.device.LastUsedAt = r.now.Format(time.RFC3339) // CoreSimulator sets it at boot
 	r.m = &Manager{Store: st, DataDir: dir, Now: func() time.Time { return r.now }}
 	if err := st.RegisterSimulator(context.Background(), ownedID, r.device.Name, j.ID); err != nil {
 		t.Fatal(err)
@@ -62,10 +65,12 @@ func newRig(t *testing.T) *rig {
 			}
 			// Shared/legacy devices are deliberately present, including a misleading Eve name.
 			ds := []xcode.SimDevice{
-				r.device,
 				{UDID: "2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856", Name: "iPhone 17 Pro", State: "Booted"},
 				{UDID: "4979D925-3782-4A2F-B08C-3381651EBD20", Name: "ScreenGate Screenshots", State: "Booted"},
 				{UDID: "75302A75-37B5-41F5-8C51-D6A8F423869C", Name: "eve-not-owned", State: "Booted"},
+			}
+			if r.device.UDID != "" {
+				ds = append(ds, r.device)
 			}
 			b, _ := json.Marshal(map[string]any{"devices": map[string]any{"iOS-26-5": ds}})
 			return string(b), 0, nil
@@ -75,6 +80,16 @@ func newRig(t *testing.T) *rig {
 				return "CoreSimulator busy", 1, nil
 			}
 			r.device.State = "Shutdown"
+			return "", 0, nil
+		case "delete":
+			r.deletes = append(r.deletes, c.Args[2])
+			if r.deleteError {
+				return "Unable to delete device", 1, nil
+			}
+			if !strings.EqualFold(c.Args[2], r.device.UDID) || r.device.State != "Shutdown" {
+				t.Fatalf("deleted a device Eve does not own or that is not stopped: %s %+v", c.String(), r.device)
+			}
+			r.device = xcode.SimDevice{}
 			return "", 0, nil
 		default:
 			t.Fatalf("unsafe/unexpected command: %s", c.String())
@@ -528,5 +543,139 @@ func TestJobTeardownLockWaitHonoursShutdownDeadline(t *testing.T) {
 	}
 	if time.Since(started) > time.Second || !r.record(t).ReleasedAt.IsZero() || len(r.fake.Commands()) != 0 {
 		t.Fatal("lock wait exceeded the teardown deadline or acted without the lock")
+	}
+}
+
+// settle runs normal job teardown at r.now, leaving a settled, stopped device.
+func (r *rig) settle(t *testing.T) time.Time {
+	t.Helper()
+	if err := r.m.Release(context.Background(), r.tools, ownedID); err != nil {
+		t.Fatal(err)
+	}
+	if d := r.record(t); !d.Settled || !d.SettledAt.Equal(r.now) {
+		t.Fatalf("%+v", d)
+	}
+	return r.now
+}
+
+func (r *rig) listings() int {
+	n := 0
+	for _, c := range r.fake.Commands() {
+		if strings.Contains(c, "simctl list") {
+			n++
+		}
+	}
+	return n
+}
+
+func TestSettledDeviceIsDeletedOnceAfterDefaultGrace(t *testing.T) {
+	r := newRig(t)
+	settled := r.settle(t)
+	r.now = settled.Add(12*time.Hour - time.Millisecond)
+	listed := r.listings()
+	r.sweep(t)
+	if len(r.deletes) != 0 || r.listings() != listed {
+		t.Fatal("deleted, or listed devices, before the grace period", r.deletes)
+	}
+	r.now = settled.Add(12 * time.Hour)
+	r.sweep(t)
+	if !slices.Equal(r.deletes, []string{ownedID}) || !r.record(t).DeletedAt.Equal(r.now) {
+		t.Fatalf("%v %+v", r.deletes, r.record(t))
+	}
+	// A deleted record is finished: no further inventory or commands.
+	commands := len(r.fake.Commands())
+	r.now = r.now.Add(48 * time.Hour)
+	r.sweep(t)
+	if len(r.fake.Commands()) != commands {
+		t.Fatal("deleted device was revisited")
+	}
+	if _, err := r.m.Renew(context.Background(), ownedID, time.Minute); !errors.Is(err, store.ErrSimulatorSettled) {
+		t.Fatal("deleted device must not be leasable", err)
+	}
+}
+
+func TestDeleteAfterIsConfigurableAndIndependentOfIdleRetry(t *testing.T) {
+	r := newRig(t)
+	zero, hour := config.Duration(0), config.Duration(time.Hour)
+	r.m.Settings = config.SimulatorSettings{IdleTimeout: &zero, DeleteAfter: &hour}
+	settled := r.settle(t)
+	r.now = settled.Add(time.Hour)
+	r.sweep(t)
+	if !slices.Equal(r.deletes, []string{ownedID}) {
+		t.Fatal("deleteAfter must work with idle retries disabled", r.deletes)
+	}
+
+	r = newRig(t)
+	r.m.Settings = config.SimulatorSettings{DeleteAfter: &zero}
+	settled = r.settle(t)
+	r.now = settled.Add(365 * 24 * time.Hour)
+	r.sweep(t)
+	if len(r.deletes) != 0 || !r.record(t).DeletedAt.IsZero() {
+		t.Fatal("deleteAfter: 0s must keep stopped devices")
+	}
+}
+
+func TestDeletionKeepsDevicesAdoptedOrChangedAfterCleanup(t *testing.T) {
+	for _, scenario := range []string{"booted now", "booted and stopped again", "booted per legacy lastBootedAt", "renamed", "unreadable boot time", "operator protected"} {
+		t.Run(scenario, func(t *testing.T) {
+			r := newRig(t)
+			settled := r.settle(t)
+			r.now = settled.Add(13 * time.Hour)
+			switch scenario {
+			case "booted now":
+				r.device.State = "Booted"
+				r.device.LastUsedAt = settled.Add(time.Hour).Format(time.RFC3339)
+			case "booted and stopped again":
+				r.device.LastUsedAt = settled.Add(time.Hour).Format(time.RFC3339)
+			case "booted per legacy lastBootedAt":
+				r.device.LastBootedAt = settled.Add(time.Second).Format(time.RFC3339)
+			case "renamed":
+				r.device.Name = "Human session"
+			case "unreadable boot time":
+				r.device.LastUsedAt = "yesterday"
+			case "operator protected":
+				r.m.Settings.ProtectedDevices = []string{ownedID}
+			}
+			r.sweep(t) // kept devices are notes, not errors retried every minute
+			r.now = r.now.Add(time.Hour)
+			r.sweep(t)
+			d := r.record(t)
+			if len(r.deletes) != 0 || !d.DeletedAt.IsZero() {
+				t.Fatalf("deleted a device that is no longer provably Eve's: %+v", d)
+			}
+			if (scenario == "operator protected") != (d.LastError == "") {
+				t.Fatalf("kept reason: %q", d.LastError)
+			}
+		})
+	}
+}
+
+func TestDeviceAlreadyGoneEndsLifecycleWithoutCommand(t *testing.T) {
+	r := newRig(t)
+	settled := r.settle(t)
+	r.device = xcode.SimDevice{} // deleted by hand or by another tool
+	r.now = settled.Add(12 * time.Hour)
+	r.sweep(t)
+	if len(r.deletes) != 0 || !r.record(t).DeletedAt.Equal(r.now) {
+		t.Fatalf("%v %+v", r.deletes, r.record(t))
+	}
+}
+
+func TestFailedDeletionIsReportedAndRetried(t *testing.T) {
+	r := newRig(t)
+	settled := r.settle(t)
+	r.now = settled.Add(12 * time.Hour)
+	r.deleteError = true
+	if err := r.m.Sweep(context.Background(), r.tools); err == nil || !strings.Contains(err.Error(), "Unable to delete device") {
+		t.Fatal(err)
+	}
+	if d := r.record(t); !d.DeletedAt.IsZero() || !strings.Contains(d.LastError, "delete deferred") {
+		t.Fatalf("%+v", d)
+	}
+	r.deleteError = false
+	r.now = r.now.Add(time.Minute)
+	r.sweep(t)
+	if d := r.record(t); len(r.deletes) != 2 || d.DeletedAt.IsZero() || d.LastError != "" {
+		t.Fatalf("%v %+v", r.deletes, d)
 	}
 }

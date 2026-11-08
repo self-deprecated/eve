@@ -87,7 +87,8 @@ func Assemble(ctx context.Context, cfg *config.Server, version string, log *slog
 	lifecycle := &simulator.Manager{Store: st, DataDir: cfg.DataDir, Settings: cfg.Simulators}
 	var lastSweep time.Time
 	q.Maintain = func(ctx context.Context) {
-		if cfg.Simulators.IdleAfter() <= 0 || time.Since(lastSweep) < time.Minute {
+		automatic := cfg.Simulators.IdleAfter() > 0 || cfg.Simulators.DeleteSettledAfter() > 0
+		if !automatic || time.Since(lastSweep) < time.Minute {
 			return
 		}
 		lastSweep = time.Now()

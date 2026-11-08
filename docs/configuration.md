@@ -57,6 +57,7 @@ apps:
 #   idleTimeout: 15m               # pending/recovered cleanup; 0s disables automatic retries
 #   shutdownTimeout: 30s           # bounded teardown; 1s–2m
 #   maxLeaseDuration: 1h           # maximum per agent borrow acquisition/renewal
+#   deleteAfter: 12h               # delete settled, still-stopped devices; 0s keeps them
 #   protectedDevices: []           # operator-only indefinite exclusions (UDIDs)
 
 # sizeGuard:                       # defaults shown

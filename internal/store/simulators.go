@@ -8,14 +8,17 @@ import (
 )
 
 // Simulator records exact ownership, an explicit job lease and one pending shutdown.
-// Zero ReleasedAt is a lease, not an age-based expiry. Settled devices are never reaped
-// again: a later boot may belong to another workflow or a person.
+// Zero ReleasedAt is a lease, not an age-based expiry. Settled devices are never shut down
+// again: a later boot may belong to another workflow or a person. A settled device that is
+// still stopped and unbooted since SettledAt may be deleted once; DeletedAt records that.
 type Simulator struct {
 	UDID            string    `json:"udid"`
 	Name            string    `json:"name"`
 	JobID           string    `json:"jobId"`
 	ReleasedAt      time.Time `json:"releasedAt"`
 	Settled         bool      `json:"settled"`
+	SettledAt       time.Time `json:"settledAt"`
+	DeletedAt       time.Time `json:"deletedAt"`
 	LegacyProtected bool      `json:"legacyProtected,omitempty"` // old indefinite pins need explicit conversion
 	LeaseUntil      time.Time `json:"leaseUntil"`
 	LastAttemptAt   time.Time `json:"lastAttemptAt"`
@@ -28,7 +31,7 @@ func (s *Store) RegisterSimulator(ctx context.Context, id, name, job string) err
 }
 
 func (s *Store) Simulators(ctx context.Context) ([]Simulator, error) {
-	rows, err := s.db.QueryContext(ctx, `SELECT udid,name,job_id,released_at,settled,protected,lease_until,last_attempt_at,last_error FROM simulators ORDER BY last_attempt_at,udid`)
+	rows, err := s.db.QueryContext(ctx, `SELECT udid,name,job_id,released_at,settled,settled_at,deleted_at,protected,lease_until,last_attempt_at,last_error FROM simulators ORDER BY last_attempt_at,udid`)
 	if err != nil {
 		return nil, err
 	}
@@ -36,11 +39,13 @@ func (s *Store) Simulators(ctx context.Context) ([]Simulator, error) {
 	out := []Simulator{}
 	for rows.Next() {
 		var d Simulator
-		var released, attempted, until int64
-		if err := rows.Scan(&d.UDID, &d.Name, &d.JobID, &released, &d.Settled, &d.LegacyProtected, &until, &attempted, &d.LastError); err != nil {
+		var released, settledAt, deletedAt, attempted, until int64
+		if err := rows.Scan(&d.UDID, &d.Name, &d.JobID, &released, &d.Settled, &settledAt, &deletedAt, &d.LegacyProtected, &until, &attempted, &d.LastError); err != nil {
 			return nil, err
 		}
 		d.ReleasedAt = fromMS(released)
+		d.SettledAt = fromMS(settledAt)
+		d.DeletedAt = fromMS(deletedAt)
 		d.LastAttemptAt = fromMS(attempted)
 		d.LeaseUntil = fromMS(until)
 		out = append(out, d)
@@ -54,8 +59,23 @@ func (s *Store) ReleaseSimulator(ctx context.Context, id string, at time.Time) e
 	return err
 }
 
+// SimulatorCleanup records a shutdown attempt. The first success also sets settled_at, the
+// start of the deletion grace period.
 func (s *Store) SimulatorCleanup(ctx context.Context, id string, settled bool, detail string, at time.Time) error {
-	_, err := s.db.ExecContext(ctx, `UPDATE simulators SET settled=?,last_error=?,last_attempt_at=? WHERE udid=?`, settled, detail, ms(at), id)
+	_, err := s.db.ExecContext(ctx, `UPDATE simulators SET settled=?,last_error=?,last_attempt_at=?,
+		settled_at=CASE WHEN ? AND settled_at=0 THEN ? ELSE settled_at END WHERE udid=?`,
+		settled, detail, ms(at), settled, ms(at), id)
+	return err
+}
+
+// SimulatorDeletion records a deletion attempt on a settled device: deleted (or already gone)
+// ends its lifecycle; otherwise detail says why it was kept. Unchanged details are not rewritten.
+func (s *Store) SimulatorDeletion(ctx context.Context, id string, deleted bool, detail string, at time.Time) error {
+	if deleted {
+		_, err := s.db.ExecContext(ctx, `UPDATE simulators SET deleted_at=?,last_error='',last_attempt_at=? WHERE udid=? AND deleted_at=0`, ms(at), ms(at), id)
+		return err
+	}
+	_, err := s.db.ExecContext(ctx, `UPDATE simulators SET last_error=?,last_attempt_at=? WHERE udid=? AND deleted_at=0 AND last_error<>?`, detail, ms(at), id, detail)
 	return err
 }
 

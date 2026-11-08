@@ -47,8 +47,24 @@ missing, malformed or unknown-state inventory is left for review, with an error 
 an inferred shutdown. Already stopped devices settle without a shutdown command. Once
 shutdown succeeds, the record settles permanently: a later boot by a human or another
 workflow does **not** cause Eve to shut it down again. Eve never adopts devices by name,
-never runs `shutdown all`, and never erases or deletes Simulators. Stopped definitions and
-their on-disk data remain; disk retention is a separate operator decision.
+never runs `shutdown all`, and never erases a Simulator's contents.
+
+### Deleting settled devices
+
+Each test device takes several gigabytes, and a busy host creates dozens a day. Eve
+therefore **deletes** a settled device `deleteAfter` (default 12h) after its shutdown settled,
+during the same once-a-minute sweep. Deletion applies only while the device is provably still
+Eve's: the recorded UDID and exact name are in a fresh inventory, it is `Shutdown`, its last
+boot is not after the settle time, and it is not in `protectedDevices`. The last boot is the
+inventory's `lastUsedAt` (CoreSimulator sets it at boot, not shutdown) or, on older Xcode
+releases, `lastBootedAt`. A device that was booted after cleanup (now or since), renamed, or
+reports an unreadable boot time is kept
+for its new user or for review: `eve simulator list` shows why, and it is never retried as an
+error. A device already missing from the inventory, for example deleted by hand, is recorded as
+deleted without a command. A failed `simctl delete` is logged as `Simulator cleanup deferred` and
+retried on the next sweep. Deleted records stay in `eve.db` with `deletedAt` and list as
+`deleted`. `deleteAfter: 0s` keeps stopped devices indefinitely, as before. Devices created by
+`exec`/`pre` scripts and shared devices are never deleted by Eve.
 
 ### Configuration and borrowing
 
@@ -59,11 +75,12 @@ simulators:
   idleTimeout: 15m          # default; 0s disables automatic retry/recovery, not job teardown
   shutdownTimeout: 30s     # default; 1s–2m (omitted or 0s uses the default)
   maxLeaseDuration: 1h     # maximum requested time per acquisition/renewal; 0s uses 1h
+  deleteAfter: 12h         # default; delete settled, still-stopped devices; 0s keeps them
   protectedDevices: []     # operator-only indefinite exclusions, independent of agent leases
 ```
 
 Through home-manager these are `services.eve.settings.simulators` with the same fields; for
-example `idleTimeout = "15m"; maxLeaseDuration = "1h";`. The maximum must be at least one second.
+example `idleTimeout = "15m"; maxLeaseDuration = "1h"; deleteAfter = "12h";`. The maximum must be at least one second.
 Each new request is checked against this server setting. Reducing it applies to new grants and
 renewals; an already granted deadline remains valid until its advertised expiry.
 
