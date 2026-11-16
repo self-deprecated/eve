@@ -117,6 +117,10 @@ func doctorCmd(env *Env) *cobra.Command {
 				_, _ = fmt.Fprintf(env.Err, "warning: the server is older than this client (API level %d, needs %d); update eve on the build Mac\n", v.API, api.APILevel)
 			case v.API > api.APILevel:
 				_, _ = fmt.Fprintf(env.Err, "warning: this client is older than the server (API level %d, server %d); update it (sd fast-lane update)\n", api.APILevel, v.API)
+			case v.Version != env.Version && strings.Contains(v.Version, "+") && strings.Contains(env.Version, "+"):
+				// Same API, different build. On the build Mac this is usually a newer CLI (fast lane)
+				// beside an eve serve nobody restarted, which silently lacks the server-side fixes.
+				_, _ = fmt.Fprintf(env.Err, "warning: the server runs eve %s but this client is %s; update whichever is older (on the build Mac, activate the new eve and restart eve serve)\n", v.Version, env.Version)
 			}
 			if !host {
 				tools := appleTools()

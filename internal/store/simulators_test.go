@@ -133,6 +133,52 @@ func TestSettledAtMigrationStartsGraceAtTheSuccessfulShutdown(t *testing.T) {
 	}
 }
 
+func TestRepairSettledAtFillsRecordsSettledByAnOlderServer(t *testing.T) {
+	st, err := Open(filepath.Join(t.TempDir(), "eve.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = st.Close() })
+	ctx := context.Background()
+	j, _, err := st.CreateJob(ctx, newJob("driver", "abc", "key"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	const old, current, pending = "0825B3D6-A17B-49A1-AC3C-0DADB895B9F8", "2A8D25F8-B2D2-4E62-9CCE-A0A0C764B856", "4979D925-3782-4A2F-B08C-3381651EBD20"
+	t0 := time.Date(2026, 11, 13, 8, 0, 0, 0, time.UTC)
+	for _, id := range []string{old, current, pending} {
+		if err := st.RegisterSimulator(ctx, id, "eve-"+id[:4], j.ID); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := st.SimulatorCleanup(ctx, current, true, "", t0); err != nil {
+		t.Fatal(err)
+	}
+	if err := st.SimulatorCleanup(ctx, pending, false, "busy", t0); err != nil {
+		t.Fatal(err)
+	}
+	// What a server without settled_at writes into the migrated schema.
+	if _, err := st.db.ExecContext(ctx, fmt.Sprintf(`UPDATE simulators SET settled=1,last_error='',last_attempt_at=%d WHERE udid='%s'`, t0.Add(time.Hour).UnixMilli(), old)); err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []int64{1, 0} { // only the old server's record; then nothing left
+		n, err := st.RepairSettledAt(ctx)
+		if err != nil || n != want {
+			t.Fatalf("repaired %d, want %d: %v", n, want, err)
+		}
+	}
+	ds, err := st.Simulators(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, d := range ds {
+		want := map[string]time.Time{old: t0.Add(time.Hour), current: t0}[d.UDID]
+		if !d.SettledAt.Equal(want) {
+			t.Fatalf("%s: settledAt %v, want %v", d.UDID, d.SettledAt, want)
+		}
+	}
+}
+
 func TestSimulatorCleanupAndDeletionTimestamps(t *testing.T) {
 	st, err := Open(filepath.Join(t.TempDir(), "eve.db"))
 	if err != nil {

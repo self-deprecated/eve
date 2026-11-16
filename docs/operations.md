@@ -63,7 +63,11 @@ for its new user or for review: `eve simulator list` shows why, and it is never 
 error. A device already missing from the inventory, for example deleted by hand, is recorded as
 deleted without a command. A failed `simctl delete` is logged as `Simulator cleanup deferred` and
 retried on the next sweep. Deleted records stay in `eve.db` with `deletedAt` and list as
-`deleted`. `deleteAfter: 0s` keeps stopped devices indefinitely, as before. Devices created by
+`deleted`. A newer `eve` (such as the fast-lane CLI) migrates `eve.db` the
+first time it opens it, so an older `eve serve` still running can settle devices without a settle
+time; each sweep starts their grace period at their recorded shutdown. `eve doctor` warns when
+the server's build differs from the client's: on the build Mac, that means `eve serve` has not
+been restarted on the newly activated eve and lacks its fixes. `deleteAfter: 0s` keeps stopped devices indefinitely, as before. Devices created by
 `exec`/`pre` scripts and shared devices are never deleted by Eve.
 
 ### Configuration and borrowing

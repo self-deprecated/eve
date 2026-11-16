@@ -8,6 +8,11 @@
   stopped, not booted since cleanup and not protected are deleted; adopted or renamed devices are
   kept with a note. `0s` keeps them. `eve simulator list` shows `deleted`; JSON adds `settledAt`
   and `deletedAt`. Existing settled records count their grace from their recorded shutdown.
+- Records settled by an older `eve serve` after a newer `eve` migrated `eve.db` (on the build
+  Mac, the fast-lane CLI beside a server nobody restarted) had no settle time and were never
+  deleted. Each sweep now gives them their recorded shutdown as the start of the grace period.
+- `eve doctor` warns when the server's build differs from the client's at the same API level, so
+  a stale `eve serve` no longer passes silently.
 
 ### Travel bridge
 - `eve bridge on [--for 2h]` reaches the iPhone over Tailscale while it's on another Wi-Fi

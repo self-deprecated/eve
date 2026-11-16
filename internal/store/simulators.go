@@ -68,6 +68,21 @@ func (s *Store) SimulatorCleanup(ctx context.Context, id string, settled bool, d
 	return err
 }
 
+// RepairSettledAt gives settled records without settled_at their grace-period start. A server
+// older than settled_at keeps settling devices without it once a newer binary sharing eve.db
+// (the fast-lane CLI on the build Mac) has run the migration, and the sweep never deletes a
+// record with no settle time. As in the migration, the last attempt was the successful
+// shutdown: nothing else writes last_attempt_at to a settled record until its settle time is
+// known, so this must run before any deletion attempt.
+func (s *Store) RepairSettledAt(ctx context.Context) (int64, error) {
+	r, err := s.db.ExecContext(ctx, `UPDATE simulators SET settled_at=last_attempt_at
+		WHERE settled=1 AND settled_at=0 AND deleted_at=0 AND last_attempt_at>0`)
+	if err != nil {
+		return 0, err
+	}
+	return r.RowsAffected()
+}
+
 // SimulatorDeletion records a deletion attempt on a settled device: deleted (or already gone)
 // ends its lifecycle; otherwise detail says why it was kept. Unchanged details are not rewritten.
 func (s *Store) SimulatorDeletion(ctx context.Context, id string, deleted bool, detail string, at time.Time) error {

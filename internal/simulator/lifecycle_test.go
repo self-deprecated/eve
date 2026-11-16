@@ -2,6 +2,7 @@ package simulator
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"path/filepath"
@@ -591,6 +592,31 @@ func TestSettledDeviceIsDeletedOnceAfterDefaultGrace(t *testing.T) {
 	}
 	if _, err := r.m.Renew(context.Background(), ownedID, time.Minute); !errors.Is(err, store.ErrSimulatorSettled) {
 		t.Fatal("deleted device must not be leasable", err)
+	}
+}
+
+// The fast-lane CLI migrates eve.db while an older eve serve keeps running: that server settles
+// devices without settled_at. The sweep must still delete them, timed from the shutdown.
+func TestDeviceSettledByOlderServerIsDeletedAfterGrace(t *testing.T) {
+	r := newRig(t)
+	settled := r.settle(t)
+	db, err := sql.Open("sqlite", filepath.Join(r.m.DataDir, "eve.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = db.Close() })
+	if _, err := db.Exec(`UPDATE simulators SET settled_at=0`); err != nil {
+		t.Fatal(err)
+	}
+	r.now = settled.Add(time.Hour)
+	r.sweep(t)
+	if d := r.record(t); len(r.deletes) != 0 || !d.SettledAt.Equal(settled) {
+		t.Fatalf("grace must start at the old server's shutdown: %v %+v", r.deletes, d)
+	}
+	r.now = settled.Add(12 * time.Hour)
+	r.sweep(t)
+	if !slices.Equal(r.deletes, []string{ownedID}) || !r.record(t).DeletedAt.Equal(r.now) {
+		t.Fatalf("%v %+v", r.deletes, r.record(t))
 	}
 }
 

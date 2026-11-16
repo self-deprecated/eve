@@ -122,6 +122,11 @@ func (m *Manager) Sweep(ctx context.Context, tools xcode.Tools) error {
 		return err
 	}
 	defer unlock()
+	if keep > 0 {
+		if _, err := m.Store.RepairSettledAt(ctx); err != nil {
+			return fmt.Errorf("repair settled times: %w", err)
+		}
+	}
 	ds, err := m.Store.Simulators(ctx)
 	if err != nil {
 		return err
